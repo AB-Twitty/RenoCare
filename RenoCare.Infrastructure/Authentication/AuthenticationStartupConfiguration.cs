@@ -2,9 +2,11 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 using RenoCare.Core.Features.Authentication.Contracts;
 using RenoCare.Infrastructure.Authentication.Contracts;
 using System;
+using System.Collections.Generic;
 using System.Text;
 
 namespace RenoCare.Infrastructure.Authentication
@@ -56,6 +58,40 @@ namespace RenoCare.Infrastructure.Authentication
                 {
                     //cache the logged user for further need.
                 };
+            });
+
+            services.AddSwaggerGen(config =>
+            {
+                config.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+                {
+                    Description = @"JWT Authorization header using the bearer scheme. \r\n\r\n
+						Enter 'Bearer' [Space] and then your token in the text input below. \r\n\r\n
+						Example : Bearer 12345abcdef",
+                    Name = "Authorization",
+                    In = ParameterLocation.Header,
+                    Type = SecuritySchemeType.ApiKey,
+                    Scheme = "Bearer"
+                });
+
+                config.AddSecurityRequirement(new OpenApiSecurityRequirement()
+                {
+                    {
+                        new OpenApiSecurityScheme
+                        {
+                            Reference = new OpenApiReference { Type = ReferenceType.SecurityScheme, Id = "Bearer" },
+                            Scheme = "oauth2",
+                            Name = "Bearer",
+                            In = ParameterLocation.Header
+                        },
+                        new List<string>()
+                    }
+                });
+
+                config.SwaggerDoc("v1", new OpenApiInfo
+                {
+                    Version = "v1",
+                    Title = "VetHub API"
+                });
             });
 
             return services;
