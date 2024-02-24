@@ -1,5 +1,6 @@
 ﻿using FluentValidation;
 using MediatR;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.Extensions.DependencyInjection;
 using RenoCare.Core.Base;
 using System.Reflection;
@@ -23,6 +24,11 @@ namespace RenoCare.Core
             services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
 
             services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
+
+            services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
+
+            services.AddHttpContextAccessor();
+
             return services;
         }
     }

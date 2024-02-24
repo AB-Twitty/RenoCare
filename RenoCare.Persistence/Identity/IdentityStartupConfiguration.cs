@@ -23,7 +23,8 @@ namespace RenoCare.Persistence.Identity
                 options.UseSqlServer(configuration.GetConnectionString("IdentityConnectionString")));
 
             services.AddIdentity<AppUser, IdentityRole>()
-                .AddEntityFrameworkStores<AppIdentityDbContext>();
+                .AddEntityFrameworkStores<AppIdentityDbContext>()
+                .AddDefaultTokenProviders();
 
             return services;
         }

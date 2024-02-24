@@ -65,6 +65,68 @@ namespace RenoCare.Infrastructure.Authentication
             return response;
         }
 
+        /// <summary>
+        /// Generate an email confirmation token.
+        /// </summary>
+        /// <param name="userId">User id</param>
+        /// <returns>
+        /// A task that represents the asynchronous operation,
+        /// the task result contains the email confirmation token.
+        /// </returns>
+        public async Task<string> GenerateEmailConfirmationTokenAsync(string userId)
+        {
+            var user = await _userManager.FindByIdAsync(userId);
+
+            if (user == null)
+                throw new ArgumentNullException(string.Format(Transcriptor.Identity.UserNotFound, userId));
+
+            return await _userManager.GenerateEmailConfirmationTokenAsync(user);
+        }
+
+        /// <summary>
+        /// Confirm user email.
+        /// </summary>
+        /// <param name="userId">User id</param>
+        /// <param name="token">Email confirmation token</param>
+        /// <returns>
+        /// A task that represents the asynchronous operation,
+        /// the task result contains a value indicating whether the confirmation succeeded.
+        /// </returns>
+        public async Task<bool> ConfirmEmailAsync(string userId, string token)
+        {
+            if (userId == null)
+                throw new ArgumentNullException(nameof(userId));
+
+            if (token == null)
+                throw new ArgumentNullException(nameof(token));
+
+            var user = await _userManager.FindByIdAsync(userId);
+
+            if (user == null)
+                throw new ArgumentNullException(string.Format(Transcriptor.Identity.UserNotFound, userId));
+
+            var result = await _userManager.ConfirmEmailAsync(user, token);
+
+            return result.Succeeded;
+        }
+
+        /// <summary>
+        /// Get user details by his id.
+        /// </summary>
+        /// <param name="userId">User id</param>
+        /// <returns>
+        /// A task that represents the asynchronous operation,
+        /// the task result contains the details of the user.
+        /// </returns>
+        public async Task<AppUser> GetUserByIdAsync(string userId)
+        {
+            if (userId == null)
+                throw new ArgumentNullException(nameof(userId));
+
+            return await _userManager.FindByIdAsync(userId);
+        }
+
+
         #endregion
     }
 }

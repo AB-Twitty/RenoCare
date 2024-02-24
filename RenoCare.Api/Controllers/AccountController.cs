@@ -31,6 +31,14 @@ namespace RenoCare.Api.Controllers
         public async Task<IActionResult> LoginAsync(AuthRequest request) =>
             ApiResult(await _mediator.Send(new LoginCommandRequest(request)));
 
+        [HttpGet(Router.AccountRouting.SendEmailConfirmation)]
+        public async Task<IActionResult> SendEmailConfirmationAsync(string userId) =>
+            ApiResult(await _mediator.Send(new SendEmailConfirmationCommandRequest { UserId = userId }));
+
+        [HttpGet(Router.AccountRouting.ConfirmEmail)]
+        public async Task<IActionResult> ConfirmEmailAsync(string userId, string code) =>
+            ApiResult(await _mediator.Send(new ConfirmEmailCommandRequest { UserId = userId, EncodedToken = code }));
+
         #endregion
     }
 }

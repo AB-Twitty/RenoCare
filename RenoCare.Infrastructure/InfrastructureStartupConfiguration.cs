@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using RenoCare.Infrastructure.Authentication;
+using RenoCare.Infrastructure.Mail;
 
 namespace RenoCare.Infrastructure
 {
@@ -16,7 +17,8 @@ namespace RenoCare.Infrastructure
         /// <returns>A collection of service descriptors.</returns>
         public static IServiceCollection ConfigureInfrastructure(this IServiceCollection services, IConfiguration configuration)
         {
-            services.ConfigureAuthenticationInfrastructure();
+            services.ConfigureAuthenticationInfrastructure()
+                .ConfigureMailInfrastructure(configuration);
 
             return services;
         }
