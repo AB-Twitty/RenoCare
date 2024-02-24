@@ -4,6 +4,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
+using RenoCare.Infrastructure;
 using RenoCare.Persistence;
 
 namespace RenoCare.Api
@@ -27,7 +28,9 @@ namespace RenoCare.Api
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "RenoCare.Api", Version = "v1" });
             });
 
-            services.ConfigurePersistence(Configuration);
+            services.ConfigurePersistence(Configuration)
+                .ConfigureInfrastructure(Configuration);
+
 
         }
 
