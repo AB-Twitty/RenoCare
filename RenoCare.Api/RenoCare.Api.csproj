@@ -12,4 +12,8 @@
     <Folder Include="Controllers\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\RenoCare.Persistence\RenoCare.Persistence.csproj" />
+  </ItemGroup>
+
 </Project>

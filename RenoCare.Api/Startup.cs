@@ -1,16 +1,10 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using RenoCare.Persistence;
 
 namespace RenoCare.Api
 {
@@ -32,6 +26,9 @@ namespace RenoCare.Api
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "RenoCare.Api", Version = "v1" });
             });
+
+            services.ConfigurePersistence(Configuration);
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
