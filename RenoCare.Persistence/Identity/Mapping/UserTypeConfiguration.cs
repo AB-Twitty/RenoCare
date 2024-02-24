@@ -48,3 +48,4 @@ namespace RenoCare.Persistence.Identity.Mapping
                 );
         }
     }
+}
