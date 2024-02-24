@@ -1,12 +1,15 @@
 ﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using RenoCare.Core.Base;
 using RenoCare.Core.Features.Authentication.Contracts;
 using RenoCare.Infrastructure.Authentication.Contracts;
 using System;
 using System.Collections.Generic;
+using System.Net;
 using System.Text;
 
 namespace RenoCare.Infrastructure.Authentication
@@ -58,6 +61,43 @@ namespace RenoCare.Infrastructure.Authentication
                 {
                     //cache the logged user for further need.
                 };
+
+                jwtOptions.Events.OnAuthenticationFailed = async (context) =>
+                {
+                    var response = new ApiResponse<string>
+                    {
+                        StatusCode = HttpStatusCode.BadRequest,
+                        Message = "Token Authentication Failure"
+                    };
+
+                    // Use this method to write to the response body after invoking the next middleware
+                    context.Response.OnStarting(async () =>
+                    {
+                        context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                        context.Response.ContentType = "application/json";
+                        await context.Response.WriteAsJsonAsync(response); //problem when parsing from JSON
+                    });
+                };
+
+                jwtOptions.Events.OnChallenge = async (context) =>
+                {
+                    var response = new ApiResponse<string>
+                    {
+                        StatusCode = HttpStatusCode.Unauthorized,
+                        Message = "Unauthorized Access"
+                    };
+
+                    // Call this to skip the default logic and avoid using the default response
+                    context.HandleResponse();
+
+                    // Set the status code and content type
+                    context.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
+                    context.Response.ContentType = "application/json";
+
+                    // Write the apiResponse as JSON in the response body
+                    await context.Response.WriteAsJsonAsync(response);
+                };
+
             });
 
             services.AddSwaggerGen(config =>
