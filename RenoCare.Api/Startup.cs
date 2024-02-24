@@ -4,6 +4,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using RenoCare.Core;
+using RenoCare.Core.Middleware;
 using RenoCare.Infrastructure;
 using RenoCare.Persistence;
 
@@ -40,6 +41,8 @@ namespace RenoCare.Api
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "RenoCare.Api v1"));
             }
+
+            app.UseMiddleware<ExceptionHandlerMiddleware>();
 
             app.UseHttpsRedirection();
 

@@ -1,5 +1,7 @@
-﻿using MediatR;
+﻿using FluentValidation;
+using MediatR;
 using Microsoft.Extensions.DependencyInjection;
+using RenoCare.Core.Base;
 using System.Reflection;
 
 namespace RenoCare.Core
@@ -18,6 +20,9 @@ namespace RenoCare.Core
         {
             services.AddMediatR(Assembly.GetExecutingAssembly());
 
+            services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
+
+            services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
             return services;
         }
     }
