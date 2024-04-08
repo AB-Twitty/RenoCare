@@ -20,7 +20,7 @@
         /// </summary>
         public static class Identity
         {
-            public const string InvalidAuthentication = "Invalid Email or Password.";
+            public const string InvalidAuthentication = "Invalid login attempt.";
             public const string UserNotFound = "Unable to load user with '{0}'.";
             public const string ConfirmationEmailSent = "Verification email sent. Please check your email.";
             public const string EmailConfirmedSuccess = "Thank you for confirming your email.";

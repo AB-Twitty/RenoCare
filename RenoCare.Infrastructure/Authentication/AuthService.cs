@@ -47,12 +47,12 @@ namespace RenoCare.Infrastructure.Authentication
             var user = await _userManager.FindByNameAsync(request.Email);
 
             if (user == null)
-                throw new Exception(Transcriptor.Identity.UserNotFound);
+                throw new Exception(Transcriptor.Identity.InvalidAuthentication);
 
             var result = await _signInManager.PasswordSignInAsync(user, request.Password, request.RememberMe, false);
 
             if (!result.Succeeded)
-                throw new Exception(Transcriptor.Identity.UserNotFound);
+                throw new Exception(Transcriptor.Identity.InvalidAuthentication);
 
             var response = new AuthResponse
             {

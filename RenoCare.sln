@@ -15,15 +15,21 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Core", "Core", "{345F2192-C
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructure", "Infrastructure", "{63C03C55-2BBF-45C4-8DBB-B11AFF0154CC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RenoCare.Api", "RenoCare.Api\RenoCare.Api.csproj", "{20E30C08-4A6E-4B8A-8CE2-CC947959CDBF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RenoCare.Api", "RenoCare.Api\RenoCare.Api.csproj", "{20E30C08-4A6E-4B8A-8CE2-CC947959CDBF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RenoCare.Core", "RenoCare.Core\RenoCare.Core.csproj", "{DB41E876-6B5E-467A-BF4B-291BDCB353E7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RenoCare.Core", "RenoCare.Core\RenoCare.Core.csproj", "{DB41E876-6B5E-467A-BF4B-291BDCB353E7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RenoCare.Domain", "RenoCare.Domain\RenoCare.Domain.csproj", "{ED7BD9C2-B17C-437F-9232-90CA21051A86}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RenoCare.Domain", "RenoCare.Domain\RenoCare.Domain.csproj", "{ED7BD9C2-B17C-437F-9232-90CA21051A86}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RenoCare.Infrastructure", "RenoCare.Infrastructure\RenoCare.Infrastructure.csproj", "{8E51353B-DF4F-4C1C-99FE-3EC3973A1341}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RenoCare.Infrastructure", "RenoCare.Infrastructure\RenoCare.Infrastructure.csproj", "{8E51353B-DF4F-4C1C-99FE-3EC3973A1341}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RenoCare.Persistence", "RenoCare.Persistence\RenoCare.Persistence.csproj", "{04EC0652-9E7A-4B7A-8AF6-F1F1068E5C38}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RenoCare.Persistence", "RenoCare.Persistence\RenoCare.Persistence.csproj", "{04EC0652-9E7A-4B7A-8AF6-F1F1068E5C38}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Web", "Web", "{083A2070-1200-4BC0-A755-1F67E59C5690}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Mobile", "Mobile", "{9734DAD6-E2B9-4FA9-B6B5-4BDDF625179A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Reno.MVC", "Reno.MVC\Reno.MVC.csproj", "{917C9E74-2EC2-42FC-8750-6D34DE27C0E7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -51,6 +57,10 @@ Global
 		{04EC0652-9E7A-4B7A-8AF6-F1F1068E5C38}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{04EC0652-9E7A-4B7A-8AF6-F1F1068E5C38}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{04EC0652-9E7A-4B7A-8AF6-F1F1068E5C38}.Release|Any CPU.Build.0 = Release|Any CPU
+		{917C9E74-2EC2-42FC-8750-6D34DE27C0E7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{917C9E74-2EC2-42FC-8750-6D34DE27C0E7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{917C9E74-2EC2-42FC-8750-6D34DE27C0E7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{917C9E74-2EC2-42FC-8750-6D34DE27C0E7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -64,5 +74,11 @@ Global
 		{ED7BD9C2-B17C-437F-9232-90CA21051A86} = {345F2192-C21B-4952-B22A-215C0CB6AD89}
 		{8E51353B-DF4F-4C1C-99FE-3EC3973A1341} = {63C03C55-2BBF-45C4-8DBB-B11AFF0154CC}
 		{04EC0652-9E7A-4B7A-8AF6-F1F1068E5C38} = {63C03C55-2BBF-45C4-8DBB-B11AFF0154CC}
+		{083A2070-1200-4BC0-A755-1F67E59C5690} = {B29520E9-8F3D-4CC6-ACDB-22D15C13E447}
+		{9734DAD6-E2B9-4FA9-B6B5-4BDDF625179A} = {B29520E9-8F3D-4CC6-ACDB-22D15C13E447}
+		{917C9E74-2EC2-42FC-8750-6D34DE27C0E7} = {083A2070-1200-4BC0-A755-1F67E59C5690}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {D6835523-BD7B-4C4A-9FE9-C78AC7E58CC2}
 	EndGlobalSection
 EndGlobal
