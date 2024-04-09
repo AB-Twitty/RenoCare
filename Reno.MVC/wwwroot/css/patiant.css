@@ -1,0 +1,287 @@
+*{
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    text-decoration: none;
+}
+body {
+    font-family: 'Roboto', sans-serif;
+}
+
+:root{
+    --main-color: #0070CD;
+    --second-color: #EF0F0F;
+    --login-Button: #048dff;
+}
+a{
+    text-decoration: none;
+}
+.sidebar{
+    position: fixed;
+    left: 0;
+    width: 250px;
+    height: 100%;
+    background: #042331;
+    z-index: 9999;
+}
+.sidebar img{
+    width: 70px;
+    height: 70px;
+}
+.sidebar header{
+    font-size: 22px;
+    color: white;
+    text-align: center;
+    line-height: 70px;
+    background: #063146;
+    user-select: none;
+}
+.sidebar ul{
+    padding-left: 0;
+}
+.sidebar ul a{
+    display: block;
+    height: 100%;
+    width: 100%;
+    line-height: 65px;
+    font-size: 20px;
+    color: white;
+    padding-left: 40px;
+    box-sizing: border-box;
+    border-top: 1px solid rgba(255,255,255,0.1);
+    border-bottom: 1px solid black;
+    transition: 0.4s;
+}
+.sidebar ul li:hover a{
+    padding-left: 50px;
+}
+.sidebar ul a i, .sidebar ul a svg{
+    margin-right: 16px;
+}
+.page-body{
+    padding-left: 250px;
+}
+.nav-link{
+    transition:ease 0.5s;
+}
+.nav-link:hover{
+    background-color: var(--login-Button);
+    color: white;
+}
+.navbar{
+    box-shadow: 0 0.5rem 1rem rgba(0,0,0,.15);
+}
+.page-body .patients-body{
+    padding-left: 15px;
+    padding-right: 15px;
+    border-bottom: 1px solid #e7eaec;
+}
+.page-body .patients-body h2{
+    color: var(--main-color);
+    font-size: 24px;
+    font-weight: 700;
+}
+.page-body .patients-body .HomeLink a{
+    color: #676A6C;
+    font-size: 16px;
+    font-weight: 700;
+}
+.page-body .patients-body .HomeLink p{
+    color: #ccc;
+    font-size: 16px;
+    padding: 0 5px;
+    font-weight: bold;
+}
+.page-body .patients-body .HomeLink strong{
+    color: #676A6C;
+}
+.page-body h3{
+    color: var(--main-color);
+    font-size: 16px;
+    font-weight: 700;
+    padding: 15px 15px 0 15px;
+}
+.page-body form{
+    padding: 15px 20px 0 20px;
+}
+.page-body .control-label {
+    color: #a0a0a0;
+    font-weight: 700;
+    font-size: 15px;
+    letter-spacing: 1px;
+    margin-bottom: 10px !important;
+    text-align: start !important;
+}
+.page-body .form-control{
+    background-color: #FFFFFF;
+    background-image: none;
+    border: 1px solid #e5e6e7;
+    border-radius: 1px;
+    color: inherit;
+    display: block;
+    padding: 6px 12px;
+    transition: border-color 0.15s ease-in-out 0s, box-shadow 0.15s ease-in-out 0s;
+    width: 100%;
+    font-size: 14px;
+    position: relative;
+    appearance: auto;
+}
+.page-body .form-control::after {
+    content: "\25BC";
+    position: absolute;
+    top: 50%;
+    right: 10px;
+    transform: translateY(-50%);
+    pointer-events: none;
+}
+select:hover, select:focus {
+    border-color: var(--main-color) !important;
+}
+.page-body .Show{
+    padding: 15px 15px 0 15px;
+}
+.page-body .Show .Showlable{
+    color: #676A6C;
+    font-size: 16px;
+    font-weight: 400;
+}
+.page-body .Show .Showlable select{
+    outline: 0;
+    border: 1px solid #e5e6e7;
+    color: inherit;
+}
+.page-body .Show .btn-group button{
+    border: 1px solid #e7eaec;
+    background: #fff;
+    color: #676a6c;
+    box-shadow: none;
+    padding: 6px 8px;
+    font-size: 12px;
+}
+.page-body .Show .btn-group button:hover{
+    background-color: #eee;
+    color: inherit;
+    border-color: #d2d2d2;
+}
+.ShowingEntries h3{
+    color: #676A6C;
+    font-size: 16px;
+    font-weight: 700;
+}
+
+
+.outer-wrapper {
+    margin: 10px;
+    margin-left: 20px;
+    margin-right: 20px;
+    border: 1px solid black;
+    border-radius: 4px;
+    box-shadow: 0px 0px 3px rgba(0, 0, 0, 0.9);
+    max-width: fit-content;
+    max-height: fit-content;
+
+    
+}
+.table-wrapper {
+
+    overflow-y: scroll;
+    overflow-x: scroll;
+    height: fit-content;
+    max-height: 66.4vh;
+    
+    margin-top: 22px;
+    
+    margin: 15px;
+    padding-bottom: 20px;
+    
+}
+table {
+    
+    min-width: max-content;
+    
+    border-collapse: separate;
+    border-spacing: 0px;    
+    
+}
+table th{
+    position: sticky; 
+    top: 0px;
+    width: 250px;
+    background-color: #F5F5F6;
+    color: #676A6C;
+    
+    text-align: center;
+    font-weight: 700;
+    font-size: 16px;
+    border: 1px solid rgb(177, 177, 177);
+
+} 
+table th .table-label{
+    color: #676A6C;
+    font-weight: 700;
+    font-size: 15px;
+    letter-spacing: 1px;
+    margin-bottom: 10px !important;
+    text-align: start !important;
+}
+.page-body table th input.form-control:focus{
+    border-color: var(--main-color);
+}
+table th, table td {
+    
+    padding: 15px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    text-align: center;
+    
+}
+table td {
+    text-align: center;
+    color: #676A6C;
+    font-weight: 700;
+    font-size: 15px;
+    border: 1px solid rgb(177, 177, 177);
+    padding-left: 20px;
+    
+}
+table td svg{
+    color: #337ab7;
+    cursor: pointer;
+}
+table th.px-0 div{
+    padding-left: 15px;
+    padding-right: 15px;
+}
+table td .label, .words .label{
+    background-color: #ed5565;
+    color: #FFFFFF;
+    border-radius: 0.25em;
+    font-family: 'Open Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-size: 10px;
+    font-weight: 600;
+    padding: 3px 8px;
+    text-shadow: none;
+}
+.pagination-father{
+    padding-left: 15px;
+    padding-right: 15px;
+}
+.words{
+    padding: 15px 20px 0 20px;
+}
+.page-body .words .control-label{
+    font-size: 13px;
+    font-weight: normal;
+}
+.page-body .words .label-success{
+    background-color: #1c84c6;
+    color: #FFFFFF;
+}
+.page-body .words .label-Yello{
+    background-color: #f8ac59;
+    color: #FFFFFF;
+}
+.page-body .words .label-green{
+    background-color: #1ab394;
+    color: #FFFFFF;
+}

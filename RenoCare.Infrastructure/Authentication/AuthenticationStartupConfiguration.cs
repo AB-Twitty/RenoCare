@@ -130,8 +130,24 @@ namespace RenoCare.Infrastructure.Authentication
                 config.SwaggerDoc("v1", new OpenApiInfo
                 {
                     Version = "v1",
-                    Title = "VetHub API"
+                    Title = "RenoCare API"
                 });
+
+                /*config.CustomSchemaIds(type =>
+                {
+                    var typeName = type.Name;
+                    if (type.IsGenericType)
+                    {
+                        var genericArgs = string.Join(", ", type.GetGenericArguments().ToList());
+
+                        int index = typeName.IndexOf('`');
+                        var typeNameWithoutGenericArity = index == -1 ? typeName : typeName.Substring(0, index);
+
+                        return $"{typeNameWithoutGenericArity}<{genericArgs}>";
+                    }
+                    return typeName;
+                });*/
+
             });
 
             return services;

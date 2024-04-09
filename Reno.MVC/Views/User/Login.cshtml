@@ -1,0 +1,63 @@
+﻿@model Reno.MVC.Models.User.Auth.LoginModel
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="DANIELS">
+    <title>RenoCare - Login page</title>
+    <link rel="shortcut icon" href="~/imgs/favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="">
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="~/css/style.css">
+</head>
+<body class="overflow-hidden">
+    <section class="gray-bg login-page">
+        <div class="row h-100">
+            <div class="col-lg-6 col-md-12 col-sm-12 mx-auto d-flex justify-content-center align-items-center">
+                <div class=" loginscreen w-100 py-5 px-5">
+                    <h2 class="text-center w-100">Reno<span>Care</span></h2>
+
+                    <form method="post">
+                        <input asp-for="ReturnUrl" hidden />
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                        <div class="form-group">
+                            <label class="login-lable p-0 pb-1" asp-for="Email"></label>
+                            <input class="form-control" type="text" id="email" placeholder="Enter Your Email" asp-for="Email">
+                        </div>
+                        <div class="form-group">
+                            <label class="login-lable p-0 pb-1" asp-for="Password"></label>
+                            <input class="form-control" type="password" id="password" placeholder="Enter Your Password" asp-for="Password">
+                        </div>
+                        <div class="form-group row">
+                            <div class="checkbox col-6">
+                                <label asp-for="RememberMe">
+                                    <input type="checkbox" id="RememberMe" asp-for="RememberMe">
+                                    Remember Me?
+                                </label>
+                            </div>
+                            <div class="text-end col-6">
+                                <a href="#" class="ForgotPassword">Forgot Password?</a>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-md-6 mx-auto">
+                                <input type="submit" value="Login" class="btn btn-primary btn-block ">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <script src="~/js/bootstrap.bundle.min.js"></script>
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+</body>
+</html>
