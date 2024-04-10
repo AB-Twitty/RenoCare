@@ -1,0 +1,256 @@
+*{
+    margin: 0;
+    padding: 0;
+}
+body {
+    font-family: "open sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 13px;
+    color: rgb(103, 106, 108);
+    line-height: 1.42857;
+}
+
+:root{
+    --main-color: #0070CD;
+    --second-color: #EF0F0F;
+    --login-Button: #048dff;
+}
+a{
+    text-decoration: none;
+}
+
+/* Login page ---------------------------------------------------- */
+.login-page{
+    width: 100%;
+    height: 100vh;
+    background: linear-gradient( rgb(255 255 255 / 50%), rgb(183 183 183 / 50%) ), url(../imgs/loginBg.jpg);
+    background-size: cover;
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-color: rgb(47, 64, 80);
+}
+.loginscreen{
+    width: 300px;
+    background-color: rgba(255, 255, 255,.5);
+    border:3px solid #fff;
+    box-shadow: 0 .5rem 1rem rgba(0,0,0,.15);
+}
+.loginscreen h2{
+    font-size: 50px;
+    color: var(--main-color);
+}
+.loginscreen h2 span{
+    color: var(--second-color);
+}
+.loginscreen form .form-group{
+    margin: 0 -15px 15px -15px;
+}
+.loginscreen form .form-group .login-lable{
+    font-size: 14px;
+    color: #676a6c;
+}
+.loginscreen form .form-group .form-control{
+    background-color: #ffffff8a;
+    border: 1px solid #18a68952;
+    border-radius: 1px;
+    color: inherit;
+    display: block;
+    padding: 6px 12px;
+    transition: border-color 0.15s ease-in-out 0s, box-shadow 0.15s ease-in-out 0s;
+    width: 100%;
+    font-size: 14px;
+    height: 34px;
+    line-height: 1.42857143;
+}
+.loginscreen form .form-group .checkbox{
+    padding-top: 7px;
+}
+.loginscreen form .form-group .checkbox label{
+    font-size: 14px;
+    min-height: 20px;
+    margin-bottom: 0;
+    font-weight: 400;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+}
+.loginscreen form .form-group .checkbox label input{
+    margin-right: 10px;
+}
+.loginscreen form .form-group a.ForgotPassword{
+    text-decoration: none;
+    color: var(--main-color);
+    font-weight: 400;
+}
+.loginscreen form .form-group .text-end{
+    display: flex;
+    justify-content: end;
+    align-items: end;
+}
+.loginscreen form .form-group a.ForgotPassword:hover{
+    color: #005192;
+}
+.loginscreen form .form-group .btn {
+    width: 100%;
+    background-color: var(--login-Button);
+    border-color: var(--login-Button);
+    color: #FFFFFF;
+    display: block;
+    padding: 6px 12px;
+    margin-bottom: 0;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1.42857143;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: middle;
+    touch-action: manipulation;
+    cursor: pointer;
+    background-image: none;
+    border: 1px solid transparent;
+    border-radius: 3px;
+    transition: 0.3s;
+}
+.loginscreen form .form-group .btn:hover{
+    background-color: var(--main-color);
+    border-color: var(--main-color);
+}
+/* .gray-bg{
+    background-color: rgb(243, 243, 244);
+} */
+
+/* sidebar ---------------------------------------------------- */
+/* #wrapper{
+    width: 100%;
+    overflow-x: hidden;
+    font-size: 16px;
+}
+#wrapper .navbar-default{
+    background-color: transparent;
+    border-color: rgb(47, 64, 80);
+}
+#wrapper .navbar-static-side{
+    transition: all 0.4s ease 0s;
+    z-index: 2001;
+    position: absolute;
+    width: 220px;
+}
+#wrapper .navbar-static-side .nav{
+    padding-left: 0px;
+    margin-bottom: 0px;
+    list-style: none;
+}
+#wrapper .navbar-static-side .nav .nav-header {
+    transition: all 0.4s ease 0s;
+    background-color: rgb(47, 64, 80);
+    background-image: url(../imgs/header-profile.png);
+    padding: 33px 25px;
+}
+.dropdown {
+    position: relative;
+}
+.img-circle {
+    border-radius: 50%;
+    width:100px;
+    height:100px;
+}
+#wrapper .navbar-static-side .nav .nav-header a {
+    color: rgb(223, 228, 237);
+    cursor: pointer;
+}
+#wrapper .navbar-static-side .nav .nav-header a .clear {
+    display: block;
+    overflow: hidden;
+}
+.m-t-5px{
+    margin-top: 5px;
+}
+#wrapper .navbar-static-side .nav .nav-header .text-muted {
+    color: rgb(128, 149, 168) !important;
+}
+#wrapper .navbar-static-side .nav .nav-header .text-muted label {
+    display: inline-block;
+    max-width: 100%;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+#wrapper .navbar-static-side .nav .nav-header .text-muted .caret {
+    display: inline-block;
+    width: 0px;
+    height: 0px;
+    margin-left: 2px;
+    vertical-align: middle;
+    border-top: 4px dashed;
+    border-right: 4px solid transparent;
+    border-left: 4px solid transparent;
+}
+#wrapper .navbar-static-side .nav .nav-header .dropdown .dropdown-toggle::after{
+    display: none;
+}
+#wrapper .navbar-static-side .nav .nav-header .dropdown .dropdown-menu {
+    box-shadow: rgba(86, 96, 117, 0.7) 0px 0px 3px;
+    display: none;
+    float: left;
+    font-size: 12px;
+    left: 0px;
+    position: absolute;
+    text-shadow: none;
+    top: 100%;
+    z-index: 1000;
+    border-width: medium;
+    border-style: none;
+    border-color: initial;
+    border-image: initial;
+    border-radius: 3px;
+    list-style: outside none none;
+    padding: 0px;
+    animation-name: fadeInRight;
+    animation-duration: 1s;
+    animation-fill-mode: both;
+}
+#wrapper .navbar-static-side .nav .nav-header .dropdown .dropdown-menu > li > a {
+    display: block;
+    clear: both;
+    padding: 3px 20px;
+    white-space: nowrap;
+    color: inherit;
+    line-height: 25px;
+    text-align: left;
+    font-weight: normal;
+    border-radius: 3px;
+    margin: 4px;
+    font-size: 12px;
+}
+#wrapper .navbar-static-side .nav .nav-header .dropdown .dropdown-menu .divider {
+    height: 1px;
+    background-color: rgb(229, 229, 229);
+    margin: 9px 0px;
+    overflow: hidden;
+}
+#wrapper .navbar-static-side .nav .nav-header .logo-element {
+    text-align: center;
+    font-size: 18px;
+    font-weight: 600;
+    color: white;
+    display: none;
+    padding: 18px 0px;
+}
+
+.nav li a {
+    color: #a7b1c2;
+    font-weight: 600;
+    padding: 14px 20px 14px 25px;
+}
+
+.nav li a i {
+    margin-right: 6px;
+    font-size: 2em;
+    display: inline-block;
+    font: normal normal normal 14px/1 FontAwesome;
+    font-size: inherit;
+    text-rendering: auto;
+    -webkit-font-smoothing: antialiased;
+}
+
+.navbar-static-side .nav-label {
+    font-size: 14px;
+} */

@@ -1,71 +1,67 @@
-﻿/* Please see documentation at https://docs.microsoft.com/aspnet/core/client-side/bundling-and-minification
-for details on configuring this project to bundle and minify static web assets. */
-
-a.navbar-brand {
-  white-space: normal;
-  text-align: center;
-  word-break: break-all;
+﻿.scrollbar {
+    padding-top: 5px;
 }
 
-/* Provide sufficient contrast against white background */
-a {
-  color: #0366d6;
+.select2-container--disabled {
+    width: 100% !important;
 }
 
-.btn-primary {
-  color: #fff;
-  background-color: #1b6ec2;
-  border-color: #1861ac;
+span > .select2, .select2-container, .select2-container--default {
+    width: 100% !important;
 }
 
-.nav-pills .nav-link.active, .nav-pills .show > .nav-link {
-  color: #fff;
-  background-color: #1b6ec2;
-  border-color: #1861ac;
+textarea {
+    resize: none;
 }
 
-/* Sticky footer styles
--------------------------------------------------- */
-html {
-  font-size: 14px;
-}
-@media (min-width: 768px) {
-  html {
-    font-size: 16px;
-  }
+tfoot {
+    display: table-header-group;
 }
 
-.border-top {
-  border-top: 1px solid #e5e5e5;
-}
-.border-bottom {
-  border-bottom: 1px solid #e5e5e5;
+td, th {
+    text-align: center;
 }
 
-.box-shadow {
-  box-shadow: 0 .25rem .75rem rgba(0, 0, 0, .05);
+.dataTables_filter > label  {
+ 
+ color:transparent;
 }
+    .dataTables_filter > label:focus {
+        color: blue;
+    }
 
-button.accept-policy {
-  font-size: 1rem;
-  line-height: inherit;
+div.dataTables_filter input {
+    display: none !important;
 }
-
-/* Sticky footer styles
--------------------------------------------------- */
-html {
-  position: relative;
-  min-height: 100%;
+/*div.dataTables_wrapper div.dataTables_info {
+    display: none;
+    text-align:right;
+}*/
+form input::-webkit-validation-bubble-message,
+form select::-webkit-validation-bubble-message,
+form textarea::-webkit-validation-bubble-message {
+    display: none;
 }
-
+.hr-line-dashed{
+    margin:10px 0 !important;
+}
+.wrapper-content {
+    padding: 8px 0px 20px !important;
+}
+.m-b {
+    margin-bottom: 10px !important;
+}
+.breadcrumb {
+    padding: 9% 0% 0% 10% !important;
+}
+.radio, .checkbox {
+    margin-top: 0px !important;
+}
 body {
-  /* Margin bottom by footer height */
-  margin-bottom: 60px;
+    font-size: 1.6em;
+    font-weight: bold;
 }
-.footer {
-  position: absolute;
-  bottom: 0;
-  width: 100%;
-  white-space: nowrap;
-  line-height: 60px; /* Vertically center the text there */
+
+.titleNav {
+    font-size: 1.1em;
 }

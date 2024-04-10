@@ -1,48 +1,201 @@
 ﻿<!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - Reno.MVC</title>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/css/site.css" />
-</head>
-<body>
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Reno.MVC</a>
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </nav>
-    </header>
-    <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
-    </div>
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2024 - Reno.MVC - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>RenoCare | @ViewBag.Title</title>
+
+    <link href="~/lib/bootstrap/dist/css/bootstrap.css" rel="stylesheet" />
+    <link href="~/css/animate.css" rel="stylesheet" />
+    <link href="~/css/style.css" rel="stylesheet" />
+    <link href="~/fonts/font-awesome/css/font-awesome.css" rel="stylesheet" />
+    <link href="~/css/site.css" rel="stylesheet" />
+    
+    @*
+    
+    
+    <link href="~/css/plugins/select2/select2.min.css" rel="stylesheet" />
+    <link href="~/css/plugins/dataTables/datatables.min.css" rel="stylesheet" />
+    <!--Add Style for Checkbox and radio (ICheck plugin) -->
+    <link href="~/css/plugins/iCheck/custom.css" rel="stylesheet" />
+    <!--Add Style Foe Date  (DatePicker plugin)-->
+    <link href="~/css/plugins/datapicker/datepicker3.css" rel="stylesheet" />
+    <link href="~/css/plugins/sweetalert/sweetalert.css" rel="stylesheet" />
+    <link href="~/css/plugins/touchspin/jquery.bootstrap-touchspin.min.css" rel="stylesheet" />
+    <link href="~/css/plugins/perfect-scrollbar/css/perfect-scrollbar.css" rel="stylesheet" />
+    <link href="~/css/plugins/steps/jquery.steps.css" rel="stylesheet" />*@
+    @* <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">*@
+    @*
+    
+    <style>
+        input[type=number]::-webkit-outer-spin-button,
+        input[type=number]::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        input[type=number] {
+            -moz-appearance: textfield;
+        }
+    </style>
+    
+    @RenderSection("styles", required: false)*@
+    <script src="~/lib/jquery/dist/jquery.js"></script>
+    
+
+</head>
+@*mini-navbar removed from class pace-done for collapse*@
+<body class="pace-done">
+    <!-- Wrapper-->
+    <div id="wrapper">
+        <!-- Navigation -->
+        <partial name="_Navigation" />
+        <!-- Page wraper -->
+        <div id="page-wrapper" class="white-bg">
+            <!-- Top Navbar -->
+            <partial name="_TopNavbar" />
+            <div class="laodingModal" ng-click="CloseLoading"></div>
+            <form id="LoadingForm">
+                <div class="loadingPopup">
+                    <div style="color:white;background-color:dimgray;display:none;" id="waittext">Please wait we are preparing your data</div>
+                    <div class="sk-spinner sk-spinner-wave">
+                        <div class="sk-rect1"></div>
+                        <div class="sk-rect2"></div>
+                        <div class="sk-rect3"></div>
+                        <div class="sk-rect4"></div>
+                        <div class="sk-rect5"></div>
+                    </div>
+                </div>
+            </form>
+            <!-- Main view  -->
+            @RenderBody()
+            <br />
+            <!-- Footer -->
+            <partial name="_Footer" />
         </div>
-    </footer>
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
-    @await RenderSectionAsync("Scripts", required: false)
+        <!-- End page wrapper-->
+    </div>
+    <!-- End wrapper-->
+    @*  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>*@
+    @*<script>
+        function showHideSpinner(state) {
+            if (state === true) {
+                $(".laodingModal").show();
+                $(".loadingPopup").show();
+            }
+            else if (state === false) {
+                $(".laodingModal").hide();
+                $(".loadingPopup").hide();
+            }
+        }
+        if ($("body").hasClass("pace-running")) {
+            showHideSpinner(true);
+        }
+        else {
+            showHideSpinner(false);
+        }
+        $(document).ready(function () {
+            $("#SMAReportLink").click(function () {
+                showHideSpinner(true);
+                $("#waittext").show();
+            })
+        });
+    </script>*@
+
+    
+    <script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
+    <script src="~/js/site.js"></script>
+
+    @*<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.23.0/moment.min.js"></script>*@
+    <script src="~/js/plugins/metisMenu/metisMenu.min.js"></script>
+    @*<script src="~/js/plugins/pace/pace.min.js"></script>*@
+    <script src="~/js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+    <script src="~/js/app/inspinia.js"></script>
+    @*<script src="~/js/plugins/select2/select2.full.min.js"></script>
+    <script src="~/js/plugins/dataTables/datatables.min.js"></script>
+    <script src="~/lib/jquery-validation/dist/jquery.validate.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js"></script>
+    <script src="~/js/plugins/iCheck/icheck.min.js"></script>
+    <script src="~/js/plugins/datapicker/bootstrap-datepicker.js"></script>
+    <script src="~/js/plugins/sweetalert/sweetalert.min.js"></script>
+    <script src="~/js/plugins/perfect-scrollbar/js/perfect-scrollbar.jquery.js"></script>
+    <script src="~/js/plugins/perfect-scrollbar/js/perfect-scrollbar.js"></script>
+    <script src="~/js/plugins/touchspin/jquery.bootstrap-touchspin.min.js"></script>
+    <script src="~/js/plugins/steps/jquery.steps.min.js"></script>
+    <script src="https://cdn.datatables.net/rowgroup/1.0.2/js/dataTables.rowGroup.min.js"></script>
+    <script src="~/js/plugins/jquery-inputmask/jquery.inputmask.bundle.min.js"></script>
+    
+    <script>
+        function clearFormElements(class_name) {
+            $("." + class_name).find(':input').each(function () {
+                switch (this.type) {
+                    case 'password':
+                    case 'text':
+                    case 'textarea':
+                    case 'file':
+                    case 'select-one':
+                        $(this).val('').trigger('change');
+                        break;
+                    case 'select-multiple':
+                        $(this).val('').trigger('change');
+                        break;
+                    case 'date':
+                    case 'number':
+                    case 'tel':
+                    case 'email':
+                        $(this).val('');
+                        break;
+                    case 'checkbox':
+                        this.checked = false;
+                        $(this).removeAttr('checked').iCheck('update');
+                        var classes = $(this).parent().closest('div');
+                        $(classes).removeClass('checked ');
+                        break;
+                    case 'radio':
+                        this.checked = false;
+                        $(this).iCheck('uncheck').iCheck('update');
+                        break;
+                }
+            });
+        }
+        function clearFormElements2(jquery_object) {
+            $(jquery_object).find(':input').each(function () {
+                switch (this.type) {
+                    case 'password':
+                    case 'text':
+                    case 'textarea':
+                    case 'file':
+                    case 'select-one':
+                        $(this).val('').trigger('change');
+                        break;
+                    case 'select-multiple':
+                        $(this).val('').trigger('change');
+                        break;
+                    case 'date':
+                    case 'number':
+                    case 'tel':
+                    case 'email':
+                        $(this).val('');
+                        break;
+                    case 'checkbox':
+                        this.checked = false;
+                        $(this).removeAttr('checked').iCheck('update');
+                        var classes = $(this).parent().closest('div');
+                        $(classes).removeClass('checked ');
+                        break;
+                    case 'radio':
+                        this.checked = false;
+                        $(this).iCheck('uncheck').iCheck('update');
+                        break;
+                }
+            });
+        }
+    </script>
+    @RenderSection("Scripts", required: false)*@
 </body>
 </html>

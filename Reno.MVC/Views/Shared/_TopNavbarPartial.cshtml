@@ -1,0 +1,35 @@
+﻿@if (User.Identity.IsAuthenticated)
+{
+    <div class="col-md-12">
+        <ul class="nav navbar-nav navbar-right mr-0">
+            @*<li>
+        <a data-toggle="modal" data-target="#NotificationModal">
+        <i class="fa fa-bell fa-lg"></i></a>
+        </li>*@
+
+            <li>
+                <a asp-controller="UserGuide" asp-action="OpenUserGuide" title="Manage">User Manual </a>
+            </li>
+            <li>
+                <a href="/uploads/National Saudi MS Registry - Informed Consent Form - Updated_28032021.pdf" target="_blank">Informed Consent Form</a>
+            </li>
+
+            <li>
+                <a asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Update My Information</a>
+            </li>
+            <li>
+                <a asp-area="Identity" asp-page="/Account/Manage/SetPassword" title="Manage">Change Password</a>
+            </li>
+
+            <li><a asp-controller="User" asp-action="Logout">Logout</a></li>
+        </ul>
+    </div>
+}
+else
+{
+    <div style="padding-top: 8px; padding-right: 20px;">
+        <ul class="nav navbar-nav navbar-right">
+            <li><a asp-controller="User" asp-action="Login" asp-route-returnUrl="/">Login</a></li>
+        </ul>
+    </div>
+}

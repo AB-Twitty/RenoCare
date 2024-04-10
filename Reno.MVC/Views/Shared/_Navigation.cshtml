@@ -1,0 +1,147 @@
+﻿@*@using Microsoft.AspNetCore.Identity
+@using MS.DAL.Enum
+
+@inject UserManager<ApplicationUser> UserManager
+@{
+    var user = await UserManager.GetUserAsync(User) ?? new ApplicationUser();
+    var role = await UserManager.GetRolesAsync(user);
+    if (user.UserImage == "" || user.UserImage == null)
+    {
+        user.UserImage = "noImg.png";
+    }
+}
+@{
+    var extractData = (int)ExtractDataType.ExtractData;
+    var extractCodedData = (int)ExtractDataType.ExtractCodedData;
+}*@
+<nav class="navbar-default navbar-static-side" role="navigation">
+    <div class="sidebar-collapse">
+        <ul class="nav" id="side-menu">
+
+            <li class="nav-header">
+                <div class="dropdown profile-element">
+                    <span class="text-center block">
+                        <img class="img-circle" id="UserImage" src="~/imgs/noImg.png" alt="User Image" style="width:125px;height:125px;" />
+                        
+                    </span>
+                    <a data-toggle="dropdown" class="dropdown-toggle" href="#">
+                        <span class="clear">
+                            <span class="block m-t-xs">
+                                <strong class="font-bold text-center block">Welcome Twitty</strong>
+                            </span> <span class="text-muted text-xs block text-center"><label>Admin</label> <b class="caret"></b></span>
+                        </span>
+                    </a>
+                    <ul class="dropdown-menu animated fadeInRight m-t-xs">
+                        <li><a asp-action="UserProfile" asp-controller="Users" asp-route-UserName="@User.Identity.Name">Profile</a></li>
+                        <li class="divider"></li>
+                        <li>
+                            <a asp-controller="User" asp-action="Logout" asp-route-returnUrl="/">Logout</a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="logo-element">
+                    Reno<br />Care
+
+                </div>
+            </li>
+
+            <li>
+                <a asp-action="Index" asp-controller="Home"><i class="fa fa-2x  fa-dashboard"></i> <span class="nav-label">Dashboard </span> </a>
+            </li>
+
+            <li>
+                <a asp-action="Index" asp-controller="Patients"><i class="fa fa-2x  fa-address-card-o"></i> <span class="nav-label" >Patients</span> <span class="fa arrow"></span></a>
+                <ul class="nav nav-second-level collapse">
+                    <li><a asp-action="Index" asp-controller="Patients">Patients</a></li>
+                    <li><a asp-action="DeletedPatients" asp-controller="Patients">Deleted Patients</a></li>
+                    <li><a href="#" data-toggle="modal" data-target="#NewPatient">New Patient</a></li>
+                    <li><a asp-action="Index" asp-controller="MsMedicationRequest">Patients Medication Requests</a></li>
+                    <li><a asp-action="GetUnVotedRequests" asp-controller="MsMedicationRequest">Pending/Current Medication Requests</a></li>
+                    @*<li><a asp-action="Index" asp-controller="TransferRequest">Patients Transfer Requests</a></li>*@
+                </ul>
+            </li>
+
+            <li>
+                <a asp-action="Index" asp-controller="Hospitals"><i class="fa fa-2x  fa-hospital-o"></i> <span class="nav-label" >Hospitals</span> <span class="fa arrow"></span></a>
+                <ul class="nav nav-second-level collapse">
+                    <li><a asp-action="Index" asp-controller="Hospitals">Hospitals</a></li>
+                    <li><a asp-action="Create" asp-controller="Hospitals"> Add Hospital</a></li>
+                </ul>
+            </li>
+
+            <li>
+                <a asp-action="Index" asp-controller="Countries"><i class="fa  fa-2x  fa-globe"></i> <span class="nav-label" >Countries</span> <span class="fa arrow"></span></a>
+                <ul class="nav nav-second-level collapse">
+                    <li><a asp-action="Index" asp-controller="Countries">Countries</a></li>
+                    <li><a asp-action="Create" asp-controller="Countries"> Add Country</a></li>
+                </ul>
+            </li>
+            
+            <li>
+                <a asp-action="Index" asp-controller="Cities"><i class="fa fa-2x  fa-university"></i> <span class="nav-label" >Cities</span> <span class="fa arrow"></span></a>
+                <ul class="nav nav-second-level collapse">
+                    <li><a asp-action="Index" asp-controller="Cities">Cities</a></li>
+                    <li><a asp-action="Create" asp-controller="Cities"> Add City</a></li>
+                </ul>
+            </li>
+            
+            <li>
+                <a asp-action="Index" asp-controller="Users"><i class="fa  fa-2x  fa-users"></i> <span class="nav-label" >Users</span> <span class="fa arrow"></span></a>
+                <ul class="nav nav-second-level collapse">
+                    <li><a asp-action="Index" asp-controller="Users">All Users</a></li>
+                    <li><a asp-action="UserbyType" asp-controller="Users" asp-route-type="Clinical Research Coordinator">Clinical Research Coordinator</a></li>
+                    <li><a asp-action="UserbyType" asp-controller="Users" asp-route-type="Neurologists">Neurologists</a></li>
+                    <li><a asp-action="UserbyType" asp-controller="Users" asp-route-type="Steering Committee">Steering Committee</a></li>
+                    <li><a asp-action="UserbyType" asp-controller="Users" asp-route-type="Monitoring team">Monitoring Team</a></li>
+                    <li><a asp-action="UserbyType" asp-controller="Users" asp-route-type="Itkan Admin">Itkan Admin</a></li>
+                </ul>
+            </li>
+            
+            <li>
+                <a asp-action="Index" asp-controller="MsMedicationRequest">
+                    <i class="fa  fa-2x  fa-address-card-o"></i>
+                    <span class="nav-label" >All Medication Requests</span>
+                    <span class="fa arrow"></span>
+                </a>
+            </li>
+
+            <li>
+                <a asp-action="GetUnVotedRequests" asp-controller="MsMedicationRequest">
+                    <i class="fa  fa-2x  fa-address-card-o"></i>
+                    <span class="nav-label" >Pending/Current Medication Requests</span>
+                    <span class="fa arrow"></span>
+                </a>
+            </li>
+
+            <li>
+                <a asp-action="Index" asp-controller="Report"><i class="fa  fa-2x  fa-file-text"></i> <span class="nav-label">Reports</span> <span class="fa arrow"></span></a>
+                <ul class="nav nav-second-level collapse">
+                    <li><a asp-action="Index" asp-controller="Report">Demographics Reports</a></li>
+                    <li><a asp-action="ExtractOnMedicationData" asp-controller="MedicationReport">Extract MS Patients On Medications</a></li>
+
+                    @*
+                    <li><a asp-action="ExtractMSData" id="extract_data" asp-controller="ExtractMSReport" asp-route-extractType="@extractData">Extract Data</a></li>
+                    <li><a asp-action="ExtractMSData" id="extract_data_coded" asp-controller="ExtractMSReport" asp-route-extractType="@extractCodedData">Extract Coded Data</a></li>
+                    *@
+
+                </ul>
+            </li>
+
+        </ul>
+    </div>
+</nav>
+
+@*
+<script>
+    $("#extract_data").on('click', function () {
+        showHideSpinner(true);
+        $("#waittext").show();
+    })
+
+    $("#extract_data_coded").on('click', function () {
+        showHideSpinner(true);
+        $("#waittext").show();
+    })
+
+</script>
+*@
