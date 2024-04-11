@@ -15,6 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\RenoCare.Core\RenoCare.Core.csproj" />
     <ProjectReference Include="..\RenoCare.Domain\RenoCare.Domain.csproj" />
   </ItemGroup>
 

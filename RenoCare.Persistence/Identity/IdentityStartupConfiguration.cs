@@ -20,7 +20,7 @@ namespace RenoCare.Persistence.Identity
         public static IServiceCollection ConfigureIdentityPersistence(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddDbContext<AppIdentityDbContext>(options =>
-                options.UseSqlServer(configuration.GetConnectionString("IdentityConnectionString")));
+                options.UseSqlServer(configuration.GetConnectionString("DefaultConnectionString")));
 
             services.AddIdentity<AppUser, IdentityRole>()
                 .AddEntityFrameworkStores<AppIdentityDbContext>()

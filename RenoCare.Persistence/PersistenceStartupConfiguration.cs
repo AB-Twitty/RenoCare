@@ -1,5 +1,7 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using RenoCare.Core.Conatracts.Persistence;
 using RenoCare.Persistence.Identity;
 
 namespace RenoCare.Persistence
@@ -18,6 +20,11 @@ namespace RenoCare.Persistence
         public static IServiceCollection ConfigurePersistence(this IServiceCollection services, IConfiguration configuration)
         {
             services.ConfigureIdentityPersistence(configuration);
+
+            services.AddDbContext<AppDbContext>(options =>
+                options.UseSqlServer(configuration.GetConnectionString("DefaultConnectionString")));
+
+            services.AddTransient(typeof(IRepository<>), typeof(EntityRepository<>));
 
             return services;
         }

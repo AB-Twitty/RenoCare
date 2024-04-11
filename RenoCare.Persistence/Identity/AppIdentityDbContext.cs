@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using RenoCare.Domain.Identity;
-using System.Reflection;
+using RenoCare.Persistence.Identity.Mapping;
 
 namespace RenoCare.Persistence.Identity
 {
@@ -10,7 +10,7 @@ namespace RenoCare.Persistence.Identity
     /// </summary>
     public class AppIdentityDbContext : IdentityDbContext<AppUser>
     {
-        public AppIdentityDbContext(DbContextOptions options) : base(options)
+        public AppIdentityDbContext(DbContextOptions<AppIdentityDbContext> options) : base(options)
         {
         }
 
@@ -18,7 +18,9 @@ namespace RenoCare.Persistence.Identity
         {
             base.OnModelCreating(builder);
 
-            builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
+            builder.ApplyConfiguration(new UserTypeConfiguration());
+            builder.ApplyConfiguration(new RoleTypeConfiguration());
+            builder.ApplyConfiguration(new UserRoleMappingTypeConfiguration());
         }
     }
 }
