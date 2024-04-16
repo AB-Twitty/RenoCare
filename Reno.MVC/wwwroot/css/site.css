@@ -65,3 +65,18 @@ body {
 .titleNav {
     font-size: 1.1em;
 }
+
+
+.dataTables_scrollHeadInner {
+    width: 100% !important;
+}
+
+.table.dataTable {
+    border-collapse: collapse !important;
+    margin: auto !important;
+    width: -webkit-fill-available !important;
+}
+
+.dataTables_scroll {
+    margin-bottom: 10px;
+}
