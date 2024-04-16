@@ -3,38 +3,45 @@
 namespace RenoCare.Core.Helpers
 {
     /// <summary>
-    /// Paged list interface
+    /// Provides the interface(s) for paged list of any type.
     /// </summary>
-    public interface IPagedList<T> : IList<T>
+    /// <typeparam name="T">The type for paging.</typeparam>
+    public interface IPagedList<T>
     {
         /// <summary>
-        /// Page index
+        /// Gets the index start value.
+        /// </summary>
+        /// <value>The index start value.</value>
+        int IndexFrom { get; }
+        /// <summary>
+        /// Gets the page index (current).
         /// </summary>
         int PageIndex { get; }
-
         /// <summary>
-        /// Page size
+        /// Gets the page size.
         /// </summary>
         int PageSize { get; }
-
         /// <summary>
-        /// Total count
+        /// Gets the total count of the list of type <typeparamref name="T"/>
         /// </summary>
         int TotalCount { get; }
-
         /// <summary>
-        /// Total pages
+        /// Gets the total pages.
         /// </summary>
         int TotalPages { get; }
-
         /// <summary>
-        /// Has previous page
+        /// Gets the current page items.
         /// </summary>
+        IList<T> Items { get; }
+        /// <summary>
+        /// Gets the has previous page.
+        /// </summary>
+        /// <value>The has previous page.</value>
         bool HasPreviousPage { get; }
-
         /// <summary>
-        /// Has next age
+        /// Gets the has next page.
         /// </summary>
+        /// <value>The has next page.</value>
         bool HasNextPage { get; }
     }
 }

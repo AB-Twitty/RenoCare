@@ -20,5 +20,13 @@
             public const string SendResetPasswordEmail = Rule + "/ResetPassword";
             public const string ResetPassword = Rule + "/ResetPassword/{userId}/";
         }
+
+        /// <summary>
+        /// Represents patient controller end points routing.
+        /// </summary>
+        public static class PatientRouting
+        {
+            public const string List = Rule + "/Patients";
+        }
     }
 }
