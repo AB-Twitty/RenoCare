@@ -3,12 +3,13 @@
     public class PatientListItemDto
     {
         public int Id { get; set; }
-        public string FirstName { get; set; }
-        public string LastName { get; set; }
-        public bool Diabetes { get; set; }
-        public bool Hypertension { get; set; }
-        public int ReportsCount { get; set; }
+        public string PatientName { get; set; }
+        public string Diabetes { get; set; }
+        public string Hypertension { get; set; }
+        public int ReportsSameUnit { get; set; }
+        public int ReportsOverral { get; set; }
         public string Gender { get; set; }
         public int Age { get; set; }
+        public string Smoking { get; set; }
     }
 }

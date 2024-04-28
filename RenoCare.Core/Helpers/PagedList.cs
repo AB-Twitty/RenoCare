@@ -28,6 +28,7 @@ namespace RenoCare.Core.Helpers
             PageSize = pageSize;
             IndexFrom = indexFrom;
             TotalCount = source.Count();
+            FilterCount = source.Count();
             TotalPages = (int)Math.Ceiling(TotalCount / (double)PageSize);
             Items = source.Skip((PageIndex - IndexFrom) * PageSize).Take(PageSize).ToList();
         }
@@ -49,6 +50,10 @@ namespace RenoCare.Core.Helpers
         /// </summary>
         /// <value>The total count.</value>
         public int TotalCount { get; set; }
+        /// <summary>
+        /// Gets the filter count of the list of type <typeparamref name="T"/>
+        /// </summary>
+        public int FilterCount { get; set; }
         /// <summary>
         /// Gets or sets the total pages.
         /// </summary>
@@ -99,6 +104,10 @@ namespace RenoCare.Core.Helpers
         /// <value>The total count.</value>
         public int TotalCount { get; }
         /// <summary>
+        /// Gets the filter count of the list of type <typeparamref name="T"/>
+        /// </summary>
+        public int FilterCount { get; }
+        /// <summary>
         /// Gets the total pages.
         /// </summary>
         /// <value>The total pages.</value>
@@ -143,6 +152,7 @@ namespace RenoCare.Core.Helpers
             PageSize = pageSize;
             IndexFrom = indexFrom;
             TotalCount = source.Count();
+            FilterCount = source.Count();
             TotalPages = (int)Math.Ceiling(TotalCount / (double)PageSize);
             var items = source.Skip((PageIndex - IndexFrom) * PageSize).Take(PageSize).ToArray();
             Items = new List<TResult>(converter(items));

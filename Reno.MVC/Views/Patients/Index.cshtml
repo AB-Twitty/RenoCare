@@ -1,4 +1,7 @@
-﻿@{
+﻿@using Reno.MVC.Services.Base;
+@inject IClient _client;
+
+@{
     ViewData["Title"] = "Patient List";
 }
 
@@ -30,11 +33,10 @@
                 @* <div class="ibox-title">
                 <h5>Patients</h5>
                 </div>*@
-                <div class="ibox-content">
+                <div class="ibox-content" style="padding: 15px 20px 0px 20px;">
                     <div class="row">
 
-                        <form asp-action="Create">
-                            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                        <form id="FilterPatients">
                             <div class="ibox float-e-margins">
                                 <div class="ibox-title">
                                     <h5>Filter Section</h5>
@@ -46,38 +48,58 @@
                                 </div>
 
                                 <div class="ibox-content">
+
                                     <div class="row mb-15">
                                         <div class="col-md-6">
-                                            <label class="control-label col-md-12">Name</label>
+                                            <label class="control-label col-md-12">Patient Name</label>
                                             <div class="col-md-12">
-                                                <input type="text" class="m-b form-control" required />
-                                                <span class="text-danger"></span>
+                                                <input type="text" class="m-b form-control" placeholder="Enter Patient Name..." />
                                             </div>
                                         </div>
                                         <div class="col-md-6">
-                                            <label class="control-label col-md-12">Code</label>
+											<label class="control-label col-md-12">Diabetes Types</label>
                                             <div class="col-md-12">
-                                                <input type="text" class="m-b form-control" required />
-                                                <span class="text-danger"></span>
+                                                <select multiple asp-items="ViewBag.DiabetesSelectList" 
+                                                    placeholder="Select Diabetes Types..." data-search="false">
+                                                </select>
                                             </div>
                                         </div>
                                     </div>
-                                    
+
+                                    <div class="row mb-15">
+                                        <div class="col-md-6">
+                                            <label class="control-label col-md-12">Hypertension Types</label>
+                                            <div class="col-md-12">
+                                                <select multiple asp-items="ViewBag.HypertensionSelectList"
+                                                        placeholder="Select Hypertension Types..." data-search="false">
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="control-label col-md-12">Smoking Status</label>
+                                            <div class="col-md-12">
+                                                <select multiple asp-items="ViewBag.SmokingSelectList"
+                                                        placeholder="Select Smoking Status..." data-search="false">
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+
                                     <div class="row mb-15">
                                         <div class="col-lg-12">
                                             <div class="ibox float-e-margins">
                                                 <div class="ibox-title">
 
-                                                    <div class="col-md-6 text-end">
-                                                        <a asp-action="Index" class=" btn btn-secondary">Clear</a>
-                                                        <button class=" btn btn-primary" id="SubmitCountry" type="submit">Search</button>
+                                                    <div class="col-md-12 text-end">
+                                                        <button class=" btn btn-danger" type="reset" id="ResetFilter">Reset</button>
+                                                        <button class=" btn btn-primary" id="SubmitFilter" type="button">Search</button>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
 
-                                    <hr />
+                                    <hr style="margin: 0;" />
                                 </div>
                             </div>
                         </form>
@@ -141,4 +163,47 @@
 	<script src="~/lib/datatables/js/jquery.datatables.min.js"></script>
 	<script src="~/lib/datatables/js/datatables.bootstrap4.min.js"></script>
     <script src="~/js/Pages/PatientsIndex.js"></script>
+
+    <script>
+        VirtualSelect.init({
+            ele: 'select',
+            dropboxWrapper: 'self',
+            optionsCount: 5,
+            
+            // Text to show near select all checkbox when search is disabled
+            selectAllText: 'Select all',
+            // Text to use when displaying no.of values selected text (i.e. 3 options selected)
+            optionsSelectedText: 'options selected',
+            // Text to use when displaying all values selected text (i.e. All (10))
+            allOptionsSelectedText: 'All',
+
+
+            // Show each selected values as tags with remove icon
+            showValueAsTags: true,
+            // Maximum no.of values to show in the tooltip for multi-select
+            noOfDisplayValues: 3,
+
+
+            // Custom width
+            dropboxWidth: "100%",
+
+            // Scroll selected option to viewport on dropbox open
+            focusSelectedOptionOnOpen: true,
+            
+            // show dropbox as popup on small screen like mobile
+            showDropboxAsPopup: true,
+            // maximum screen width that allowed to show dropbox as popup
+            popupDropboxBreakpoint: '576px',
+            // left, center, or right
+            popupPosition: 'center',
+
+
+            // hide value tooltip if all options selected
+            hideValueTooltipOnSelectAll: true,
+
+            // Maximum width
+            maxWidth: '100%'
+
+        });
+    </script>
 }

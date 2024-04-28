@@ -66,17 +66,49 @@ body {
     font-size: 1.1em;
 }
 
+.dataTables_scroll th {
+    min-width: 200px;
+}
 
 .dataTables_scrollHeadInner {
     width: 100% !important;
 }
 
+.dataTables_scrollHeadInner {
+    border-bottom: 2px solid #777777;
+}
+
 .table.dataTable {
     border-collapse: collapse !important;
     margin: auto !important;
-    width: -webkit-fill-available !important;
 }
 
 .dataTables_scroll {
     margin-bottom: 10px;
 }
+
+.sorting_asc, .sorting_desc {
+    background-color: #F5F5F6 !important;
+}
+
+
+.vscomp-wrapper.focused .vscomp-toggle-button, .vscomp-wrapper:focus .vscomp-toggle-button {
+    box-shadow: none !important;
+}
+
+.vscomp-wrapper.focused .vscomp-toggle-button {
+    border-color: #1ab394;
+    transition: border-color 0.15s ease-in-out 0s, box-shadow 0.15s ease-in-out 0s;
+}
+
+.vscomp-wrapper {
+    color: inherit !important;
+    font-family: inherit !important;
+}
+
+    .vscomp-wrapper.multiple .vscomp-option.selected .checkbox-icon::after, 
+    .vscomp-wrapper .checkbox-icon.checked::after {
+        border-color: #1ab394;
+        border-left-color: rgba(0, 0, 0, 0);
+        border-top-color: rgba(0, 0, 0, 0);
+    }

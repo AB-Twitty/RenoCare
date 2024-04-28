@@ -5,6 +5,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Reno.MVC.Helpers;
+using Reno.MVC.Helpers.Contracts;
 using Reno.MVC.Services.Base;
 using Reno.MVC.Services.Base.Contracts;
 using System;
@@ -42,6 +44,8 @@ namespace Reno.MVC
                 });
 
             services.AddControllersWithViews();
+
+            services.AddTransient<IDataTableInfoExtractor, DataTableExtractor>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

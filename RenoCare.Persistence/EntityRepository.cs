@@ -52,7 +52,7 @@ namespace RenoCare.Persistence
         /// </returns>
         protected virtual async Task<IList<TEntity>> GetEntitiesAsync(Func<Task<IList<TEntity>>> getAllAsync)
         {
-            return await GetAllAsync();
+            return await getAllAsync();
         }
 
         /// <summary>

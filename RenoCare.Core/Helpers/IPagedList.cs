@@ -26,6 +26,10 @@ namespace RenoCare.Core.Helpers
         /// </summary>
         int TotalCount { get; }
         /// <summary>
+        /// Gets the filter count of the list of type <typeparamref name="T"/>
+        /// </summary>
+        int FilterCount { get; }
+        /// <summary>
         /// Gets the total pages.
         /// </summary>
         int TotalPages { get; }

@@ -19,8 +19,14 @@ namespace RenoCare.Persistence
             base.OnModelCreating(builder);
 
             builder.ApplyConfiguration(new PatientTypeConfiguration());
+            builder.ApplyConfiguration(new HypertensionTypeConfiguration());
+            builder.ApplyConfiguration(new DiabetesTypeConfiguration());
+            builder.ApplyConfiguration(new SmokingStatusTypeConfiguration());
         }
 
         public DbSet<Patient> Patients { get; set; }
+        public DbSet<HypertensionType> HypertensionTypes { get; set; }
+        public DbSet<DiabetesType> DiabetesTypes { get; set; }
+        public DbSet<SmokingStatus> SmokingStatus { get; set; }
     }
 }

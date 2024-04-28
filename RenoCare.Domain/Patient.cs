@@ -3,6 +3,9 @@ using RenoCare.Domain.Identity;
 
 namespace RenoCare.Domain
 {
+    /// <summary>
+    /// Represents a patient entity.
+    /// </summary>
     public class Patient : BaseEntity, ISoftDeletedEntity
     {
         /// <summary>
@@ -16,19 +19,19 @@ namespace RenoCare.Domain
         public string KidneyFailureCause { get; set; }
 
         /// <summary>
-        /// Gets or sets a vlaue indicating whether the patient has diabetes or not
+        /// Gets or sets a value indicating the diabetes type of the patient
         /// </summary>
-        public bool Diabetes { get; set; }
+        public int DiabetesTypeId { get; set; }
 
         /// <summary>
-        /// Gets or sets a vlaue indicating whether the patient has hypertension (high blood pressure) or not
+        /// Gets or sets a value indicating the hypertension type of the patient
         /// </summary>
-        public bool Hypertension { get; set; }
+        public int HypertensionTypeId { get; set; }
 
         /// <summary>
-        /// Gets or sets a vlaue indicating whether the patient smokes or not
+        /// Gets or sets a value indicating The smoking status of the patient
         /// </summary>
-        public bool Smoking { get; set; }
+        public int? SmokingStatusId { get; set; }
 
         /// <summary>
         /// Gets or sets the reason of deletion
@@ -39,6 +42,22 @@ namespace RenoCare.Domain
         /// Gets or sets a value indecating whether an entity is deleted or not
         /// </summary>
         public bool IsDeleted { get; set; }
+
+
+        /// <summary>
+        /// Gets or sets the navigation property for hypertension type.
+        /// </summary>
+        public virtual HypertensionType HypertensionType { get; set; }
+
+        /// <summary>
+        /// Gets or sets the navigation property for diabetes type.
+        /// </summary>
+        public virtual DiabetesType DiabetesType { get; set; }
+
+        /// <summary>
+        /// Gets or sets the navigation property for smoking status.
+        /// </summary>
+        public virtual SmokingStatus SmokingStatus { get; set; }
 
         /// <summary>
         /// Gets or sets the navigation property user account

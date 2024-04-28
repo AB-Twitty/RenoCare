@@ -27,5 +27,14 @@
             public const string EmailSendingFailure = "Error sending the email.";
             public const string ResetPasswordEmailSent = "Reset password email sent. Please check your email.";
         }
+
+        /// <summary>
+        /// Represents response messages.
+        /// </summary>
+        public static class Response
+        {
+            public const string EntityNotFound = "Entity with id '{0}' not found.";
+        }
+
     }
 }
