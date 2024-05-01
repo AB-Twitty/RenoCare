@@ -71,10 +71,6 @@ body {
 }
 
 .dataTables_scrollHeadInner {
-    width: 100% !important;
-}
-
-.dataTables_scrollHeadInner {
     border-bottom: 2px solid #777777;
 }
 
@@ -90,6 +86,11 @@ body {
 .sorting_asc, .sorting_desc {
     background-color: #F5F5F6 !important;
 }
+
+.sorting_disabled {
+    background-color: transparent !important;
+}
+
 
 
 .vscomp-wrapper.focused .vscomp-toggle-button, .vscomp-wrapper:focus .vscomp-toggle-button {

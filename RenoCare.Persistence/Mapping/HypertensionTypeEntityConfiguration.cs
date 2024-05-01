@@ -7,7 +7,7 @@ namespace RenoCare.Persistence.Mapping
     /// <summary>
     /// Represents the hypertension type entity configuration.
     /// </summary>
-    public class HypertensionTypeConfiguration : IEntityTypeConfiguration<HypertensionType>
+    public class HypertensionTypeEntityConfiguration : IEntityTypeConfiguration<HypertensionType>
     {
         /// <summary>
         /// Configure entity options.

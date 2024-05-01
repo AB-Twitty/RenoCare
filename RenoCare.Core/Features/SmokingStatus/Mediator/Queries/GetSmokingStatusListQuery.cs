@@ -18,7 +18,7 @@ namespace RenoCare.Core.Features.Smoking.Mediator.Queries
         public int? Id { get; set; }
     }
 
-    // <summary>
+    /// <summary>
     /// Represents a handler for the smoking status list query request.
     /// </summary>
     public class GetSmokingStatusListQueryRequestHandler : ResponseHandler,

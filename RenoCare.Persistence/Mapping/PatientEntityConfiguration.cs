@@ -7,7 +7,7 @@ namespace RenoCare.Persistence.Mapping
     /// <summary>
     /// Represents the patient entity configuration.
     /// </summary>
-    public class PatientTypeConfiguration : IEntityTypeConfiguration<Patient>
+    public class PatientEntityConfiguration : IEntityTypeConfiguration<Patient>
     {
         /// <summary>
         /// Configure entity options.

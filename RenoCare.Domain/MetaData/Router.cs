@@ -38,5 +38,15 @@
             public const string HypertensionTypes = Rule + "/Hypertension/Types";
             public const string SmokingStatuses = Rule + "/Smoking/Status";
         }
+
+        /// <summary>
+        /// Represents medication requests controller end points routing.
+        /// </summary>
+        public static class MedicationRequestRouting
+        {
+            public const string List = Rule + "/Medication/Requests";
+            public const string Status = Rule + "/Medication/Requests/Status";
+            public const string Types = Rule + "/Medication/Requests/Types";
+        }
     }
 }

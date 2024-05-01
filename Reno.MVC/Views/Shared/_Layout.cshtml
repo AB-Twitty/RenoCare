@@ -42,6 +42,7 @@
         }
     </style>
     *@
+
     <link href="~/css/site.css" rel="stylesheet" />
     @RenderSection("styles", required: false)
     <script src="~/lib/jquery/dist/jquery.js"></script>
@@ -200,6 +201,52 @@
             });
         }
     </script>*@
+
+    <script>
+        $('document').ready(() => {
+            VirtualSelect.init({
+                ele: '.multiple-select',
+                dropboxWrapper: 'self',
+                optionsCount: 5,
+
+                // Text to show near select all checkbox when search is disabled
+                selectAllText: 'Select all',
+                // Text to use when displaying no.of values selected text (i.e. 3 options selected)
+                optionsSelectedText: 'options selected',
+                // Text to use when displaying all values selected text (i.e. All (10))
+                allOptionsSelectedText: 'All',
+
+
+                // Show each selected values as tags with remove icon
+                showValueAsTags: true,
+                // Maximum no.of values to show in the tooltip for multi-select
+                noOfDisplayValues: 3,
+
+
+                // Custom width
+                dropboxWidth: "100%",
+
+                // Scroll selected option to viewport on dropbox open
+                focusSelectedOptionOnOpen: true,
+
+                // show dropbox as popup on small screen like mobile
+                showDropboxAsPopup: true,
+                // maximum screen width that allowed to show dropbox as popup
+                popupDropboxBreakpoint: '576px',
+                // left, center, or right
+                popupPosition: 'center',
+
+
+                // hide value tooltip if all options selected
+                hideValueTooltipOnSelectAll: true,
+
+                // Maximum width
+                maxWidth: '100%'
+
+            });
+        });
+    </script>
+
     @RenderSection("Scripts", required: false)
 </body>
 </html>

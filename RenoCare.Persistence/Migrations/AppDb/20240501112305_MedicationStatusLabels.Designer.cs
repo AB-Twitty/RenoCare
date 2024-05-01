@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using RenoCare.Persistence;
 
 namespace RenoCare.Persistence.Migrations.AppDb
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240501112305_MedicationStatusLabels")]
+    partial class MedicationStatusLabels
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -257,35 +259,35 @@ namespace RenoCare.Persistence.Migrations.AppDb
                         {
                             Id = 1,
                             Description = "Indicates that the medication request is pending / awaiting to be reviewed by the healthcare provider.",
-                            LabelClass = "#f0ad4e",
+                            LabelClass = "label-warning",
                             Name = "Pending"
                         },
                         new
                         {
                             Id = 2,
                             Description = "Indicates that the medication request is upcoming / reviewed by the healthcare provider and approved it.",
-                            LabelClass = "#20809D",
+                            LabelClass = "label-info",
                             Name = "Upcoming"
                         },
                         new
                         {
                             Id = 3,
                             Description = "Indicates that the medication request is completed.",
-                            LabelClass = "#5cb85c",
+                            LabelClass = "label-success",
                             Name = "Completed"
                         },
                         new
                         {
                             Id = 4,
                             Description = "Indicates that the medication request is rejected / reviewed by the healthcare provider and declined it.",
-                            LabelClass = "#A72925",
+                            LabelClass = "label-warning{background-color:#7B4C09}",
                             Name = "Rejected"
                         },
                         new
                         {
                             Id = 5,
                             Description = "Indicates that the medication request is either cancelled by the patient or its time has passed without reviewing it.",
-                            LabelClass = "#d9534f",
+                            LabelClass = "label-danger",
                             Name = "Cancelled"
                         });
                 });

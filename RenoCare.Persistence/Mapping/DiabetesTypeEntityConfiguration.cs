@@ -7,7 +7,7 @@ namespace RenoCare.Persistence.Mapping
     /// <summary>
     /// Represents the diabetes type entity configuration.
     /// </summary>
-    public class DiabetesTypeConfiguration : IEntityTypeConfiguration<DiabetesType>
+    public class DiabetesTypeEntityConfiguration : IEntityTypeConfiguration<DiabetesType>
     {
         /// <summary>
         /// Configure entity options.

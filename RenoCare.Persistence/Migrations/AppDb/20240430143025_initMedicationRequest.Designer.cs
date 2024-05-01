@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using RenoCare.Persistence;
 
 namespace RenoCare.Persistence.Migrations.AppDb
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240430143025_initMedicationRequest")]
+    partial class initMedicationRequest
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -240,9 +242,6 @@ namespace RenoCare.Persistence.Migrations.AppDb
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("LabelClass")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(50)
@@ -257,35 +256,30 @@ namespace RenoCare.Persistence.Migrations.AppDb
                         {
                             Id = 1,
                             Description = "Indicates that the medication request is pending / awaiting to be reviewed by the healthcare provider.",
-                            LabelClass = "#f0ad4e",
                             Name = "Pending"
                         },
                         new
                         {
                             Id = 2,
                             Description = "Indicates that the medication request is upcoming / reviewed by the healthcare provider and approved it.",
-                            LabelClass = "#20809D",
                             Name = "Upcoming"
                         },
                         new
                         {
                             Id = 3,
                             Description = "Indicates that the medication request is completed.",
-                            LabelClass = "#5cb85c",
                             Name = "Completed"
                         },
                         new
                         {
                             Id = 4,
                             Description = "Indicates that the medication request is rejected / reviewed by the healthcare provider and declined it.",
-                            LabelClass = "#A72925",
                             Name = "Rejected"
                         },
                         new
                         {
                             Id = 5,
                             Description = "Indicates that the medication request is either cancelled by the patient or its time has passed without reviewing it.",
-                            LabelClass = "#d9534f",
                             Name = "Cancelled"
                         });
                 });
@@ -318,14 +312,14 @@ namespace RenoCare.Persistence.Migrations.AppDb
                         {
                             Id = 1,
                             Description = "Book for only one time.",
-                            IsActive = true,
+                            IsActive = false,
                             Name = "Just Once"
                         },
                         new
                         {
                             Id = 2,
                             Description = "Automatically book the same medication request every week.",
-                            IsActive = true,
+                            IsActive = false,
                             Name = "Weekly"
                         });
                 });

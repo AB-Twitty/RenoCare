@@ -7,7 +7,7 @@ namespace RenoCare.Persistence.Mapping
     /// <summary>
     /// Represents the smoking status entity configuration.
     /// </summary>
-    public class SmokingStatusTypeConfiguration : IEntityTypeConfiguration<SmokingStatus>
+    public class SmokingStatusEntityConfiguration : IEntityTypeConfiguration<SmokingStatus>
     {
         /// <summary>
         /// Configure entity options.
