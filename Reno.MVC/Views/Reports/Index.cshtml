@@ -1,0 +1,195 @@
+﻿@model Reno.MVC.Models.Reports.ReportIndexVM;
+
+@section styles{
+    <style>
+        .label {
+            padding: 4px 4px;
+        }
+
+        .form-horizontal .control-label {
+            text-align: left;
+        }
+
+        .nav-tabs > li > a {
+            padding: 10px 15px 10px 6px;
+        }
+
+        .group-start {
+            height: 40px;
+            background-color: #E2e2e2;
+        }
+
+        tr {
+            line-height: 3;
+        }
+
+        .titleNav {
+            text-align: center;
+            /*margin: -20px -15px 0px 10px;*/
+        }
+
+        .example123 td {
+            text-align: left;
+        }
+
+        .well {
+            background-color: rgba(0, 0, 0, 0) !important;
+        }
+    </style>
+}
+
+
+<!-- Begin wrapper Content (Page Content) -->
+<div class="wrapper wrapper-content animated fadeInRight shadow">
+    <!-- Begin Row-->
+    <div class="row mx-0">
+        <!-- Begin Column-->
+        <div class="col-md-12 col-xs-12">
+            <!-- Begin Page ibox-->
+            <div class="ibox float-e-margins" style="margin-bottom: -25px;">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+
+                        <div class="row">
+                            <div class="col-md-12 col-xs-12">
+                                <div class="col-md-4">
+                                    <h2>Visit Information</h2>
+                                </div>
+                                <div class="col-md-8" id="PartailButtons">
+                                    <div class="row">
+                                        <div style="float:right">
+                                            @Html.ActionLink("Patient Profile", "Edit", "Patients", new { id = ViewBag.Patiant_ID }, new { @class = "btn btn-default" })
+                                        </div>
+                                    </div>
+                                    @*<partial name="_PartailButtons" />*@
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    <!-- Begin  ibox Content-->
+                    <div class="ibox-content">
+                        <div class="form-group">
+                            <input type="hidden" id="PatiantId" value="@ViewContext.RouteData.Values["id"]" />
+
+                            <div class="row mx-0">
+                                <label class="control-label ">Patient Name : </label>
+                                <label class="control-label">@Model.PatientName</label>
+                            </div>
+                            
+                            <div class="row mx-0">
+                                <label class="control-label ">Dialysis Unit : </label>
+                                <label class="control-label">@Model.ReportNephrologist</label>
+
+                            <div class="row mx-0">
+                                <label class="control-label ">Nephrologist : </label>
+                                <label class="control-label">@Model.ReportNephrologist</label>
+                            </div>
+
+                            <input id="isdisabled" type="hidden" value="hidden" />
+                            <input id="isPADEditable" type="hidden" value="ispregnancyEditable" />
+
+                        </div>
+                        <div class="form-group">
+                            <form asp-action="Details" asp-controller="Ms" method="get" target="_blank" class="ViewFollowUpReports">
+
+                                <div class="row mx-0">
+                                    <label class="control-label ">Visit Date : </label>
+                                    <label class="control-label">
+                                        <label>@DateTime.Now.AddYears(-4).ToString("dd-MMM-yyyy")</label>
+                                    </label>
+                                </div>
+
+                                <div class="row mx-0">
+
+                                    <div class="col-md-2 px-0">
+                                        <label class="control-label ">Previous Visits : </label>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <select @*name="ReportId" id="ReportId" asp-items="ViewBag.ReportTypeDrop"*@ class="m-b form-control  ViewFollowUpReports">
+                                            <option>Select Previous reports...</option>
+                                            <option>@DateTime.Now.AddYears(-1).AddMonths(-6).ToString("dd-MMM-yyyy")</option>
+                                            <option>@DateTime.Now.AddYears(-2).ToString("dd-MMM-yyyy")</option>
+                                            <option>@DateTime.Now.AddYears(-3).AddMonths(-3).ToString("dd-MMM-yyyy")</option>
+                                            <option>@DateTime.Now.AddYears(-5).ToString("dd-MMM-yyyy")</option>
+                                            <option>@DateTime.Now.AddYears(-6).AddMonths(-1).ToString("dd-MMM-yyyy")</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="col-md-2">
+                                        <button type="submit" id="SupmitViewReport" class="btn btn-primary btn-block">View Report</button>
+                                    </div>
+
+                                    <div class="col-md-2">
+
+                                        <a href="#" data-toggle="modal" id="addfollowup" data-target="#followUpModal" class="btn btn-primary">Add Follow Up Visit</a>
+                                        
+                                        @*@if (ViewBag.Patiant.Status == "Reviewed")
+                                        {
+                                            <a href="#" data-toggle="modal" id="addfollowup" data-target="#followUpModal" class="btn btn-primary">Add Follow Up Visit</a>
+
+                                        }*@
+                                    </div>
+
+
+                                </div>
+                            </form>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <div class="ibox float-e-margins">
+                <!--Begin Page Title -->
+                <div class="ibox-title">
+                    <div class="col-md-12 col-xs-12">
+                        <h4 class="brand-color">Report</h4>
+                        <div class="col-md-offset-1">
+                            <label class="control-label label-info col-md-3 form-status-holder" style="display:none"></label>
+                        </div>
+                        <div style="float:right">
+                            <label class="control-label" style="margin-left: -5%;"> Creation Date : </label>
+                            <label class="control-label">@DateTime.Now.AddYears(-4).ToString("dd-MMM-yyyy")</label>
+                            <label class="control-label">&nbsp;&nbsp;&nbsp;&nbsp; Last Update : </label>
+                            <label class="control-label">@DateTime.Now.AddYears(-4).ToString("dd-MMM-yyyy")</label>
+
+                            <button type="button" class="btn btn-primary btn-xs " style="float: right;" 
+                                    data-toggle="modal" data-target="#AllComments"
+                                    data-id="@Context.Request.Query["id"]">
+                                <i class="fa fa-comment "> Comments </i>
+                            </button>
+
+                        </div>
+                    </div>
+                </div>
+                <!--End Page Title -->
+                <!-- Begin  ibox Content-->
+                <div class="ibox-content ">
+                    <div class="row">
+                        <div class="col-md-12 col-xs-12">
+                            <div class="tabs-container">
+                                <div class="tabs-left">
+                                    <ul class="nav nav-tabs shadow" id="main">
+                                        <partial name="_PartialNavTabsIndex" />
+                                    </ul>
+                                    <div class="tab-content">
+                                        <partial name="_PartialTabsContentIndex" />
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                        @*
+                        <partial name="_Comments" />
+                        <partial name="_AllComments" />
+                        *@
+                    </div>
+                    <!-- End  ibox Content-->
+                    <!-- End Page ibox-->
+                </div>
+            </div>
+            <!-- End Column-->
+        </div>
+        <!-- End Row-->
+    </div>
+</div>

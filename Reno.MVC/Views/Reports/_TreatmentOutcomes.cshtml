@@ -1,0 +1,146 @@
+﻿<form asp-action="SaveMS" asp-controller="MS" asp-route-PatiantId="@Context.Request.Query["id"]" method="post" class="main-form" name="main-form" id="main-form">
+
+    <div class="form-group">
+
+        <!--Urea-->
+        <div>
+            <p>
+                Urea
+                <span class="font-12">- mg/dL</span>
+                <span class="text-danger"> *</span>
+            </p>
+            <div class="row">
+
+                <!--Pre Urea-->
+                <div class="col-md-4">
+                    <div class="col-md-12" style="display:inline-flex;">
+                        <label class="control-label m-r-sm" style="padding-top:5px; min-width:60px;">
+                            Pre:
+                        </label>
+                        <input class="m-b form-control" maxlength="3" />
+                        <span class="text-danger"></span>
+                    </div>
+                </div>
+
+                <!--Post Urea-->
+                <div class="col-md-4">
+                    <div class="col-md-12" style="display:inline-flex;">
+                        <label class="control-label m-r-sm" style="padding-top:5px; min-width:60px;">
+                            Post:
+                        </label>
+                        <input class="m-b form-control" maxlength="3" />
+                        <span class="text-danger"></span>
+                    </div>
+                </div>
+
+                <!--Urea Reduction Ratio-->
+                <div class="col-md-4">
+                    <div class="col-md-12" style="display:inline-flex;">
+                        <label class="control-label m-r-sm" style="min-width:fit-content;">
+                            Urea Reduction<br/>Ratio (URR):
+                        </label>
+                        <input class="m-b form-control" maxlength="3" />
+                        <span class="text-danger"></span>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <br />
+
+        <!--Fluid Removal-->
+        <div>
+            <p>
+                Fluid Removal
+                <span class="text-danger"> *</span>
+            </p>
+            <div class="row">
+
+                <!--Total-->
+                <div class="col-md-6">
+                    <div class="col-md-12" style="display:inline-flex;">
+                        <label class="control-label m-r-sm wn-fit" style="padding-top:5px;">
+                            Total Fluid Removal
+                            <span class=" font-12 control-label">- ml</span>
+                            :
+                        </label>
+                        <input class="m-b form-control" maxlength="3" />
+                        <span class="text-danger"></span>
+                    </div>
+                </div>
+
+                <!--Rate-->
+                <div class="col-md-6">
+                    <div class="col-md-12" style="display:inline-flex;">
+                        <label class="control-label m-r-sm wn-fit" style="padding-top:5px;">
+                            Fluid Removal Rate:
+                        </label>
+                        <input class="m-b form-control" maxlength="3" />
+                        <span class="text-danger"></span>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <br />
+
+        <hr />
+        <div class="row">
+
+            <!--Urine Output-->
+            <div class="col-md-6">
+                <label class="control-label col-md-12">
+                    Urine Output
+                    <span class=" font-12 control-label">- ml/day</span>
+                    <span class="text-danger"> *</span>
+                </label>
+
+                <div class="col-md-12">
+                    <input class="m-b form-control" />
+                    <span class="text-danger"></span>
+                </div>
+            </div>
+
+            <!--Kt/V-->
+            <div class="col-md-6">
+                <label class="control-label col-md-12">
+                    Kt/V
+                    <span class="text-danger"> *</span>
+                </label>
+
+                <div class="col-md-12">
+                    <input class="m-b form-control" />
+                    <span class="text-danger"></span>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+
+    <!--Tabs Buttons-->
+    <div class="row">
+        <div class="ibox float-e-margins">
+            <div class="ibox-title">
+                <div class="col-md-6">
+                    <button data-toggle="tab" id="prev_to_vitalSigns" href="#tab-3" class="tab7 btn btn-secondary">Previous</button>
+                </div>
+                <div class="col-md-6 text-end">
+                    <button data-toggle="tab" id="nxt_to_paraExaminations" href="#tab-5" class="tab9 btn btn-primary">Next</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</form>
+
+<script>
+    $("#prev_to_vitalSigns").on('click', function () {
+        $('.nav-tabs a[href="' + "#tab-3" + '"]').tab('show');
+    });
+
+    $("#nxt_to_paraExaminations").on('click', function () {
+        $('.nav-tabs a[href="' + "#tab-5" + '"]').tab('show');
+    });
+</script>

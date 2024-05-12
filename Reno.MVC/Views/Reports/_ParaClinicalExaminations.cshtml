@@ -1,0 +1,100 @@
+﻿<form asp-action="SaveMS" asp-controller="MS" asp-route-PatiantId="@Context.Request.Query["id"]" method="post" class="main-form" name="main-form" id="main-form">
+
+    <div class="form-group">
+        <div class="row">
+
+            <!--Creatinine-->
+            <div class="col-md-6 mb-15">
+                <label class="control-label col-md-12">
+                    Creatinine
+                    <span class="font-12">- mg/dL</span>
+                    <span class="text-danger"> *</span>
+                </label>
+                <div class="col-md-12">
+                    <input type="text" class="m-b form-control BaselineSingleControl" disabled />
+                </div>
+            </div>
+
+            <!--Potassium-->
+            <div class="col-md-6 mb-15">
+                <label class="control-label col-md-12">
+                    Potassium
+                    <span class="font-12">- mEq/L</span>
+                    <span class="text-danger"> *</span>
+                </label>
+                <div class="col-md-12">
+                    <input type="text" class="m-b form-control BaselineSingleControl" disabled />
+                </div>
+            </div>
+
+        </div>
+        <br/>
+
+        <div class="row">
+
+            <!--Hemoglobin-->
+            <div class="col-md-6 mb-15">
+                <label class="control-label col-md-12">
+                    Hemoglobin
+                    <span class="font-12">- g/dL</span>
+                    <span class="text-danger"> *</span>
+                </label>
+                <div class="col-md-12">
+                    <input type="text" class="m-b form-control BaselineSingleControl" disabled />
+                </div>
+            </div>
+
+            <!--Hematocrit-->
+            <div class="col-md-6 mb-15">
+                <label class="control-label col-md-12">
+                    Hematocrit
+                    <span class="text-danger"> *</span>
+                </label>
+                <div class="col-md-12">
+                    <input type="text" class="m-b form-control BaselineSingleControl" disabled />
+                </div>
+            </div>
+
+        </div>
+        <br />
+
+        <div class="row">
+
+            <!--Albumin-->
+            <div class="col-md-6 mb-15">
+                <label class="control-label col-md-12">
+                    Albumin
+                    <span class="font-12">- g/dL</span>
+                    <span class="text-danger"> *</span>
+                </label>
+                <div class="col-md-12">
+                    <input type="text" class="m-b form-control BaselineSingleControl" disabled />
+                </div>
+            </div>
+
+        </div>
+        
+    </div>
+
+    <!--Tabs Buttons-->
+    <div class="row">
+        <div class="ibox float-e-margins">
+            <div class="ibox-title">
+                <div class="col-md-6">
+                    <button data-toggle="tab" id="prev_to_treatmentOutcomes" href="#tab-4" class="tab7 btn btn-secondary">Previous</button>
+                </div>
+                <div class="col-md-6 text-end">
+                    <button type="submit" class="tab9 btn btn-primary">Save</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</form>
+
+<script>
+    $("#prev_to_treatmentOutcomes").on('click', function () {
+        $('.nav-tabs a[href="' + "#tab-4" + '"]').tab('show');
+    });
+</script>

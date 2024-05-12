@@ -1925,6 +1925,10 @@ a.list-group-item.active:focus {
     min-width: 300px;
 }
 
+.wn-fit {
+    min-width: fit-content;
+}
+
 .legendLabel {
     padding-left: 5px;
 }
