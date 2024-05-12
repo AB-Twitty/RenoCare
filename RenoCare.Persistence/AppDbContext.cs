@@ -26,6 +26,7 @@ namespace RenoCare.Persistence
             builder.ApplyConfiguration(new MedicationRequestEntityConfiguration());
             builder.ApplyConfiguration(new MedicationRequestStatusEntityConfiguration());
             builder.ApplyConfiguration(new MedicationRequestTypeEntityConfiguration());
+            builder.ApplyConfiguration(new ReportEntityConfiguration());
         }
 
         public DbSet<AppUser> Users { get; set; }
@@ -36,5 +37,7 @@ namespace RenoCare.Persistence
         public DbSet<MedicationRequest> MedicationRequests { get; set; }
         public DbSet<MedicationRequestStatus> MedicationRequestStatus { get; set; }
         public DbSet<MedicationRequestType> MedicationRequestTypes { get; set; }
+
+        public DbSet<Report> Reports { get; set; }
     }
 }
