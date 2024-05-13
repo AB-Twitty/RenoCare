@@ -9,7 +9,9 @@ using RenoCare.Core.Features.Authentication.Contracts;
 using RenoCare.Infrastructure.Authentication.Contracts;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
+using System.Security.Claims;
 using System.Text;
 
 namespace RenoCare.Infrastructure.Authentication
@@ -60,6 +62,19 @@ namespace RenoCare.Infrastructure.Authentication
                 jwtOptions.Events.OnTokenValidated = async (context) =>
                 {
                     //cache the logged user for further need.
+                    context.HttpContext.User.AddIdentity(context.Principal.Identity as ClaimsIdentity);
+
+                    if (context.HttpContext.User.IsInRole("HealthCare"))
+                    {
+                        var unitId = context.HttpContext.User.Claims.Where(x => x.Type == "uid").FirstOrDefault();
+                        var unitName = context.HttpContext.User.Claims.Where(x => x.Type == "unit").FirstOrDefault();
+
+                        if (unitId != null && unitName != null)
+                        {
+                            context.HttpContext.Items["unitId"] = int.Parse(unitId.Value);
+                            context.HttpContext.Items["unit"] = unitName.Value;
+                        }
+                    }
                 };
 
                 jwtOptions.Events.OnAuthenticationFailed = async (context) =>

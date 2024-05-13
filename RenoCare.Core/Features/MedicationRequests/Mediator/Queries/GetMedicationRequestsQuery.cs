@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.Http;
 using RenoCare.Core.Base;
 using RenoCare.Core.Conatracts.Persistence;
 using RenoCare.Core.Extensions;
@@ -38,14 +39,17 @@ namespace RenoCare.Core.Features.MedicationRequests.Mediator.Queries
         #region Fields
 
         private readonly IRepository<MedicationRequest> _medicationRequestRepo;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
         #endregion
 
         #region Ctor
 
-        public GetMedicationRequestsQueryRequestHandler(IRepository<MedicationRequest> medicationRequestRepo)
+        public GetMedicationRequestsQueryRequestHandler(IRepository<MedicationRequest> medicationRequestRepo
+            , IHttpContextAccessor httpContextAccessor)
         {
             _medicationRequestRepo = medicationRequestRepo;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         #endregion
@@ -65,12 +69,25 @@ namespace RenoCare.Core.Features.MedicationRequests.Mediator.Queries
         {
             var list = await _medicationRequestRepo.ApplyQueryAsync(async query =>
             {
+                if (_httpContextAccessor.HttpContext.User.IsInRole("HealthCare"))
+                {
+                    var unitId = _httpContextAccessor.HttpContext.Items["unitId"];
+                    var unitName = _httpContextAccessor.HttpContext.Items["unit"];
+
+                    if (unitId == null || unitName == null)
+                        return new PagedList<MedicationRequestListItemDto>();
+
+                    query = query.Where(x => x.DialysisUnitId == int.Parse(unitId.ToString()));
+                }
+
+
+
                 var qry = query
                     .Select(x => new MedicationRequestListItemDto
                     {
                         Id = x.Id,
                         PatientName = x.Patient.User.FirstName + " " + x.Patient.User.LastName,
-                        DialysisUnitName = x.DialysisUnitId.ToString(),
+                        DialysisUnitName = x.DialysisUnit.Name,
                         Date = x.AppointmentDate,
                         Time = x.AppointmentHour,
                         Status = x.Status.Name,

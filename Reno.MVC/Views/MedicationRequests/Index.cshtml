@@ -62,13 +62,16 @@
                                             </div>
                                         </div>
 
-                                        <div class="col-md-6">
-                                            <label class="control-label col-md-12">Dialysis Unit Name</label>
-                                            <div class="col-md-12">
-                                                <input type="text" class="m-b form-control" placeholder="Enter Dialysis Unit Name..." />
+                                        @if (User.IsInRole("Admin"))
+                                        {
+                                            <div class="col-md-6">
+                                                <label class="control-label col-md-12">Dialysis Unit Name</label>
+                                                <div class="col-md-12">
+                                                    <input type="text" class="m-b form-control" placeholder="Enter Dialysis Unit Name..." />
+                                                </div>
                                             </div>
-                                        </div>
-
+                                        }
+                                        
                                     </div>
 
                                     <div class="row mb-15">
@@ -102,6 +105,7 @@
                                                         <button class=" btn btn-danger" type="reset" id="ResetFilter">Reset</button>
                                                         <button class=" btn btn-primary" id="SubmitFilter" type="button">Search</button>
                                                     </div>
+
                                                 </div>
                                             </div>
                                         </div>
@@ -118,8 +122,11 @@
                                     
                                     <th>Session Report</th>
                                     <th>Patient Name</th>
-									<th>Dialysis Unit Name</th>
-									<th>Status</th>
+                                    @if (User.IsInRole("Admin"))
+                                    {
+                                        
+                                    }<th>Dialysis Unit Name</th>
+                                    <th>Status</th>
                                     <th>Booking Type</th>
                                     <th>Medication Date</th>
                                     <th>Medication Time</th>
@@ -189,11 +196,14 @@
                         searchable: false
                     },
                     { data: "patientName", name: "PatientName" },
-                    { data: "dialysisUnitName", name: "DialysisUnitName" },
+                    { 
+                        data: "dialysisUnitName", 
+                        name: "DialysisUnitName", 
+                        visible: @User.IsInRole("Admin").ToString().ToLower(),
+                    },
                     { 
                         data: "status", 
                         name: "Status", 
-                        visible: @User.IsInRole("Admin").ToString().ToLower(),
                         render: function (data, type, row, meta) {
                             var bgColor = $('#' + data).css('background-color');
 
@@ -204,9 +214,19 @@
                         },
                         sortable: false
                     },
-                    { data: "type", name: "Type" },
-                    { data: "date", name: "Date" },
-                    { data: "time", name: "Time" }
+                    { 
+                        data: "type", 
+                        name: "Type"
+                    },
+                    { 
+                        data: "date",
+                        name: "Date",
+                        render: (data, type, row, meta) => formatDateToCustomString(data)
+                    },
+                    { 
+                        data: "time", 
+                        name: "Time"
+                    }
                 ],
                 "fnInitComplete": function () {
                     addSearchControl();
@@ -253,6 +273,20 @@
                     // Add mappings for other input fields as needed
                     default: return ""; // Return an empty string for unmapped inputs
                 }
+            }
+
+            function formatDateToCustomString(date_string) {
+                var date = new Date(date_string);
+                const months = [
+                    'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+                    'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
+                ];
+
+                const day = date.getDate();
+                const month = months[date.getMonth()];
+                const year = date.getFullYear();
+
+                return `${day}-${month}-${year}`;
             }
 
         });

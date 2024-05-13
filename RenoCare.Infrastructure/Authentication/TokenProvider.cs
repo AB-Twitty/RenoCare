@@ -63,10 +63,15 @@ namespace RenoCare.Infrastructure.Authentication
 
             if (rolesClaims.Where(x => x.Value == "HealthCare").Any())
             {
-                var unitName = await _dialysisUnitRepo.Table
-                    .Where(x => x.UserId == user.Id).Select(x => x.Name).FirstOrDefaultAsync();
-                if (unitName != null)
-                    claims = claims.Append(new Claim("unit", unitName));
+                var unit = await _dialysisUnitRepo.Table
+                    .Where(x => x.UserId == user.Id).Select(x => new { x.Id, x.Name })
+                    .FirstOrDefaultAsync();
+                if (unit != null)
+                    claims = claims.Concat(new[]
+                    {
+                        new Claim("unit", unit.Name),
+                        new Claim("uid", unit.Id.ToString())
+                    });
             }
 
 
