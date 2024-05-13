@@ -83,12 +83,12 @@ namespace Reno.MVC.Controllers
             }
         }
 
-        public virtual async Task<string> LogoutAsync()
+        public virtual async Task<IActionResult> LogoutAsync()
         {
             await _httpContextAccessor.HttpContext.SignOutAsync();
             _localStorageService.ClearStorage(new List<string> { "Token" });
 
-            return "Logged out ";
+            return RedirectToAction("Index", "Home");
         }
 
 
