@@ -2,7 +2,7 @@
 using RenoCare.Core.Base;
 using RenoCare.Core.Conatracts.Persistence;
 using RenoCare.Core.Extensions;
-using RenoCare.Core.Features.Patients.DTOs;
+using RenoCare.Core.Features.MedicationRequests.DTOs;
 using RenoCare.Core.Helpers;
 using RenoCare.Core.Helpers.Contracts;
 using RenoCare.Domain;
@@ -74,7 +74,9 @@ namespace RenoCare.Core.Features.MedicationRequests.Mediator.Queries
                         Date = x.AppointmentDate,
                         Time = x.AppointmentHour,
                         Status = x.Status.Name,
-                        Type = x.Type.Name
+                        Type = x.Type.Name,
+                        ReportId = x.ReportId,
+                        PatientId = x.PatientId,
                     });
 
                 var totalCount = qry.Count();

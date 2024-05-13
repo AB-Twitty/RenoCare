@@ -1,10 +1,10 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using RenoCare.Core.Base;
+using RenoCare.Core.Features.MedicationRequests.DTOs;
 using RenoCare.Core.Features.MedicationRequests.Mediator.Queries;
 using RenoCare.Core.Features.MedicationRequestStatus.Mediator.Queries;
 using RenoCare.Core.Features.MedicationRequestTypes.Mediator.Queries;
-using RenoCare.Core.Features.Patients.DTOs;
 using RenoCare.Core.Helpers;
 using RenoCare.Domain;
 using RenoCare.Domain.MetaData;

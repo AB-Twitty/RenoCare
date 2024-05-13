@@ -115,7 +115,8 @@
                         <table id="MedicationRequestTable" class="table  table-striped  table-bordered table-hover display">
                             <thead>
                                 <tr>
-
+                                    
+                                    <th>Session Report</th>
                                     <th>Patient Name</th>
 									<th>Dialysis Unit Name</th>
 									<th>Status</th>
@@ -167,7 +168,26 @@
                 language: {
                     processing: "Processing, Please Wait..."
                 },
+                order: [[1, 'asc']],
                 columns: [
+                    {
+                        data: "reportId",
+                        name: "ReportId",
+                        render: function (data, type, row, meta) {
+                            if (data==null && row.status!="Completed")
+                                return "N/A";
+
+                            if (data==null)
+                                return `<a href="/Reports/Create/${row.patientId}/${row.id}" 
+                                           class="btn btn-primary">Create</a>`;
+
+                            else
+                                return `<a href="/Reports?id=${row.reportId}"
+                                           class="btn btn-default">View</a>`;
+                        },
+                        sortable: false,
+                        searchable: false
+                    },
                     { data: "patientName", name: "PatientName" },
                     { data: "dialysisUnitName", name: "DialysisUnitName" },
                     { 
@@ -226,10 +246,10 @@
             // Helper function to map input index to column name
             function getColumnIndexForInput(index) {
                 switch (index) {
-                    case 0: return '0';
-                    case 1: return '1';
-                    case 2: return '2';
-                    case 3: return '3';
+                    case 1: return '0';
+                    case 2: return '1';
+                    case 3: return '2';
+                    case 4: return '3';
                     // Add mappings for other input fields as needed
                     default: return ""; // Return an empty string for unmapped inputs
                 }

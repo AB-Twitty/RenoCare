@@ -27,6 +27,7 @@
         public static class PatientRouting
         {
             public const string List = Rule + "/Patients";
+            public const string Medical = Rule + "/Patients/{id}";
         }
 
         /// <summary>
@@ -47,6 +48,14 @@
             public const string List = Rule + "/Medication/Requests";
             public const string Status = Rule + "/Medication/Requests/Status";
             public const string Types = Rule + "/Medication/Requests/Types";
+        }
+
+        /// <summary>
+        /// Represents reports controller end points routing.
+        /// </summary>
+        public static class ReportRouting
+        {
+            public const string GetById = Rule + "/Report";
         }
     }
 }

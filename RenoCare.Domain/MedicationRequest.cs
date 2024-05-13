@@ -43,6 +43,11 @@ namespace RenoCare.Domain
         /// </summary>
         public int TypeId { get; set; }
 
+        /// <summary>
+        /// Gets or sets a value indicating the report of treatment session
+        /// </summary>
+        public int? ReportId { get; set; }
+
 
         /// <summary>
         /// Gets or sets the navigation property for the patient of the medication request.
@@ -58,5 +63,10 @@ namespace RenoCare.Domain
         /// Gets or sets the navigation property for the type of the medication request.
         /// </summary>
         public virtual MedicationRequestType Type { get; set; }
+
+        /// <summary>
+        /// Gets or sets the navigation property for the report of the medication request.
+        /// </summary>
+        public virtual Report Report { get; set; }
     }
 }

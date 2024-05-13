@@ -55,14 +55,16 @@
                                 <div class="col-md-4">
                                     <h2>Visit Information</h2>
                                 </div>
-                                <div class="col-md-8" id="PartailButtons">
-                                    <div class="row">
-                                        <div style="float:right">
-                                            @Html.ActionLink("Patient Profile", "Edit", "Patients", new { id = ViewBag.Patiant_ID }, new { @class = "btn btn-default" })
+                                @if (User.IsInRole("Admin"))
+                                {
+                                    <div class="col-md-8" id="PartailButtons">
+                                        <div class="row">
+                                            <div style="float:right">
+                                                @Html.ActionLink("Patient Profile", "Edit", "Patients", new { id = Model.Report.Patient.Id }, new { @class = "btn btn-default" })
+                                            </div>
                                         </div>
                                     </div>
-                                    @*<partial name="_PartailButtons" />*@
-                                </div>
+                                }
                             </div>
                         </div>
 
@@ -74,29 +76,30 @@
 
                             <div class="row mx-0">
                                 <label class="control-label ">Patient Name : </label>
-                                <label class="control-label">@Model.PatientName</label>
+                                <label class="control-label">@Model.Report.Patient.PatientName</label>
                             </div>
                             
                             <div class="row mx-0">
                                 <label class="control-label ">Dialysis Unit : </label>
-                                <label class="control-label">@Model.ReportNephrologist</label>
-
-                            <div class="row mx-0">
-                                <label class="control-label ">Nephrologist : </label>
-                                <label class="control-label">@Model.ReportNephrologist</label>
+                                <label class="control-label">@Model.Report.DialysisUnitName</label>
                             </div>
 
-                            <input id="isdisabled" type="hidden" value="hidden" />
-                            <input id="isPADEditable" type="hidden" value="ispregnancyEditable" />
-
+                            @if(Model.Report.Nephrologist!=null)
+                            {
+                                <div class="row mx-0">
+                                    <label class="control-label ">Nephrologist : </label>
+                                    <label class="control-label">@Model.Report.Nephrologist</label>
+                                </div>
+                            }
+                            
                         </div>
                         <div class="form-group">
-                            <form asp-action="Details" asp-controller="Ms" method="get" target="_blank" class="ViewFollowUpReports">
+                            <form asp-action="Details" asp-controller="Ms" method="get" class="ViewFollowUpReports">
 
                                 <div class="row mx-0">
                                     <label class="control-label ">Visit Date : </label>
                                     <label class="control-label">
-                                        <label>@DateTime.Now.AddYears(-4).ToString("dd-MMM-yyyy")</label>
+                                        <label>@Model.Report.SessionDate.ToString("dd-MMM-yyyy")</label>
                                     </label>
                                 </div>
 
@@ -120,18 +123,6 @@
                                         <button type="submit" id="SupmitViewReport" class="btn btn-primary btn-block">View Report</button>
                                     </div>
 
-                                    <div class="col-md-2">
-
-                                        <a href="#" data-toggle="modal" id="addfollowup" data-target="#followUpModal" class="btn btn-primary">Add Follow Up Visit</a>
-                                        
-                                        @*@if (ViewBag.Patiant.Status == "Reviewed")
-                                        {
-                                            <a href="#" data-toggle="modal" id="addfollowup" data-target="#followUpModal" class="btn btn-primary">Add Follow Up Visit</a>
-
-                                        }*@
-                                    </div>
-
-
                                 </div>
                             </form>
                         </div>
@@ -144,14 +135,12 @@
                 <div class="ibox-title">
                     <div class="col-md-12 col-xs-12">
                         <h4 class="brand-color">Report</h4>
-                        <div class="col-md-offset-1">
-                            <label class="control-label label-info col-md-3 form-status-holder" style="display:none"></label>
-                        </div>
+                        
                         <div style="float:right">
                             <label class="control-label" style="margin-left: -5%;"> Creation Date : </label>
-                            <label class="control-label">@DateTime.Now.AddYears(-4).ToString("dd-MMM-yyyy")</label>
+                            <label class="control-label">@Model.Report.CreatedDate.ToString("dd-MMM-yyyy")</label>
                             <label class="control-label">&nbsp;&nbsp;&nbsp;&nbsp; Last Update : </label>
-                            <label class="control-label">@DateTime.Now.AddYears(-4).ToString("dd-MMM-yyyy")</label>
+                            <label class="control-label">@Model.Report.LastModifiedDate.ToString("dd-MMM-yyyy")</label>
 
                             <button type="button" class="btn btn-primary btn-xs " style="float: right;" 
                                     data-toggle="modal" data-target="#AllComments"
@@ -166,6 +155,7 @@
                 <!-- Begin  ibox Content-->
                 <div class="ibox-content ">
                     <div class="row">
+                        <form method="post" asp-action="Save" id="main-form">
                         <div class="col-md-12 col-xs-12">
                             <div class="tabs-container">
                                 <div class="tabs-left">
@@ -179,6 +169,7 @@
                             </div>
 
                         </div>
+                        </form>
                         @*
                         <partial name="_Comments" />
                         <partial name="_AllComments" />

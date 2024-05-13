@@ -37,6 +37,10 @@ namespace RenoCare.Api.Controllers
             return ApiResult(await _mediator.Send(request));
         }
 
+        [HttpGet(Router.PatientRouting.Medical)]
+        public async Task<ActionResult<ApiResponse<PatientDto>>> GetPatientMedicalInfoAsync([FromRoute] int id) =>
+            ApiResult(await _mediator.Send(new GetPatientMedicalInfoQueryRequest { Id = id }));
+
         #endregion
 
     }

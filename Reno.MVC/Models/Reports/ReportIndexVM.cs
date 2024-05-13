@@ -1,10 +1,12 @@
-﻿namespace Reno.MVC.Models.Reports
+﻿using Reno.MVC.Services.Base;
+
+namespace Reno.MVC.Models.Reports
 {
     public class ReportIndexVM
     {
-        public int PatientId { get; set; }
-        public string PatientName { get; set; }
-        public string ReportNephrologist { get; set; }
+        public ReportDto Report { get; set; }
+
+        public string ViewMode { get; set; }
 
     }
 }

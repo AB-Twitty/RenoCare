@@ -1,120 +1,126 @@
-﻿<form asp-action="SaveMS" asp-controller="MS" asp-route-PatiantId="@Context.Request.Query["id"]" method="post" class="main-form" name="main-form" id="main-form">
+﻿@model ReportIndexVM
 
-    <div class="row">
+<div class="row">
 
-        <!--Dialysis Unit Name-->
-        <div class="col-md-6">
-            <label class="control-label col-md-12">Dialysis Unit Name<span class=" text-danger"> *</span></label>
+    <!--Dialysis Unit Name-->
+    <div class="col-md-6">
+        <label class="control-label col-md-12">
+            Dialysis Unit Name
+            <span class=" text-danger"> *</span>
+        </label>
 
-            <div class="col-md-12">
-                <input type="text" class="m-b form-control" />
-                <span class="text-danger"></span>
-            </div>
-        </div>
-
-        <!--Nephrologist Name-->
-        <div class="col-md-6">
-            <label class="control-label col-md-12">Nephrologist Name<span class=" text-danger"> *</span></label>
-
-            <div class="col-md-12">
-                <input type="text" class="m-b form-control" />
-                <span class="text-danger"></span>
-            </div>
-        </div>
-
-    </div>
-    <br />
-
-
-    <div class="row">
-
-        <!--Date of Session-->
-        <div class="col-md-4">
-            <label class="control-label col-md-12">Date Of Session<span class=" text-danger"> *</span></label>
-            <div class="col-md-12">
-                <input type="text" class="m-b form-control datepicker" />
-                <label id="visit_date_lbl" hidden="hidden" class="text-danger">Date of visit is required</label>
-            </div>
-        </div>
-        
-        <!--Dialysis Duration-->
-        <div class="col-md-4">
-            <label class="control-label col-md-12">
-                Dialysis Duration
-                <span class="font-12 control-label">- Hr</span>
-                <span class=" text-danger"> *</span>
-            </label>
-
-            <div class="col-md-12">
-                <input type="text" class="m-b form-control" />
-                <span class="text-danger"></span>
-            </div>
-        </div>
-
-        <!--Dialysis Frequency-->
-        <div class="col-md-4">
-            <label class="control-label col-md-12">
-                Dialysis Freuency
-                <span class="font-12 control-label">per week</span>
-                <span class=" text-danger"> *</span>
-            </label>
-
-            <div class="col-md-12">
-                <input type="text" class="m-b form-control" />
-                <span class="text-danger"></span>
-            </div>
-        </div>
-
-    </div>
-    <br />
-
-
-    <div class="row">
-
-        <!--Vascular Access Type-->
-        <div class="col-md-6">
-            <label class="control-label col-md-12">
-                Vascular Access Type
-                <span class="font-12 control-label">- Hr</span>
-                <span class=" text-danger"> *</span>
-            </label>
-
-            <div class="col-md-12">
-                <input type="text" class="m-b form-control" />
-                <span class="text-danger"></span>
-            </div>
-        </div>
-
-        <!--Dialyzer Type-->
-        <div class="col-md-6">
-            <label class="control-label col-md-12">
-                Dialyzer Type
-                <span class="font-12 control-label">per week</span>
-                <span class=" text-danger"> *</span>
-            </label>
-
-            <div class="col-md-12">
-                <input type="text" class="m-b form-control" />
-                <span class="text-danger"></span>
-            </div>
-        </div>
-
-    </div>
-    <br />
-
-
-    <!--Tab Buttons-->
-    <div class="row">
-        <div class="ibox float-e-margins" style="float:right">
-            <div class="ibox-title">
-                <div class="col-md-6 text-end">
-                    <button data-toggle="tab" id="nxt_to_health_status" href="#tab-2" class="tab9 btn btn-primary">Next</button>
-                </div>
-            </div>
+        <div class="col-md-12">
+            <input asp-for="@Model.Report.DialysisUnitName" class="m-b form-control" readonly />
+            <span class="text-danger"></span>
         </div>
     </div>
 
-</form>
+    <!--Nephrologist Name-->
+    <div class="col-md-6">
+        <label class="control-label col-md-12">Nephrologist Name<span class=" text-danger"> *</span></label>
+
+        <div class="col-md-12">
+            <input asp-for="@Model.Report.Nephrologist" class="m-b form-control" />
+            <span class="text-danger"></span>
+        </div>
+    </div>
+
+</div>
+<br />
+
+
+<div class="row">
+
+    <!--Date of Session-->
+    <div class="col-md-4">
+        <label class="control-label col-md-12">Date Of Session<span class=" text-danger"> *</span></label>
+        <div class="col-md-12">
+            <input asp-for="@Model.Report.SessionDate" type="date" class="m-b form-control" readonly />
+        </div>
+    </div>
+
+    <!--Dialysis Duration-->
+    <div class="col-md-4">
+        <label class="control-label col-md-12">
+            Dialysis Duration
+            <span class="font-12 control-label">- Hr</span>
+            <span class=" text-danger"> *</span>
+        </label>
+
+        <div class="col-md-12">
+            <input id="dialysisDuration" asp-for="@Model.Report.DialysisDuration" type="text" class="m-b form-control" />
+            <span class="text-danger"></span>
+        </div>
+    </div>
+
+    <!--Dialysis Frequency-->
+    <div class="col-md-4">
+        <label class="control-label col-md-12">
+            Dialysis Freuency
+            <span class="font-12 control-label">per week</span>
+            <span class=" text-danger"> *</span>
+        </label>
+
+        <div class="col-md-12">
+            <input asp-for="@Model.Report.DialysisFrequency" type="text" class="m-b form-control" />
+            <span class="text-danger"></span>
+        </div>
+    </div>
+
+</div>
+<br />
+
+
+<div class="row">
+
+    <!--Vascular Access Type-->
+    <div class="col-md-6">
+        <label class="control-label col-md-12">
+            Vascular Access Type
+            <span class=" text-danger"> *</span>
+        </label>
+
+        <div class="col-md-12">
+            <select asp-for="@Model.Report.VascularAccessType" 
+                    asp-items="Html.GetEnumSelectList<VascularType>()" 
+                    class="form-control">
+                <option value="" selected disabled>Vascular Access Type...</option>
+            </select>
+            <span class="text-danger"></span>
+        </div>
+    </div>
+
+    <!--Dialyzer Type-->
+    <div class="col-md-6">
+        <label class="control-label col-md-12">
+            Dialyzer Type
+            <span class=" text-danger"> *</span>
+        </label>
+
+        <div class="col-md-12">
+            <select asp-for="@Model.Report.DialyzerType"
+                    asp-items="Html.GetEnumSelectList<DialyzerType>()"
+                    class="form-control">
+                <option value="" selected disabled>Vascular Access Type...</option>
+            </select>
+            <span class="text-danger"></span>
+        </div>
+    </div>
+
+</div>
+<br />
+
+
+<!--Tab Buttons-->
+<div class="row">
+    <div class="ibox float-e-margins" style="float:right">
+        <div class="ibox-title">
+            <div class="col-md-6 text-end">
+                <button data-toggle="tab" id="nxt_to_health_status" href="#tab-2" class="tab9 btn btn-primary">Next</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 <script>
     $("#nxt_to_health_status").on('click', function () {

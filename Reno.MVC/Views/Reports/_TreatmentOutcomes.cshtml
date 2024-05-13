@@ -1,139 +1,139 @@
-﻿<form asp-action="SaveMS" asp-controller="MS" asp-route-PatiantId="@Context.Request.Query["id"]" method="post" class="main-form" name="main-form" id="main-form">
+﻿@model ReportIndexVM
 
-    <div class="form-group">
+<div class="form-group">
 
-        <!--Urea-->
-        <div>
-            <p>
-                Urea
-                <span class="font-12">- mg/dL</span>
-                <span class="text-danger"> *</span>
-            </p>
-            <div class="row">
-
-                <!--Pre Urea-->
-                <div class="col-md-4">
-                    <div class="col-md-12" style="display:inline-flex;">
-                        <label class="control-label m-r-sm" style="padding-top:5px; min-width:60px;">
-                            Pre:
-                        </label>
-                        <input class="m-b form-control" maxlength="3" />
-                        <span class="text-danger"></span>
-                    </div>
-                </div>
-
-                <!--Post Urea-->
-                <div class="col-md-4">
-                    <div class="col-md-12" style="display:inline-flex;">
-                        <label class="control-label m-r-sm" style="padding-top:5px; min-width:60px;">
-                            Post:
-                        </label>
-                        <input class="m-b form-control" maxlength="3" />
-                        <span class="text-danger"></span>
-                    </div>
-                </div>
-
-                <!--Urea Reduction Ratio-->
-                <div class="col-md-4">
-                    <div class="col-md-12" style="display:inline-flex;">
-                        <label class="control-label m-r-sm" style="min-width:fit-content;">
-                            Urea Reduction<br/>Ratio (URR):
-                        </label>
-                        <input class="m-b form-control" maxlength="3" />
-                        <span class="text-danger"></span>
-                    </div>
-                </div>
-
-            </div>
-        </div>
-        <br />
-
-        <!--Fluid Removal-->
-        <div>
-            <p>
-                Fluid Removal
-                <span class="text-danger"> *</span>
-            </p>
-            <div class="row">
-
-                <!--Total-->
-                <div class="col-md-6">
-                    <div class="col-md-12" style="display:inline-flex;">
-                        <label class="control-label m-r-sm wn-fit" style="padding-top:5px;">
-                            Total Fluid Removal
-                            <span class=" font-12 control-label">- ml</span>
-                            :
-                        </label>
-                        <input class="m-b form-control" maxlength="3" />
-                        <span class="text-danger"></span>
-                    </div>
-                </div>
-
-                <!--Rate-->
-                <div class="col-md-6">
-                    <div class="col-md-12" style="display:inline-flex;">
-                        <label class="control-label m-r-sm wn-fit" style="padding-top:5px;">
-                            Fluid Removal Rate:
-                        </label>
-                        <input class="m-b form-control" maxlength="3" />
-                        <span class="text-danger"></span>
-                    </div>
-                </div>
-
-            </div>
-        </div>
-        <br />
-
-        <hr />
+    <!--Urea-->
+    <div>
+        <p>
+            Urea
+            <span class="font-12">- mg/dL</span>
+            <span class="text-danger"> *</span>
+        </p>
         <div class="row">
 
-            <!--Urine Output-->
-            <div class="col-md-6">
-                <label class="control-label col-md-12">
-                    Urine Output
-                    <span class=" font-12 control-label">- ml/day</span>
-                    <span class="text-danger"> *</span>
-                </label>
-
-                <div class="col-md-12">
-                    <input class="m-b form-control" />
+            <!--Pre Urea-->
+            <div class="col-md-4">
+                <div class="col-md-12" style="display:inline-flex;">
+                    <label class="control-label m-r-sm" style="padding-top:5px; min-width:60px;">
+                        Pre:
+                    </label>
+                    <input id="preUrea" asp-for="@Model.Report.PreUrea" class="m-b form-control" maxlength="3" />
                     <span class="text-danger"></span>
                 </div>
             </div>
 
-            <!--Kt/V-->
-            <div class="col-md-6">
-                <label class="control-label col-md-12">
-                    Kt/V
-                    <span class="text-danger"> *</span>
-                </label>
+            <!--Post Urea-->
+            <div class="col-md-4">
+                <div class="col-md-12" style="display:inline-flex;">
+                    <label class="control-label m-r-sm" style="padding-top:5px; min-width:60px;">
+                        Post:
+                    </label>
+                    <input id="postUrea" asp-for="@Model.Report.PostUrea" class="m-b form-control" maxlength="3" />
+                    <span class="text-danger"></span>
+                </div>
+            </div>
 
-                <div class="col-md-12">
-                    <input class="m-b form-control" />
+            <!--Urea Reduction Ratio-->
+            <div class="col-md-4">
+                <div class="col-md-12" style="display:inline-flex;">
+                    <label class="control-label m-r-sm" style="min-width:fit-content;">
+                        Urea Reduction<br />Ratio (URR):
+                    </label>
+                    <input id="URR" asp-for="@Model.Report.UreaReductionRatio" class="m-b form-control" maxlength="3" readonly />
                     <span class="text-danger"></span>
                 </div>
             </div>
 
         </div>
     </div>
+    <br />
 
+    <!--Fluid Removal-->
+    <div>
+        <p>
+            Fluid Removal
+            <span class="text-danger"> *</span>
+        </p>
+        <div class="row">
 
-    <!--Tabs Buttons-->
+            <!--Total-->
+            <div class="col-md-6">
+                <div class="col-md-12" style="display:inline-flex;">
+                    <label class="control-label m-r-sm wn-fit" style="padding-top:5px;">
+                        Total Fluid Removal
+                        <span class=" font-12 control-label">- ml</span>
+                        :
+                    </label>
+                    <input id="totalFluid" asp-for="@Model.Report.TotalFluidRemoval" class="m-b form-control" maxlength="3" />
+                    <span class="text-danger"></span>
+                </div>
+            </div>
+
+            <!--Rate-->
+            <div class="col-md-6">
+                <div class="col-md-12" style="display:inline-flex;">
+                    <label class="control-label m-r-sm wn-fit" style="padding-top:5px;">
+                        Fluid Removal Rate
+                        <span class=" font-12 control-label">- ml/H</span>
+                        :
+                    </label>
+                    <input id="fluidRate" asp-for="@Model.Report.FluidRemovalRate" class="m-b form-control" maxlength="3" readonly/>
+                    <span class="text-danger"></span>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <br />
+
+    <hr />
     <div class="row">
-        <div class="ibox float-e-margins">
-            <div class="ibox-title">
-                <div class="col-md-6">
-                    <button data-toggle="tab" id="prev_to_vitalSigns" href="#tab-3" class="tab7 btn btn-secondary">Previous</button>
-                </div>
-                <div class="col-md-6 text-end">
-                    <button data-toggle="tab" id="nxt_to_paraExaminations" href="#tab-5" class="tab9 btn btn-primary">Next</button>
-                </div>
+
+        <!--Urine Output-->
+        <div class="col-md-6">
+            <label class="control-label col-md-12">
+                Urine Output
+                <span class=" font-12 control-label">- ml/day</span>
+                <span class="text-danger"> *</span>
+            </label>
+
+            <div class="col-md-12">
+                <input asp-for="@Model.Report.UrineOutput" class="m-b form-control" />
+                <span class="text-danger"></span>
+            </div>
+        </div>
+
+        <!--Kt/V-->
+        <div class="col-md-6">
+            <label class="control-label col-md-12">
+                Kt/V
+                <span class="text-danger"> *</span>
+            </label>
+
+            <div class="col-md-12">
+                <input id="Kt_V" asp-for="@Model.Report.Kt_V" class="m-b form-control" readonly />
+                <span class="text-danger"></span>
             </div>
         </div>
 
     </div>
+</div>
 
-</form>
+
+<!--Tabs Buttons-->
+<div class="row">
+    <div class="ibox float-e-margins">
+        <div class="ibox-title">
+            <div class="col-md-6">
+                <button data-toggle="tab" id="prev_to_vitalSigns" href="#tab-3" class="tab7 btn btn-secondary">Previous</button>
+            </div>
+            <div class="col-md-6 text-end">
+                <button data-toggle="tab" id="nxt_to_paraExaminations" href="#tab-5" class="tab9 btn btn-primary">Next</button>
+            </div>
+        </div>
+    </div>
+
+</div>
 
 <script>
     $("#prev_to_vitalSigns").on('click', function () {
@@ -143,4 +143,48 @@
     $("#nxt_to_paraExaminations").on('click', function () {
         $('.nav-tabs a[href="' + "#tab-5" + '"]').tab('show');
     });
+
+
+    $('#preUrea').on('change', CalcKt_V).on('change', CalcURR);
+    $('#postUrea').on('change', CalcKt_V).on('change', CalcURR);
+    $('#dialysisDuration').on('change', CalcKt_V);
+    $('#totalFluid').on('change', CalcKt_V).on('change', CalcFluidRemovalRate);
+    $('#postWeight').on('change', CalcKt_V);
+
+    function CalcURR() {
+        var preUrea = parseFloat($('#preUrea').val());
+        var postUrea = parseFloat($('#postUrea').val());
+
+        if (preUrea && postUrea) {
+            var URR = ((preUrea - postUrea) / preUrea) * 100;
+            $('#URR').val(URR.toFixed(2)); // This will format the result to two decimal places
+        }
+    }
+
+    function CalcFluidRemovalRate() {
+        var duration = parseFloat($('#dialysisDuration').val());
+        var totalFluid = parseFloat($('#totalFluid').val());
+
+        if (duration && totalFluid) {
+            var rate = totalFluid / duration;
+            $('#fluidRate').val(rate.toFixed(2)); // This will format the result to two decimal places
+        }
+    }
+
+    function CalcKt_V() {
+        var preUrea = parseFloat($('#preUrea').val());
+        var postUrea = parseFloat($('#postUrea').val());
+        var totalFluid = parseFloat($('#totalFluid').val());
+        var postWeight = parseFloat($('#postWeight').val());
+
+        if (preUrea && postUrea && totalFluid && postWeight) {
+            var UF = totalFluid; // Ultrafiltration volume in liters
+            var R = postUrea / preUrea; // The ratio of post to pre urea levels
+
+            var Kt_V = -Math.log(R - 0.03) + (4 - 3.5 * R) * (UF / postWeight);
+            $('#Kt_V').val(Kt_V.toFixed(2)); // This will format the result to two decimal places
+        }
+    }
+
+
 </script>
