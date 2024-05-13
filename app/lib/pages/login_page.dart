@@ -1,10 +1,18 @@
-import 'package:flutter/material.dart';
 
+import 'package:app/Shared/Network/authentication_service.dart';
+import 'package:dio/dio.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+
+import '../Shared/Network/api_maneger.dart';
 import '../services/navigation_service.dart';
-import '../widgets/custom_input_fields.dart';
+
+
 
 class LoginPage extends StatefulWidget {
-  const LoginPage({Key? key}) : super(key: key);
+
+
 
   @override
   State<LoginPage> createState() => _LoginPageState();
@@ -12,6 +20,7 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   late NavigationService _navigation;
+  final AuthenticationService auth=AuthenticationService(Dio());
   late double deviceHeight;
   late double deviceWidth;
   var _formKey =GlobalKey<FormState>();
@@ -29,7 +38,6 @@ class _LoginPageState extends State<LoginPage> {
 
         children: [
           Container(
-
             width: 390,
             height: 280,
             child: Image.asset("assets/images/DoctorsImage.jpg"),
@@ -45,7 +53,6 @@ class _LoginPageState extends State<LoginPage> {
                     height: 47,
                     width: 344,
                     child: TextFormField(
-
                       controller: emailController,
                       decoration: const InputDecoration(
                         fillColor: Color(0xffB8E8F7),
@@ -57,7 +64,6 @@ class _LoginPageState extends State<LoginPage> {
                               color: Color(0xffB8E8F7)
                           ),
                         ),
-
                         enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.all(Radius.circular(16)),
                             borderSide: BorderSide(
@@ -69,7 +75,6 @@ class _LoginPageState extends State<LoginPage> {
                           fontSize: 12,
 
                       ),
-
                       ),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
@@ -141,32 +146,109 @@ class _LoginPageState extends State<LoginPage> {
 
                       ),
                       onPressed: () {
-                        if (_formKey.currentState!.validate()) {
-                              _navigation.navigateToRoute('/home');
-                        }
+
+                             ApiManager.login('admi11n@localhost.com', '123456',true);
+                            //
+                            // print("user loged sucess");
+                            // auth.login('admn@localhost.com', '121515151');
+                            _navigation.removeAndNavigateToRoute('/home_page');
                       },
-                      child: const Text('Login'),
+                      child: const Text(
+                        'Login',
+                        style: TextStyle(
+                              color: Colors.black,
+
+
+                        ),
+                      ),
                     ),
                   ),
 
                   SizedBox(height: 20,),
-                  InkWell(
+                  Row(
 
-                    child: Row(
+                    children: [
+                      Expanded(
+                        child: Divider(
+                          endIndent: 10,
+                          indent: 10,
+                          height: 2,
+                          color: Colors.black,
+                          thickness: 1.5,
 
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-
-                        Container(
-                            child: Image.asset("assets/images/google_logo.png"),
-                          width: 50,
-                          height: 50,
                         ),
+                      ),
+                      Text(
+                          "OR",
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 12
+                        ),
+                      ),
+                      Expanded(
+                        child: Divider(
+                          endIndent: 10,
+                          indent: 10,
+                          height: 2,
+                          color: Colors.black,
+                          thickness: 1.5,
 
-                        Text("Continue with Google")
-                      ],
-                    ),
+                        ),
+                      ),
+
+                    ],
                   ),
+                  SizedBox(height: 10,),
+
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      InkWell(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+
+                            Container(
+                              child: Image.asset("assets/images/google_logo.png"),
+                              width: 50,
+                              height: 50,
+                            ),
+
+                            Text("Continue with Google")
+                          ],
+                        ),
+                      ),
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisSize: MainAxisSize.max,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                              "Don't have an account?",
+                            style: TextStyle(
+                              color: Colors.grey,
+                              fontSize: 12
+                            ),
+
+                          ),
+
+                          TextButton(
+                              onPressed: () {
+
+                                _navigation.removeAndNavigateToRoute('/signup');
+                              },
+                              child: Text(
+                                "sign up",
+                                style: TextStyle(
+                                    color: Color(0xff45B3EF)
+                                ),
+                              )
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+
                 ],
 
 
@@ -178,5 +260,4 @@ class _LoginPageState extends State<LoginPage> {
       ),
     );
   }
-
 }
