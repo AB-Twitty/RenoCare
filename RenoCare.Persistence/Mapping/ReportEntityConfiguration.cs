@@ -26,6 +26,7 @@ namespace RenoCare.Persistence.Mapping
             builder.HasOne(p => p.Patient).WithOne().HasForeignKey<Report>(p => p.PatientId);
 
             builder.Property(x => x.DialysisUnitId).IsRequired();
+            builder.HasOne(p => p.DialysisUnit).WithOne().HasForeignKey<Report>(p => p.DialysisUnitId);
 
             builder.Property(x => x.MedicationRequestId).IsRequired();
             builder.HasOne(p => p.MedicationRequest).WithOne().HasForeignKey<Report>(p => p.MedicationRequestId);

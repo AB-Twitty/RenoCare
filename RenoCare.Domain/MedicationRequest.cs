@@ -68,5 +68,10 @@ namespace RenoCare.Domain
         /// Gets or sets the navigation property for the report of the medication request.
         /// </summary>
         public virtual Report Report { get; set; }
+
+        /// <summary>
+        /// Gets or sets the navigation property for the requested dialysis unit.
+        /// </summary>
+        public virtual DialysisUnit DialysisUnit { get; set; }
     }
 }

@@ -213,6 +213,11 @@ namespace RenoCare.Domain
         /// Gets or sets the navigation property for the medication request.
         /// </summary>
         public virtual MedicationRequest MedicationRequest { get; set; }
+
+        /// <summary>
+        /// Gets or sets the navigation property for the dialysis unit.
+        /// </summary>
+        public virtual DialysisUnit DialysisUnit { get; set; }
     }
 
     public enum VascularType
