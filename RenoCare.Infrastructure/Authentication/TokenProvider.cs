@@ -1,5 +1,8 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using RenoCare.Core.Conatracts.Persistence;
+using RenoCare.Domain;
 using RenoCare.Domain.Identity;
 using RenoCare.Infrastructure.Authentication.Contracts;
 using System;
@@ -18,15 +21,17 @@ namespace RenoCare.Infrastructure.Authentication
     {
         #region Fields
 
+        private readonly IRepository<DialysisUnit> _dialysisUnitRepo;
         private readonly UserManager<AppUser> _userManager;
 
         #endregion
 
         #region Ctor
 
-        public TokenProvider(UserManager<AppUser> userManager)
+        public TokenProvider(UserManager<AppUser> userManager, IRepository<DialysisUnit> dialysisUnitRepo)
         {
             _userManager = userManager;
+            _dialysisUnitRepo = dialysisUnitRepo;
         }
 
         #endregion
@@ -52,8 +57,23 @@ namespace RenoCare.Infrastructure.Authentication
             {
                 new Claim(JwtRegisteredClaimNames.Sub, user.Id),
                 new Claim(JwtRegisteredClaimNames.Email, user.Email),
+                new Claim(ClaimTypes.Name, user.FirstName + " " + user.LastName),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
             }.Union(userClaims).Union(rolesClaims);
+
+            if (rolesClaims.Where(x => x.Value == "HealthCare").Any())
+            {
+                var unit = await _dialysisUnitRepo.Table
+                    .Where(x => x.UserId == user.Id).Select(x => new { x.Id, x.Name })
+                    .FirstOrDefaultAsync();
+                if (unit != null)
+                    claims = claims.Concat(new[]
+                    {
+                        new Claim("unit", unit.Name),
+                        new Claim("uid", unit.Id.ToString())
+                    });
+            }
+
 
             var credentials = new SigningCredentials
             (

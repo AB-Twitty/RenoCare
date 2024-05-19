@@ -1,9 +1,10 @@
 
+import 'package:app/pages/map_page.dart';
 import 'package:easy_search_bar/easy_search_bar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-
+import '../services/navigation_service.dart';
 import '../Shared/components/widgets/bottom_sheet.dart';
 import '../Shared/components/widgets/center_card.dart';
 import '../Shared/components/widgets/fliter_drawer.dart';
@@ -19,10 +20,13 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  late NavigationService _navigation;
   String searchValue='';
   final List<String> _suggestions = ['Afeganistan', 'Albania', 'Algeria', 'Australia', 'Brazil', 'German', 'Madagascar', 'Mozambique', 'Portugal', 'Zambia'];
   @override
   Widget build(BuildContext context) {
+
+    _navigation=NavigationService();
     return Scaffold(
 
       key: _scaffoldKey,
@@ -98,7 +102,10 @@ class _HomeState extends State<Home> {
                 Row(
                   children: [
                     IconButton(
-                        onPressed: () {},
+                        onPressed: () {
+
+                          _navigation.navigateToPage(MapPage());
+                        },
                         icon: Icon(Icons.map,color:Color(0xff3C98CB) ,)
                     ),
                     Text(

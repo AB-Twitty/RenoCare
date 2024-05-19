@@ -9,7 +9,8 @@ import '../Shared/Network/api_maneger.dart';
 import '../services/navigation_service.dart';
 
 
-
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 class LoginPage extends StatefulWidget {
 
 
@@ -147,8 +148,6 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                       onPressed: () {
 
-                             ApiManager.login('admi11n@localhost.com', '123456',true);
-                            //
                             // print("user loged sucess");
                             // auth.login('admn@localhost.com', '121515151');
                             _navigation.removeAndNavigateToRoute('/home_page');

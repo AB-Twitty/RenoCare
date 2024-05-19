@@ -41,7 +41,7 @@ class ApiManager{
 
 
  static Future<void> login(String email, String password, bool rememberMe) async {
-    final url = Uri.parse('http://10.0.2.2:6982/Api/V1/Login');
+    final url = Uri.parse('http://192.168.43.6:6982/Api/V1/Login');
     try {
       final response = await http.post(
         url,
@@ -62,6 +62,8 @@ class ApiManager{
         // If the server did not return a 200 OK response,
         // then throw an exception.
         print('===================================');
+        print(response.statusCode);
+        print(response.body);
         print("Fuck Api's");
         print('===================================');
         throw Exception('Failed to load login');

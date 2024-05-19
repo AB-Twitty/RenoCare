@@ -1,10 +1,12 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace RenoCare.Domain.Identity
 {
     /// <summary>
     /// Represents the user entity.
     /// </summary>
+    [Table("AspNetUsers")]
     public class AppUser : IdentityUser
     {
         /// <summary>

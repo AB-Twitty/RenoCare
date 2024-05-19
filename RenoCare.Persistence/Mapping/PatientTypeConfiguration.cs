@@ -24,21 +24,13 @@ namespace RenoCare.Persistence.Mapping
 
             builder.Property(p => p.KidneyFailureCause).IsRequired();
 
-            builder.Property(p => p.Diabetes).IsRequired();
+            builder.Property(p => p.DiabetesType).IsRequired();
 
-            builder.Property(p => p.Hypertension).IsRequired();
+            builder.Property(p => p.HypertensionType).IsRequired();
 
             builder.Property(p => p.IsDeleted).IsRequired().HasDefaultValue(false);
 
-            builder.HasData(
-                new Patient
-                {
-                    Id = 1,
-                    UserId = "a6d6f491-1957-4e70-98c7-997eb0d3255f",
-                    KidneyFailureCause = "Hypertension",
-                    Diabetes = true,
-                    Hypertension = true
-                });
+           
         }
     }
 }

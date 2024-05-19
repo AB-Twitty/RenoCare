@@ -52,7 +52,7 @@ namespace RenoCare.Persistence
         /// </returns>
         protected virtual async Task<IList<TEntity>> GetEntitiesAsync(Func<Task<IList<TEntity>>> getAllAsync)
         {
-            return await GetAllAsync();
+            return await getAllAsync();
         }
 
         /// <summary>
@@ -184,20 +184,20 @@ namespace RenoCare.Persistence
         /// <param name="func">Function to select entries</param>
         /// <param name="pageIndex">Page index</param>
         /// <param name="pageSize">Page size</param>
-        /// <param name="getOnlyTotalCount">Whether to get only the total number of entries without actually loading data</param>
+        /// <param name="indexFrom">The start index value.</param>
         /// <param name="includeDeleted">Whether to include deleted items (applies only to <see cref="Nop.Core.Domain.Common.ISoftDeletedEntity"/> entities)</param>
         /// <returns>
         /// A task that represents the asynchronous operation
         /// The task result contains the paged list of entity entries
         /// </returns>
         public virtual async Task<IPagedList<TEntity>> GetAllPagedAsync(Func<IQueryable<TEntity>, IQueryable<TEntity>> func = null,
-            int pageIndex = 0, int pageSize = int.MaxValue, bool getOnlyTotalCount = false, bool includeDeleted = true)
+            int pageIndex = 0, int pageSize = int.MaxValue, int indexFrom = 1, bool includeDeleted = true)
         {
             var query = AddDeletedFilter(Table, includeDeleted);
 
             query = func != null ? func(query) : query;
 
-            return await query.ToPagedListAsync(pageIndex, pageSize, getOnlyTotalCount);
+            return await query.ToPagedListAsync(pageIndex, pageSize, indexFrom);
         }
 
         /// <summary>
