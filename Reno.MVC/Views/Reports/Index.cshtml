@@ -142,10 +142,16 @@
                             <label class="control-label">&nbsp;&nbsp;&nbsp;&nbsp; Last Update : </label>
                             <label class="control-label">@Model.Report.LastModifiedDate.ToString("dd-MMM-yyyy")</label>
 
+                            @*
                             <button type="button" class="btn btn-primary btn-xs " style="float: right;" 
                                     data-toggle="modal" data-target="#AllComments"
                                     data-id="@Context.Request.Query["id"]">
                                 <i class="fa fa-comment "> Comments </i>
+                            </button>
+                            *@
+
+                            <button type="button" class="btn btn-default" style="float:right;">
+                                <i class="fa fa-download"></i>
                             </button>
 
                         </div>
@@ -155,7 +161,7 @@
                 <!-- Begin  ibox Content-->
                 <div class="ibox-content ">
                     <div class="row">
-                        <form method="post" asp-action="Save" id="main-form">
+                        <form method="post" asp-action="Save" asp-route-patientId="@Model.Report.Patient.Id" id="main-form">
                         <div class="col-md-12 col-xs-12">
                             <div class="tabs-container">
                                 <div class="tabs-left">
@@ -184,3 +190,68 @@
         <!-- End Row-->
     </div>
 </div>
+
+<script>
+    $('document').ready( () => {
+        function restrictToIntegers(event) {
+            const key = event.keyCode || event.which;
+            // Allow numeric keys (0-9) and numeric keypad keys (NumLock section)
+            if ((key >= 48 && key <= 57) || (key >= 96 && key <= 105) || key === 8) {
+                // Allow digits and Backspace
+                return true;
+            } else {
+                event.preventDefault(); // Prevent non-numeric characters
+                return false;
+            }
+        }
+
+
+        function restrictToHalfDecimal(event, inputElem) {
+            const key = event.keyCode || event.which;
+            // Allow numeric keys (0-9) and numeric keypad keys (NumLock section)
+            if ((key >= 48 && key <= 57) || (key >= 96 && key <= 105) || key === 8 || key === 190 || key === 110) {
+                var val = inputElem.value;
+                if (val.includes('.') && key != 53 && key != 101 && key != 8) {
+                    event.preventDefault();
+                    return false;
+                }
+
+                return true;
+            } else {
+                event.preventDefault(); // Prevent non-numeric characters
+                return false;
+            }
+        }
+
+        function restrictToDecimal(event, inputElem) {
+            const key = event.keyCode || event.which;
+            // Allow numeric keys (0-9) and numeric keypad keys (NumLock section)
+            if ((key >= 48 && key <= 57) || (key >= 96 && key <= 105) || key === 8 || key === 190 || key === 110) {
+                var val = inputElem.value;
+                if (val.includes('.') && (key===190 || key===110)) {
+                    event.preventDefault();
+                    return false;
+                }
+
+                return true;
+            } else {
+                event.preventDefault(); // Prevent non-numeric characters
+                return false;
+            }
+        }
+
+
+        $('#main-form input.input-half-decimal').each((index, element) => {
+            element.addEventListener('keydown', (event) => restrictToHalfDecimal(event, element));
+        });
+
+        $('#main-form input.input-integer').each((index, element) => {
+            element.addEventListener('keydown', (event) => restrictToIntegers(event));
+        });
+
+        $('#main-form input.input-decimal').each((index, element) => {
+            element.addEventListener('keydown', (event) => restrictToDecimal(event, element));
+        });
+    });
+
+</script>

@@ -1,5 +1,23 @@
 ﻿@model ReportIndexVM
 
+@{
+    var propertiesToCheck = new[]
+    {
+        nameof(Model.Report.Nephrologist),
+        nameof(Model.Report.DialysisDuration),
+        nameof(Model.Report.DialysisFrequency),
+        nameof(Model.Report.VascularAccessType),
+        nameof(Model.Report.DialyzerType)
+    };
+
+    var initialForm = propertiesToCheck.All(prop =>
+        Model.Report.GetType().GetProperty(prop).GetValue(Model.Report) == null);
+
+    var change_to_warning = !initialForm && propertiesToCheck.Any(prop =>
+        ViewData.ModelState[$"{nameof(Model.Report)}.{prop}"]?.Errors.Any() ?? false);
+}
+
+
 <div class="row">
 
     <!--Dialysis Unit Name-->
@@ -21,7 +39,7 @@
 
         <div class="col-md-12">
             <input asp-for="@Model.Report.Nephrologist" class="m-b form-control" />
-            <span class="text-danger"></span>
+            <span asp-validation-for="@Model.Report.Nephrologist" class="text-danger"></span>
         </div>
     </div>
 
@@ -48,8 +66,9 @@
         </label>
 
         <div class="col-md-12">
-            <input id="dialysisDuration" asp-for="@Model.Report.DialysisDuration" type="text" class="m-b form-control" />
-            <span class="text-danger"></span>
+            <input id="dialysisDuration" asp-for="@Model.Report.DialysisDuration" 
+                    type="text" class="m-b form-control input-half-decimal" maxlength="3" />
+            <span asp-validation-for="@Model.Report.DialysisDuration" class="text-danger"></span>
         </div>
     </div>
 
@@ -62,8 +81,9 @@
         </label>
 
         <div class="col-md-12">
-            <input asp-for="@Model.Report.DialysisFrequency" type="text" class="m-b form-control" />
-            <span class="text-danger"></span>
+            <input asp-for="@Model.Report.DialysisFrequency" type="text" 
+                    class="m-b form-control input-integer" maxlength="1" />
+            <span asp-validation-for="@Model.Report.DialysisFrequency" class="text-danger"></span>
         </div>
     </div>
 
@@ -86,7 +106,7 @@
                     class="form-control">
                 <option value="" selected disabled>Vascular Access Type...</option>
             </select>
-            <span class="text-danger"></span>
+            <span asp-validation-for="@Model.Report.VascularAccessType" class="text-danger"></span>
         </div>
     </div>
 
@@ -101,9 +121,9 @@
             <select asp-for="@Model.Report.DialyzerType"
                     asp-items="Html.GetEnumSelectList<DialyzerType>()"
                     class="form-control">
-                <option value="" selected disabled>Vascular Access Type...</option>
+                <option value="" selected disabled>Dialyzer Type...</option>
             </select>
-            <span class="text-danger"></span>
+            <span asp-validation-for="@Model.Report.DialyzerType" class="text-danger"></span>
         </div>
     </div>
 
@@ -126,4 +146,11 @@
     $("#nxt_to_health_status").on('click', function () {
         $('.nav-tabs a[href="' + "#tab-2" + '"]').tab('show');
     });
+
+    var init = @initialForm.ToString().ToLower();
+    if (!init) {
+        const $tabIcon = $('.nav-tabs a[href="#tab-1"] i');
+        $tabIcon.removeClass('label label-danger fa fa-window-close').addClass(@change_to_warning.ToString().ToLower()
+                ? 'label label-danger fa fa-window-close' : 'label label-primary fa fa-check');
+    }
 </script>

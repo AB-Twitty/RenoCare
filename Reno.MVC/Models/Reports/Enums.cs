@@ -1,4 +1,6 @@
-﻿namespace Reno.MVC.Models.Reports
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace Reno.MVC.Models.Reports
 {
     public enum VascularType
     {
@@ -9,7 +11,9 @@
 
     public enum DialyzerType
     {
+        [Display(Name = "High-Flux")]
         HighFlux,
+        [Display(Name = "Low-Flux")]
         LowFlux
     }
 }

@@ -1,7 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Reno.MVC.Models.Reports;
 using Reno.MVC.Services.Base;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Reno.MVC.Controllers
@@ -23,6 +25,7 @@ namespace Reno.MVC.Controllers
         }
 
         [HttpGet("{controller}/{action}/{patientId}/{requestId}")]
+        [Authorize(Roles = "HealthCare")]
         public async Task<IActionResult> Create(int requestId, int patientId)
         {
             var report = new ReportDto
@@ -43,10 +46,33 @@ namespace Reno.MVC.Controllers
         }
 
         [HttpPost("{controller}/{action}")]
+        [Authorize(Roles = "HealthCare")]
         [ValidateAntiForgeryToken]
-        public ActionResult Save([FromForm] ReportDto report)
+        public async Task<ActionResult> Save([FromForm] ReportDto report, int patientId)
         {
-            return View(report);
+            try
+            {
+                var result = await _client.CreateReportAsync(report);
+
+            }
+            catch (ApiException<ApiResponse<ReportDto>> ex)
+            {
+                var errors = ex.Result.Errors;
+                if (errors?.Any() ?? false)
+                {
+                    foreach (var error in errors)
+                    {
+                        var key = error.Split(" : ")[0];
+                        var msg = error.Split(" : ")[1];
+
+                        ModelState.AddModelError(key, msg);
+                    }
+                }
+            }
+
+            report.Patient = (await _client.GetPatientMedicalInfoAsync(patientId)).Data;
+            var model = new ReportIndexVM { Report = report, ViewMode = "Create" };
+            return View("Index", model);
         }
     }
 }

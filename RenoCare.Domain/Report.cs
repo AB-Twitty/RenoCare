@@ -1,6 +1,5 @@
 ﻿using RenoCare.Domain.Common;
 using System;
-using System.ComponentModel.DataAnnotations;
 
 namespace RenoCare.Domain
 {
@@ -44,13 +43,11 @@ namespace RenoCare.Domain
         /// <summary>
         /// Gets or sets the duration in hours for the dialysis treatment session.
         /// </summary>
-        [Range(1.0, 8.0)]
         public double DialysisDuration { get; set; }
 
         /// <summary>
         /// Gets or sets the frequency per week for the dialysis treatment session.
         /// </summary>
-        [Range(1, 7)]
         public int DialysisFrequency { get; set; }
 
         /// <summary>
@@ -70,55 +67,36 @@ namespace RenoCare.Domain
         /// <summary>
         /// Gets or sets the pre dialysis session weight of patient.
         /// </summary>
-        [Range(30.0, 200.0)]
         public double PreWeight { get; set; }
 
         /// <summary>
         /// Gets or sets the post dialysis session weight of patient.
         /// </summary>
-        [Range(30.0, 200.0)]
         public double PostWeight { get; set; }
 
         /// <summary>
-        /// Gets or sets the systolic blood pressure of patient pre dialysis session .
+        /// Gets or sets the blood pressure of patient pre dialysis session .
         /// </summary>
-        public string PreSystolicBloodPressure { get; set; }
+        public string PreBloodPressure { get; set; }
 
         /// <summary>
-        /// Gets or sets the systolic blood pressure of patient during dialysis session .
+        /// Gets or sets the blood pressure of patient during dialysis session .
         /// </summary>
-        public string DuringSystolicBloodPressure { get; set; }
+        public string DuringBloodPressure { get; set; }
 
         /// <summary>
-        /// Gets or sets the systolic blood pressure of patient post dialysis session .
+        /// Gets or sets the blood pressure of patient post dialysis session .
         /// </summary>
-        public string PostSystolicBloodPressure { get; set; }
-
-        /// <summary>
-        /// Gets or sets the diastolic blood pressure of patient pre dialysis session .
-        /// </summary>
-        public string PreDiastolicBloodPressure { get; set; }
-
-        /// <summary>
-        /// Gets or sets the systolic blood pressure of patient during dialysis session .
-        /// </summary>
-        public string DuringDiastolicBloodPressure { get; set; }
-
-        /// <summary>
-        /// Gets or sets the systolic blood pressure of patient post dialysis session .
-        /// </summary>
-        public string PostDiastolicBloodPressure { get; set; }
+        public string PostBloodPressure { get; set; }
 
         /// <summary>
         /// Gets or sets the dry weight.
         /// </summary>
-        [Range(30.0, 200.0)]
         public double DryWeight { get; set; }
 
         /// <summary>
         /// Gets or sets the heart rate of patient.
         /// </summary>
-        [Range(40, 120)]
         public int HeartRate { get; set; }
 
         #endregion
@@ -128,43 +106,36 @@ namespace RenoCare.Domain
         /// <summary>
         /// Gets or sets the urea pre dialysis session.
         /// </summary>
-        [Range(5.0, 200.0)]
         public double PreUrea { get; set; }
 
         /// <summary>
         /// Gets or sets the urea post dialysis session.
         /// </summary>
-        [Range(5.0, 200.0)]
         public double PostUrea { get; set; }
 
         /// <summary>
         /// Gets or sets the urea reduction ratio (URR).
         /// </summary>
-        [Range(0.0, 100.0)]
         public double UreaReductionRatio { get; set; }
 
         /// <summary>
         /// Gets or sets the total fluid removal.
         /// </summary>
-        [Range(0.0, 5000.0)]
         public double TotalFluidRemoval { get; set; }
 
         /// <summary>
         /// Gets or sets the fluid removal rate.
         /// </summary>
-        [Range(0.0, 5000.0)]
         public double FluidRemovalRate { get; set; }
 
         /// <summary>
         /// Gets or sets the urine output per day.
         /// </summary>
-        [Range(0.0, 5000.0)]
         public double UrineOutput { get; set; }
 
         /// <summary>
         /// Gets or sets the Kt/V value.
         /// </summary>
-        [Range(0.5, 2.5)]
         public double Kt_V { get; set; }
 
         #endregion
@@ -174,31 +145,26 @@ namespace RenoCare.Domain
         /// <summary>
         /// Gets or sets the creatinine.
         /// </summary>
-        [Range(0.5, 15.0)]
         public double Creatinine { get; set; }
 
         /// <summary>
         /// Gets or sets the Potassium.
         /// </summary>
-        [Range(2.5, 6.5)]
         public double Potassium { get; set; }
 
         /// <summary>
         /// Gets or sets the hemoglobin.
         /// </summary>
-        [Range(5.0, 20.0)]
         public double Hemoglobin { get; set; }
 
         /// <summary>
         /// Gets or sets the Hematocrit.
         /// </summary>
-        [Range(15.0, 60.0)]
         public double Hematocrit { get; set; }
 
         /// <summary>
         /// Gets or sets the Albumin.
         /// </summary>
-        [Range(2.0, 6.0)]
         public double Albumin { get; set; }
 
         #endregion

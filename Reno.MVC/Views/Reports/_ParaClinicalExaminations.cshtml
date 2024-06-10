@@ -1,5 +1,22 @@
 ﻿@model ReportIndexVM
 
+@{
+    var propertiesToCheck = new[]
+    {
+        nameof(Model.Report.Creatinine),
+        nameof(Model.Report.Hemoglobin),
+        nameof(Model.Report.Hematocrit),
+        nameof(Model.Report.Potassium),
+        nameof(Model.Report.Albumin)
+    };
+
+    var initialForm = propertiesToCheck.All(prop =>
+        Model.Report.GetType().GetProperty(prop).GetValue(Model.Report) == null);
+
+    var change_to_warning = !initialForm && propertiesToCheck.Any(prop =>
+        ViewData.ModelState[$"{nameof(Model.Report)}.{prop}"]?.Errors.Any() ?? false);
+}
+
 <div class="form-group">
     <div class="row">
 
@@ -11,7 +28,8 @@
                 <span class="text-danger"> *</span>
             </label>
             <div class="col-md-12">
-                <input asp-for="@Model.Report.Creatinine" type="text" class="m-b form-control BaselineSingleControl" />
+                <input asp-for="@Model.Report.Creatinine" type="text" class="m-b form-control input-decimal" maxlength="4" />
+                <span asp-validation-for="@Model.Report.Creatinine" class="text-danger"></span>
             </div>
         </div>
 
@@ -23,7 +41,8 @@
                 <span class="text-danger"> *</span>
             </label>
             <div class="col-md-12">
-                <input type="text" class="m-b form-control BaselineSingleControl" disabled />
+                <input asp-for="@Model.Report.Potassium" type="text" class="m-b form-control input-decimal" maxlength="3" />
+                <span asp-validation-for="@Model.Report.Potassium" class="text-danger"></span>
             </div>
         </div>
 
@@ -40,7 +59,8 @@
                 <span class="text-danger"> *</span>
             </label>
             <div class="col-md-12">
-                <input type="text" class="m-b form-control BaselineSingleControl" disabled />
+                <input asp-for="@Model.Report.Hemoglobin" type="text" class="m-b form-control input-decimal" maxlength="4" />
+                <span asp-validation-for="@Model.Report.Hemoglobin" class="text-danger"></span>
             </div>
         </div>
 
@@ -51,7 +71,8 @@
                 <span class="text-danger"> *</span>
             </label>
             <div class="col-md-12">
-                <input type="text" class="m-b form-control BaselineSingleControl" disabled />
+                <input asp-for="@Model.Report.Hematocrit" type="text" class="m-b form-control input-decimal" maxlength="4" />
+                <span asp-validation-for="@Model.Report.Hematocrit" class="text-danger"></span>
             </div>
         </div>
 
@@ -68,7 +89,8 @@
                 <span class="text-danger"> *</span>
             </label>
             <div class="col-md-12">
-                <input type="text" class="m-b form-control BaselineSingleControl" disabled />
+                <input asp-for="@Model.Report.Albumin" type="text" class="m-b form-control input-decimal" mexlength="3" />
+                <span asp-validation-for="@Model.Report.Hematocrit" class="text-danger"></span>
             </div>
         </div>
 
@@ -95,4 +117,11 @@
     $("#prev_to_treatmentOutcomes").on('click', function () {
         $('.nav-tabs a[href="' + "#tab-4" + '"]').tab('show');
     });
+
+    var init = @initialForm.ToString().ToLower();
+    if (!init) {
+        const $tabIcon = $('.nav-tabs a[href="#tab-5"] i');
+        $tabIcon.removeClass('label label-danger fa fa-window-close').addClass(@change_to_warning.ToString().ToLower()
+                ? 'label label-danger fa fa-window-close' : 'label label-primary fa fa-check');
+    }
 </script>

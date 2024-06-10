@@ -16,6 +16,7 @@
 
 namespace Reno.MVC.Services.Base
 {
+    using Reno.MVC.Models.Reports;
     using Reno.MVC.Services.Base.Contracts;
     using System;
     using System.Collections.Generic;
@@ -135,6 +136,24 @@ namespace Reno.MVC.Services.Base
         /// <returns>Success</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
         System.Threading.Tasks.Task<ApiResponse<PatientDto>> GetPatientMedicalInfoAsync(int id, System.Threading.CancellationToken cancellationToken);
+
+        /// <returns>Success</returns>
+        /// <exception cref="ApiException">A server side error occurred.</exception>
+        System.Threading.Tasks.Task<ApiResponse<ReportDto>> CreateReportAsync(ReportDto body);
+
+        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+        /// <returns>Success</returns>
+        /// <exception cref="ApiException">A server side error occurred.</exception>
+        System.Threading.Tasks.Task<ApiResponse<ReportDto>> CreateReportAsync(ReportDto body, System.Threading.CancellationToken cancellationToken);
+
+        /// <returns>Success</returns>
+        /// <exception cref="ApiException">A server side error occurred.</exception>
+        System.Threading.Tasks.Task<ApiResponse<string>> SetPasswordWithOtpAsync(OtpPasswordSetRequest body);
+
+        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+        /// <returns>Success</returns>
+        /// <exception cref="ApiException">A server side error occurred.</exception>
+        System.Threading.Tasks.Task<ApiResponse<string>> SetPasswordWithOtpAsync(OtpPasswordSetRequest body, System.Threading.CancellationToken cancellationToken);
 
     }
 
@@ -1143,6 +1162,160 @@ namespace Reno.MVC.Services.Base
             }
         }
 
+        /// <returns>Success</returns>
+        /// <exception cref="ApiException">A server side error occurred.</exception>
+        public virtual System.Threading.Tasks.Task<ApiResponse<ReportDto>> CreateReportAsync(ReportDto body)
+        {
+            return CreateReportAsync(body, System.Threading.CancellationToken.None);
+        }
+
+        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+        /// <returns>Success</returns>
+        /// <exception cref="ApiException">A server side error occurred.</exception>
+        public virtual async System.Threading.Tasks.Task<ApiResponse<ReportDto>> CreateReportAsync(ReportDto body, System.Threading.CancellationToken cancellationToken)
+        {
+            var urlBuilder_ = new System.Text.StringBuilder();
+            urlBuilder_.Append(BaseUrl != null ? BaseUrl.TrimEnd('/') : "").Append("/Api/V1/Report/Create");
+
+            var client_ = _httpClient;
+            var disposeClient_ = false;
+            try
+            {
+                using (var request_ = new System.Net.Http.HttpRequestMessage())
+                {
+                    var json_ = Newtonsoft.Json.JsonConvert.SerializeObject(body, _settings.Value);
+                    var content_ = new System.Net.Http.StringContent(json_);
+                    content_.Headers.ContentType = System.Net.Http.Headers.MediaTypeHeaderValue.Parse("application/json");
+                    request_.Content = content_;
+                    request_.Method = new System.Net.Http.HttpMethod("POST");
+                    request_.Headers.Accept.Add(System.Net.Http.Headers.MediaTypeWithQualityHeaderValue.Parse("text/plain"));
+
+                    PrepareRequest(client_, request_, urlBuilder_);
+
+                    var url_ = urlBuilder_.ToString();
+                    request_.RequestUri = new System.Uri(url_, System.UriKind.RelativeOrAbsolute);
+
+                    PrepareRequest(client_, request_, url_);
+
+                    var response_ = await client_.SendAsync(request_, System.Net.Http.HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
+                    var disposeResponse_ = true;
+                    try
+                    {
+                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        if (response_.Content != null && response_.Content.Headers != null)
+                        {
+                            foreach (var item_ in response_.Content.Headers)
+                                headers_[item_.Key] = item_.Value;
+                        }
+
+                        ProcessResponse(client_, response_);
+
+                        var status_ = (int)response_.StatusCode;
+                        var objectResponse_ = await ReadObjectResponseAsync<ApiResponse<ReportDto>>(response_, headers_, cancellationToken).ConfigureAwait(false);
+                        if (status_ == 200)
+                        {
+                            if (objectResponse_.Object == null)
+                            {
+                                throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
+                            }
+                            return objectResponse_.Object;
+                        }
+                        else
+                        {
+                            throw new ApiException<ApiResponse<ReportDto>>("The HTTP status code of the response was not expected (" + status_ + ").", status_, null, headers_, objectResponse_.Object, null);
+                        }
+                    }
+                    finally
+                    {
+                        if (disposeResponse_)
+                            response_.Dispose();
+                    }
+                }
+            }
+            finally
+            {
+                if (disposeClient_)
+                    client_.Dispose();
+            }
+        }
+
+        /// <returns>Success</returns>
+        /// <exception cref="ApiException">A server side error occurred.</exception>
+        public virtual System.Threading.Tasks.Task<ApiResponse<string>> SetPasswordWithOtpAsync(OtpPasswordSetRequest body)
+        {
+            return SetPasswordWithOtpAsync(body, System.Threading.CancellationToken.None);
+        }
+
+        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+        /// <returns>Success</returns>
+        /// <exception cref="ApiException">A server side error occurred.</exception>
+        public virtual async System.Threading.Tasks.Task<ApiResponse<string>> SetPasswordWithOtpAsync(OtpPasswordSetRequest body, System.Threading.CancellationToken cancellationToken)
+        {
+            var urlBuilder_ = new System.Text.StringBuilder();
+            urlBuilder_.Append(BaseUrl != null ? BaseUrl.TrimEnd('/') : "").Append("/Api/V1/Password/Reset/OTP");
+
+            var client_ = _httpClient;
+            var disposeClient_ = false;
+            try
+            {
+                using (var request_ = new System.Net.Http.HttpRequestMessage())
+                {
+                    var json_ = Newtonsoft.Json.JsonConvert.SerializeObject(body, _settings.Value);
+                    var content_ = new System.Net.Http.StringContent(json_);
+                    content_.Headers.ContentType = System.Net.Http.Headers.MediaTypeHeaderValue.Parse("application/json");
+                    request_.Content = content_;
+                    request_.Method = new System.Net.Http.HttpMethod("POST");
+                    request_.Headers.Accept.Add(System.Net.Http.Headers.MediaTypeWithQualityHeaderValue.Parse("text/plain"));
+
+                    PrepareRequest(client_, request_, urlBuilder_);
+
+                    var url_ = urlBuilder_.ToString();
+                    request_.RequestUri = new System.Uri(url_, System.UriKind.RelativeOrAbsolute);
+
+                    PrepareRequest(client_, request_, url_);
+
+                    var response_ = await client_.SendAsync(request_, System.Net.Http.HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
+                    var disposeResponse_ = true;
+                    try
+                    {
+                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        if (response_.Content != null && response_.Content.Headers != null)
+                        {
+                            foreach (var item_ in response_.Content.Headers)
+                                headers_[item_.Key] = item_.Value;
+                        }
+
+                        ProcessResponse(client_, response_);
+
+                        var status_ = (int)response_.StatusCode;
+                        var objectResponse_ = await ReadObjectResponseAsync<ApiResponse<string>>(response_, headers_, cancellationToken).ConfigureAwait(false);
+                        if (status_ == 200)
+                        {
+                            if (objectResponse_.Object == null)
+                            {
+                                throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
+                            }
+                            return objectResponse_.Object;
+                        }
+                        else
+                        {
+                            throw new ApiException<ApiResponse<string>>("The HTTP status code of the response was not expected (" + status_ + ").", status_, null, headers_, objectResponse_.Object, null);
+                        }
+                    }
+                    finally
+                    {
+                        if (disposeResponse_)
+                            response_.Dispose();
+                    }
+                }
+            }
+            finally
+            {
+                if (disposeClient_)
+                    client_.Dispose();
+            }
+        }
+
 
         protected struct ObjectResponseResult<T>
         {
@@ -1299,6 +1472,20 @@ namespace Reno.MVC.Services.Base
 
         [Newtonsoft.Json.JsonProperty("accessToken", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string AccessToken { get; set; }
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "13.19.0.0 (NJsonSchema v10.9.0.0 (Newtonsoft.Json v11.0.0.0))")]
+    public partial class OtpPasswordSetRequest
+    {
+        [Newtonsoft.Json.JsonProperty("email", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string Email { get; set; }
+
+        [Newtonsoft.Json.JsonProperty("password", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string Password { get; set; }
+
+        [Newtonsoft.Json.JsonProperty("otp", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string Otp { get; set; }
 
     }
 
@@ -1534,83 +1721,74 @@ namespace Reno.MVC.Services.Base
         [Newtonsoft.Json.JsonProperty("nephrologist", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string Nephrologist { get; set; }
 
-        [Newtonsoft.Json.JsonProperty("dialysisDuration", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public double DialysisDuration { get; set; }
+        [Newtonsoft.Json.JsonProperty("dialysisDuration", Required = Newtonsoft.Json.Required.AllowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public double? DialysisDuration { get; set; }
 
-        [Newtonsoft.Json.JsonProperty("dialysisFrequency", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public int DialysisFrequency { get; set; }
+        [Newtonsoft.Json.JsonProperty("dialysisFrequency", Required = Newtonsoft.Json.Required.AllowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public int? DialysisFrequency { get; set; }
 
         [Newtonsoft.Json.JsonProperty("vascularAccessType", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public string VascularAccessType { get; set; }
+        public VascularType? VascularAccessType { get; set; }
 
         [Newtonsoft.Json.JsonProperty("dialyzerType", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public string DialyzerType { get; set; }
+        public DialyzerType? DialyzerType { get; set; }
 
-        [Newtonsoft.Json.JsonProperty("preWeight", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public double PreWeight { get; set; }
+        [Newtonsoft.Json.JsonProperty("preWeight", Required = Newtonsoft.Json.Required.AllowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public double? PreWeight { get; set; }
 
-        [Newtonsoft.Json.JsonProperty("postWeight", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public double PostWeight { get; set; }
+        [Newtonsoft.Json.JsonProperty("postWeight", Required = Newtonsoft.Json.Required.AllowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public double? PostWeight { get; set; }
 
-        [Newtonsoft.Json.JsonProperty("preSystolicBloodPressure", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public string PreSystolicBloodPressure { get; set; }
+        [Newtonsoft.Json.JsonProperty("preBloodPressure", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string PreBloodPressure { get; set; }
 
-        [Newtonsoft.Json.JsonProperty("duringSystolicBloodPressure", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public string DuringSystolicBloodPressure { get; set; }
+        [Newtonsoft.Json.JsonProperty("duringBloodPressure", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string DuringBloodPressure { get; set; }
 
-        [Newtonsoft.Json.JsonProperty("postSystolicBloodPressure", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public string PostSystolicBloodPressure { get; set; }
+        [Newtonsoft.Json.JsonProperty("postBloodPressure", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string PostBloodPressure { get; set; }
 
-        [Newtonsoft.Json.JsonProperty("preDiastolicBloodPressure", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public string PreDiastolicBloodPressure { get; set; }
+        [Newtonsoft.Json.JsonProperty("dryWeight", Required = Newtonsoft.Json.Required.AllowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public double? DryWeight { get; set; }
 
-        [Newtonsoft.Json.JsonProperty("duringDiastolicBloodPressure", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public string DuringDiastolicBloodPressure { get; set; }
+        [Newtonsoft.Json.JsonProperty("heartRate", Required = Newtonsoft.Json.Required.AllowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public int? HeartRate { get; set; }
 
-        [Newtonsoft.Json.JsonProperty("postDiastolicBloodPressure", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public string PostDiastolicBloodPressure { get; set; }
+        [Newtonsoft.Json.JsonProperty("preUrea", Required = Newtonsoft.Json.Required.AllowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public double? PreUrea { get; set; }
 
-        [Newtonsoft.Json.JsonProperty("dryWeight", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public double DryWeight { get; set; }
-
-        [Newtonsoft.Json.JsonProperty("heartRate", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public int HeartRate { get; set; }
-
-        [Newtonsoft.Json.JsonProperty("preUrea", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public double PreUrea { get; set; }
-
-        [Newtonsoft.Json.JsonProperty("postUrea", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public double PostUrea { get; set; }
+        [Newtonsoft.Json.JsonProperty("postUrea", Required = Newtonsoft.Json.Required.AllowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public double? PostUrea { get; set; }
 
         [Newtonsoft.Json.JsonProperty("ureaReductionRatio", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public double UreaReductionRatio { get; set; }
+        public double? UreaReductionRatio { get; set; }
 
-        [Newtonsoft.Json.JsonProperty("totalFluidRemoval", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public double TotalFluidRemoval { get; set; }
+        [Newtonsoft.Json.JsonProperty("totalFluidRemoval", Required = Newtonsoft.Json.Required.AllowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public double? TotalFluidRemoval { get; set; }
 
-        [Newtonsoft.Json.JsonProperty("fluidRemovalRate", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public double FluidRemovalRate { get; set; }
+        [Newtonsoft.Json.JsonProperty("fluidRemovalRate", Required = Newtonsoft.Json.Required.AllowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public double? FluidRemovalRate { get; set; }
 
-        [Newtonsoft.Json.JsonProperty("urineOutput", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public double UrineOutput { get; set; }
+        [Newtonsoft.Json.JsonProperty("urineOutput", Required = Newtonsoft.Json.Required.AllowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public double? UrineOutput { get; set; }
 
-        [Newtonsoft.Json.JsonProperty("kt_V", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public double Kt_V { get; set; }
+        [Newtonsoft.Json.JsonProperty("kt_V", Required = Newtonsoft.Json.Required.AllowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public double? Kt_V { get; set; }
 
-        [Newtonsoft.Json.JsonProperty("creatinine", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public double Creatinine { get; set; }
+        [Newtonsoft.Json.JsonProperty("creatinine", Required = Newtonsoft.Json.Required.AllowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public double? Creatinine { get; set; }
 
-        [Newtonsoft.Json.JsonProperty("potassium", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public double Potassium { get; set; }
+        [Newtonsoft.Json.JsonProperty("potassium", Required = Newtonsoft.Json.Required.AllowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public double? Potassium { get; set; }
 
-        [Newtonsoft.Json.JsonProperty("hemoglobin", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public double Hemoglobin { get; set; }
+        [Newtonsoft.Json.JsonProperty("hemoglobin", Required = Newtonsoft.Json.Required.AllowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public double? Hemoglobin { get; set; }
 
-        [Newtonsoft.Json.JsonProperty("hematocrit", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public double Hematocrit { get; set; }
+        [Newtonsoft.Json.JsonProperty("hematocrit", Required = Newtonsoft.Json.Required.AllowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public double? Hematocrit { get; set; }
 
-        [Newtonsoft.Json.JsonProperty("albumin", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public double Albumin { get; set; }
+        [Newtonsoft.Json.JsonProperty("albumin", Required = Newtonsoft.Json.Required.AllowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public double? Albumin { get; set; }
 
     }
 

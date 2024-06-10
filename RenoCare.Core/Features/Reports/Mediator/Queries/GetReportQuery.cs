@@ -14,14 +14,14 @@ using System.Threading.Tasks;
 namespace RenoCare.Core.Features.Reports.Mediator.Queries
 {
     /// <summary>
-    /// Represents a get patient list request with specidfied properties with a corresponding response.
+    /// Represents a get report request with specidfied properties with a corresponding response.
     /// </summary>
     public class GetReportQueryRequest : IRequest<ApiResponse<ReportDto>>
     {
         public int Id { get; set; }
     }
 
-    // <summary>
+    /// <summary>
     /// Represents a handler for the get report query request.
     /// </summary>
     public class GetReportQueryRequestHandler : ResponseHandler,
@@ -81,17 +81,14 @@ namespace RenoCare.Core.Features.Reports.Mediator.Queries
                                       DialysisDuration = x.DialysisDuration,
                                       DialysisFrequency = x.DialysisFrequency,
                                       DialysisUnitName = "Unit Name",
-                                      VascularAccessType = x.VascularAccessType.ToString(),
-                                      DialyzerType = x.DialyzerType.ToString(),
+                                      VascularAccessType = x.VascularAccessType,
+                                      DialyzerType = x.DialyzerType,
                                       PreWeight = x.PreWeight,
                                       PostWeight = x.PostWeight,
                                       DryWeight = x.DryWeight,
-                                      PreSystolicBloodPressure = x.PreSystolicBloodPressure,
-                                      DuringSystolicBloodPressure = x.DuringSystolicBloodPressure,
-                                      PostSystolicBloodPressure = x.DuringSystolicBloodPressure,
-                                      PreDiastolicBloodPressure = x.PreDiastolicBloodPressure,
-                                      DuringDiastolicBloodPressure = x.DuringDiastolicBloodPressure,
-                                      PostDiastolicBloodPressure = x.PostDiastolicBloodPressure,
+                                      PreBloodPressure = x.PreBloodPressure,
+                                      DuringBloodPressure = x.DuringBloodPressure,
+                                      PostBloodPressure = x.DuringBloodPressure,
                                       HeartRate = x.HeartRate,
                                       PreUrea = x.PreUrea,
                                       PostUrea = x.PostUrea,

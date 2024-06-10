@@ -52,13 +52,9 @@ namespace RenoCare.Persistence.Mapping
 
             builder.Property(x => x.PreWeight).IsRequired();
 
-            builder.Property(x => x.PreSystolicBloodPressure).IsRequired().HasMaxLength(10);
-            builder.Property(x => x.DuringSystolicBloodPressure).IsRequired().HasMaxLength(10);
-            builder.Property(x => x.PostSystolicBloodPressure).IsRequired().HasMaxLength(10);
-
-            builder.Property(x => x.PreDiastolicBloodPressure).IsRequired().HasMaxLength(10);
-            builder.Property(x => x.DuringDiastolicBloodPressure).IsRequired().HasMaxLength(10);
-            builder.Property(x => x.PostDiastolicBloodPressure).IsRequired().HasMaxLength(10);
+            builder.Property(x => x.PreBloodPressure).IsRequired().HasMaxLength(10);
+            builder.Property(x => x.DuringBloodPressure).IsRequired().HasMaxLength(10);
+            builder.Property(x => x.PostBloodPressure).IsRequired().HasMaxLength(10);
 
             builder.Property(x => x.DryWeight).IsRequired();
 

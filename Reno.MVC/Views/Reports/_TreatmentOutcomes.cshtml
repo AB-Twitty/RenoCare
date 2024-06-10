@@ -1,5 +1,21 @@
 ﻿@model ReportIndexVM
 
+@{
+    var propertiesToCheck = new[]
+    {
+        nameof(Model.Report.PreUrea),
+        nameof(Model.Report.PostUrea),
+        nameof(Model.Report.TotalFluidRemoval),
+        nameof(Model.Report.UrineOutput)
+    };
+
+    var initialForm = propertiesToCheck.All(prop =>
+        Model.Report.GetType().GetProperty(prop).GetValue(Model.Report) == null);
+
+    var change_to_warning = !initialForm && propertiesToCheck.Any(prop =>
+        ViewData.ModelState[$"{nameof(Model.Report)}.{prop}"]?.Errors.Any() ?? false);
+}
+
 <div class="form-group">
 
     <!--Urea-->
@@ -17,8 +33,8 @@
                     <label class="control-label m-r-sm" style="padding-top:5px; min-width:60px;">
                         Pre:
                     </label>
-                    <input id="preUrea" asp-for="@Model.Report.PreUrea" class="m-b form-control" maxlength="3" />
-                    <span class="text-danger"></span>
+                    <input id="preUrea" asp-for="@Model.Report.PreUrea" class="m-b form-control input-decimal" maxlength="5" />
+                    <span asp-validation-for="@Model.Report.PreUrea" class="text-danger"></span>
                 </div>
             </div>
 
@@ -28,8 +44,8 @@
                     <label class="control-label m-r-sm" style="padding-top:5px; min-width:60px;">
                         Post:
                     </label>
-                    <input id="postUrea" asp-for="@Model.Report.PostUrea" class="m-b form-control" maxlength="3" />
-                    <span class="text-danger"></span>
+                    <input id="postUrea" asp-for="@Model.Report.PostUrea" class="m-b form-control input-decimal" maxlength="5" />
+                    <span asp-validation-for="@Model.Report.PostUrea" class="text-danger"></span>
                 </div>
             </div>
 
@@ -39,7 +55,7 @@
                     <label class="control-label m-r-sm" style="min-width:fit-content;">
                         Urea Reduction<br />Ratio (URR):
                     </label>
-                    <input id="URR" asp-for="@Model.Report.UreaReductionRatio" class="m-b form-control" maxlength="3" readonly />
+                    <input id="URR" asp-for="@Model.Report.UreaReductionRatio" class="m-b form-control" readonly />
                     <span class="text-danger"></span>
                 </div>
             </div>
@@ -64,8 +80,8 @@
                         <span class=" font-12 control-label">- ml</span>
                         :
                     </label>
-                    <input id="totalFluid" asp-for="@Model.Report.TotalFluidRemoval" class="m-b form-control" maxlength="3" />
-                    <span class="text-danger"></span>
+                    <input id="totalFluid" asp-for="@Model.Report.TotalFluidRemoval" class="m-b form-control input-decimal" max-length="6" />
+                    <span asp-validation-for="@Model.Report.TotalFluidRemoval" class="text-danger"></span>
                 </div>
             </div>
 
@@ -77,7 +93,7 @@
                         <span class=" font-12 control-label">- ml/H</span>
                         :
                     </label>
-                    <input id="fluidRate" asp-for="@Model.Report.FluidRemovalRate" class="m-b form-control" maxlength="3" readonly/>
+                    <input id="fluidRate" asp-for="@Model.Report.FluidRemovalRate" class="m-b form-control" readonly/>
                     <span class="text-danger"></span>
                 </div>
             </div>
@@ -98,8 +114,8 @@
             </label>
 
             <div class="col-md-12">
-                <input asp-for="@Model.Report.UrineOutput" class="m-b form-control" />
-                <span class="text-danger"></span>
+                <input asp-for="@Model.Report.UrineOutput" class="m-b form-control input-decimal" maxlength="6" />
+                <span asp-validation-for="@Model.Report.UrineOutput" class="text-danger"></span>
             </div>
         </div>
 
@@ -186,5 +202,11 @@
         }
     }
 
+    var init = @initialForm.ToString().ToLower();
+    if (!init) {
+        const $tabIcon = $('.nav-tabs a[href="#tab-4"] i');
+        $tabIcon.removeClass('label label-danger fa fa-window-close').addClass(@change_to_warning.ToString().ToLower()
+                ? 'label label-danger fa fa-window-close' : 'label label-primary fa fa-check');
+    }
 
 </script>

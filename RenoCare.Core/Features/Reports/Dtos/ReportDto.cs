@@ -1,4 +1,5 @@
 ﻿using RenoCare.Core.Features.Patients.DTOs;
+using RenoCare.Domain;
 using System;
 
 namespace RenoCare.Core.Features.Reports.Dtos
@@ -17,20 +18,17 @@ namespace RenoCare.Core.Features.Reports.Dtos
         public string Nephrologist { get; set; }
         public double DialysisDuration { get; set; }
         public int DialysisFrequency { get; set; }
-        public string VascularAccessType { get; set; }
-        public string DialyzerType { get; set; }
+        public VascularType VascularAccessType { get; set; }
+        public DialyzerType DialyzerType { get; set; }
 
         #endregion
 
         #region Vital Signs
         public double PreWeight { get; set; }
         public double PostWeight { get; set; }
-        public string PreSystolicBloodPressure { get; set; }
-        public string DuringSystolicBloodPressure { get; set; }
-        public string PostSystolicBloodPressure { get; set; }
-        public string PreDiastolicBloodPressure { get; set; }
-        public string DuringDiastolicBloodPressure { get; set; }
-        public string PostDiastolicBloodPressure { get; set; }
+        public string PreBloodPressure { get; set; }
+        public string DuringBloodPressure { get; set; }
+        public string PostBloodPressure { get; set; }
         public double DryWeight { get; set; }
         public int HeartRate { get; set; }
 

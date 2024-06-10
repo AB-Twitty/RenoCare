@@ -1,5 +1,25 @@
 ﻿@model ReportIndexVM
 
+@{
+    var propertiesToCheck = new[]
+    {
+        nameof(Model.Report.PreWeight),
+        nameof(Model.Report.PostWeight),
+        nameof(Model.Report.PreBloodPressure),
+        nameof(Model.Report.DuringBloodPressure),
+        nameof(Model.Report.PostBloodPressure),
+        nameof(Model.Report.DryWeight),
+        nameof(Model.Report.HeartRate)
+    };
+
+    var initialForm = propertiesToCheck.All(prop => 
+        Model.Report.GetType().GetProperty(prop).GetValue(Model.Report) == null);
+
+    var change_to_warning = !initialForm && propertiesToCheck.Any(prop =>
+        ViewData.ModelState[$"{nameof(Model.Report)}.{prop}"]?.Errors.Any() ?? false);
+}
+
+
 <div class="form-group">
 
     <!--Weight-->
@@ -14,22 +34,22 @@
             <!--Pre Weight-->
             <div class="col-md-6">
                 <div class="col-md-12" style="display:inline-flex;">
-                    <label class="control-label m-r-sm" style="padding-top:5px; min-width:60px;">
+                    <label class="control-label m-r-sm input-decimal" style="padding-top:5px; min-width:60px;">
                         Pre:
                     </label>
-                    <input asp-for="@Model.Report.PreWeight" class="m-b form-control" maxlength="3" />
-                    <span class="text-danger"></span>
+                    <input asp-for="@Model.Report.PreWeight" type="text" class="m-b form-control input-decimal" maxlength="5" />
+                    <span asp-validation-for="@Model.Report.PreWeight" class="text-danger"></span>
                 </div>
             </div>
 
             <!--Post Weight-->
             <div class="col-md-6">
                 <div class="col-md-12" style="display:inline-flex;">
-                    <label class="control-label m-r-sm" style="padding-top:5px; min-width:60px;">
+                    <label class="control-label m-r-sm input-decimal" style="padding-top:5px; min-width:60px;">
                         Post:
                     </label>
-                    <input id="postWeight" asp-for="@Model.Report.PostWeight" class="m-b form-control" maxlength="3" />
-                    <span class="text-danger"></span>
+                    <input id="postWeight" asp-for="@Model.Report.PostWeight" type="text" class="m-b form-control input-decimal" maxlength="5" />
+                    <span asp-validation-for="@Model.Report.PostWeight" class="text-danger"></span>
                 </div>
             </div>
 
@@ -37,10 +57,10 @@
     </div>
     <br />
 
-    <!--Systolic Blood Pressure-->
+    <!-- Blood Pressure-->
     <div>
         <p>
-            Systolic Blood Pressure
+             Blood Pressure
             <span class="font-12">- mmHg</span>
             <span class="text-danger"> *</span>
         </p>
@@ -53,14 +73,22 @@
                         Pre:
                     </label>
                     <div style="display:inline-flex; min-width:120px; max-width:200px;">
-                        <input id="preBloodPressure" asp-for="@Model.Report.PreSystolicBloodPressure" hidden />
-                        <input value="@Model.Report.PreSystolicBloodPressure?.Split('/')[0]"
-                               class="m-b form-control" maxlength="3" id="preSystolic"/>
+                        <input id="preBloodPressure" asp-for="@Model.Report.PreBloodPressure" hidden />
+                        @{
+                            var isPreValid = !ViewData
+                                .ModelState[nameof(Model.Report) + "." + nameof(Model.Report.PreBloodPressure)]
+                                ?.Errors.Any() ?? true;
+                        }
+
+                        <input value="@Model.Report.PreBloodPressure?.Split('/')[0]" type="text"
+                               class="m-b form-control input-integer @(isPreValid ? "" : "input-validation-error")"
+                               maxlength="3" id="preSystolic"/>
                         <div style="font-size:x-large; margin: 0 5px;">/</div>
-                        <input value="@Model.Report.PreSystolicBloodPressure?.Split('/')[1]"
-                               class="m-b form-control" maxlength="3" id="preDiastolic"/>
+                        <input value="@Model.Report.PreBloodPressure?.Split('/')[1]" type="text"
+                               class="m-b form-control input-integer @(isPreValid ? "" : "input-validation-error")"
+                               maxlength="3" id="preDiastolic"/>
                     </div>
-                    <span class="text-danger"></span>
+                    <span asp-validation-for="@Model.Report.PreBloodPressure" class="text-danger"></span>
                 </div>
             </div>
 
@@ -71,14 +99,21 @@
                         During:
                     </label>
                     <div style="display:inline-flex; min-width:120px; max-width:200px;">
-                        <input id="duringBloodPressure" asp-for="@Model.Report.DuringSystolicBloodPressure" hidden />
-                        <input value="@Model.Report.DuringSystolicBloodPressure?.Split('/')[0]"
-                               class="m-b form-control" maxlength="3" id="duringSystolic" />
+                        <input id="duringBloodPressure" asp-for="@Model.Report.DuringBloodPressure" hidden />
+                        @{
+                            var isDuringValid = !ViewData
+                                .ModelState[nameof(Model.Report) + "." + nameof(Model.Report.DuringBloodPressure)]
+                                ?.Errors.Any() ?? true;
+                        }
+                        <input value="@Model.Report.DuringBloodPressure?.Split('/')[0]" type="text"
+                               class="m-b form-control input-integer @(isDuringValid ? "" : "input-validation-error")"
+                               maxlength="3" id="duringSystolic" />
                         <div style="font-size:x-large; margin: 0 5px;">/</div>
-                        <input value="@Model.Report.DuringSystolicBloodPressure?.Split('/')[1]"
-                               class="m-b form-control" maxlength="3" id="duringDiastolic" />
+                        <input value="@Model.Report.DuringBloodPressure?.Split('/')[1]" type="text"
+                               class="m-b form-control input-integer @(isDuringValid ? "" : "input-validation-error")"
+                               maxlength="3" id="duringDiastolic" />
                     </div>
-                    <span class="text-danger"></span>
+                    <span asp-validation-for="@Model.Report.DuringBloodPressure" class="text-danger"></span>
                 </div>
             </div>
 
@@ -89,14 +124,21 @@
                         Post:
                     </label>
                     <div style="display:inline-flex; min-width:120px; max-width:200px;">
-                        <input id="postBloodPressure" asp-for="@Model.Report.PostSystolicBloodPressure" hidden />
-                        <input value="@Model.Report.PostSystolicBloodPressure?.Split('/')[0]"
-                               class="m-b form-control" maxlength="3" id="postSystolic" />
+                        <input id="postBloodPressure" asp-for="@Model.Report.PostBloodPressure" hidden />
+                        @{
+                            var isPostValid = !ViewData
+                                .ModelState[nameof(Model.Report) + "." + nameof(Model.Report.PostBloodPressure)]
+                                ?.Errors.Any() ?? true;
+                        }
+                        <input value="@Model.Report.PostBloodPressure?.Split('/')[0]" type="text"
+                               class="m-b form-control input-integer @(isPostValid ? "" : "input-validation-error")"
+                               maxlength="3" id="postSystolic" />
                         <div style="font-size:x-large; margin: 0 5px;">/</div>
-                        <input value="@Model.Report.PostSystolicBloodPressure?.Split('/')[1]"
-                               class="m-b form-control" maxlength="3" id="postDiastolic" />
+                        <input value="@Model.Report.PostBloodPressure?.Split('/')[1]" type="text"
+                               class="m-b form-control input-integer @(isPostValid ? "" : "input-validation-error")"
+                               maxlength="3" id="postDiastolic" />
                     </div>
-                    <span class="text-danger"></span>
+                    <span asp-validation-for="@Model.Report.PostBloodPressure" class="text-danger"></span>
                 </div>
             </div>
 
@@ -116,8 +158,8 @@
             </label>
 
             <div class="col-md-12">
-                <input asp-for="@Model.Report.DryWeight" class="m-b form-control" />
-                <span class="text-danger"></span>
+                <input asp-for="@Model.Report.DryWeight" type="text" class="m-b form-control input-decimal" maxlength="5" />
+                <span asp-validation-for="@Model.Report.DryWeight" class="text-danger"></span>
             </div>
         </div>
 
@@ -130,8 +172,8 @@
             </label>
 
             <div class="col-md-12">
-                <input asp-for="@Model.Report.HeartRate" class="m-b form-control" />
-                <span class="text-danger"></span>
+                <input asp-for="@Model.Report.HeartRate" type="text" class="m-b form-control input-integer" maxlength="3" />
+                <span asp-validation-for="@Model.Report.HeartRate" class="text-danger"></span>
             </div>
         </div>
 
@@ -172,10 +214,15 @@
     function FormatBloodPressureFields(prefix) {
         var systolic = $("#" + prefix + "Systolic").val();
         var diastolic = $("#" + prefix + "Diastolic").val();
-
         if (systolic && diastolic)
             $("#" + prefix + "BloodPressure").val(systolic + '/' + diastolic);
     }
 
+    var init = @initialForm.ToString().ToLower();
+    if (!init) {
+        const $tabIcon = $('.nav-tabs a[href="#tab-3"] i');
+        $tabIcon.removeClass('label label-danger fa fa-window-close').addClass(@change_to_warning.ToString().ToLower()
+            ? 'label label-danger fa fa-window-close' : 'label label-primary fa fa-check');
+    }
 
 </script>
