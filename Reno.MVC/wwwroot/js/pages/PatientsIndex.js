@@ -1,6 +1,7 @@
 ﻿$('document').ready(function() {
     var patientTable = $('#PatientTable').DataTable({
         pageLength: 25,
+        dom: '<"html5buttons"B>lrtip',
         ordering: true,
         scrollX: true,
         ajax: {
@@ -23,6 +24,25 @@
             { data: "diabetes", name: "Diabetes" },
             { data: "hypertension", name: "Hypertension" },
             { data: "smoking", name: "Smoking" }
+        ],
+        buttons: [
+            'copy', 'excel', 'csv',
+            {
+                extend: 'pdf',
+                orientation: 'landscape',
+                pageSize: 'LEGAL'
+            },
+            {
+                extend: 'print',
+                customize: function (win) {
+                    $(win.document.body).addClass('white-bg');
+                    $(win.document.body).css('font-size', '10px');
+                    $(win.document.body).find('table')
+                        .addClass('compact')
+                        .css('font-size', 'inherit');
+                }
+            }
+
         ],
         "fnInitComplete": function () {
             addSearchControl();

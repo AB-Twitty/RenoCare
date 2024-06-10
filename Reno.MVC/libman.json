@@ -9,6 +9,10 @@
     {
       "library": "chosen@1.8.7",
       "destination": "wwwroot/lib/chosen/"
+    },
+    {
+      "library": "datatables-buttons@3.0.2",
+      "destination": "wwwroot/lib/datatables-buttons/"
     }
   ]
 }
