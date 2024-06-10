@@ -19,6 +19,15 @@
             public const string ConfirmEmail = Rule + "/ConfirmEmail/{userId}";
             public const string SendResetPasswordEmail = Rule + "/ResetPassword";
             public const string ResetPassword = Rule + "/ResetPassword/{userId}";
+            public const string SetPasswordWithOtp = Rule + "/Password/Reset/OTP";
+        }
+
+        /// <summary>
+        /// Represents healthcare provider methods end points routing.
+        /// </summary>
+        public static class HealthCareProviderRouting
+        {
+            public const string CreateHealthCareUser = Rule + "/HealthCare/Create";
         }
 
         /// <summary>
@@ -56,6 +65,7 @@
         public static class ReportRouting
         {
             public const string GetById = Rule + "/Report";
+            public const string Create = Rule + "/Report/Create";
         }
     }
 }

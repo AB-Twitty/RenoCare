@@ -3,6 +3,7 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.Extensions.DependencyInjection;
 using RenoCare.Core.Base;
+using System.Linq;
 using System.Reflection;
 
 namespace RenoCare.Core
@@ -22,6 +23,17 @@ namespace RenoCare.Core
             services.AddMediatR(Assembly.GetExecutingAssembly());
 
             services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
+
+            // Configure FluentValidation DisplayNameResolver
+            ValidatorOptions.Global.DisplayNameResolver = (type, memberInfo, lambdaExpression) =>
+            {
+                if (memberInfo != null)
+                {
+                    // Split the member name by spaces and return the last part
+                    return memberInfo.Name.Split(' ').Last();
+                }
+                return null;
+            };
 
             services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
 

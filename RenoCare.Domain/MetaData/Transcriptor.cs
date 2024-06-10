@@ -10,9 +10,9 @@
         /// </summary>
         public static class Validations
         {
-            public const string NotNull = "{PropertyName} is required.";
-            public const string NotEmpty = "{PropertyName} can't be empty.";
-            public const string AlreadyExist = "{PropertyValue} already exists.";
+            public const string NotNull = "'{PropertyName}' is required.";
+            public const string NotEmpty = "'{PropertyName}' can't be empty.";
+            public const string AlreadyExist = "'{PropertyValue}' already exists.";
         }
 
         /// <summary>

@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Net;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
@@ -30,6 +31,7 @@ namespace Reno.MVC.Controllers
         [HttpGet("Login")]
         public virtual IActionResult LoginAsync(string returnUrl = null)
         {
+            _localStorageService.ClearStorage(new List<string> { "Token" });
             return View();
         }
 
@@ -91,6 +93,60 @@ namespace Reno.MVC.Controllers
             return RedirectToAction("Index", "Home");
         }
 
+        [HttpGet("Password/Reset/OTP")]
+        public virtual IActionResult SetPasswordWithOtpAsync()
+        {
+            _localStorageService.ClearStorage(new List<string> { "Token" });
+            return View();
+        }
+
+        [HttpPost("Password/Reset/OTP")]
+        public virtual async Task<IActionResult> SetPasswordWithOtpAsync(PasswordResetModel PassModel)
+        {
+            try
+            {
+                _localStorageService.ClearStorage(new List<string> { "Token" });
+                if (!ModelState.IsValid)
+                    return View(PassModel);
+
+                var passwordRequest = new OtpPasswordSetRequest
+                {
+                    Email = PassModel.Email,
+                    Password = PassModel.Password,
+                    Otp = PassModel.Otp
+                };
+
+                var result = await _client.SetPasswordWithOtpAsync(passwordRequest);
+
+                return RedirectToAction("Login");
+            }
+            catch (ApiException<ApiResponse<string>> ex)
+            {
+                var result = ex.Result;
+
+                switch (result.StatusCode)
+                {
+                    case HttpStatusCode.BadRequest:
+                        ModelState.AddModelError("", result.Message);
+                        break;
+                    case HttpStatusCode.UnprocessableEntity:
+                        var errors = ex.Result.Errors;
+                        if (errors?.Any() ?? false)
+                        {
+                            foreach (var error in errors)
+                            {
+                                var key = (error.Split(" : ")[0]).Split('.').Last();
+                                var msg = error.Split(" : ")[1];
+
+                                ModelState.AddModelError(key, msg);
+                            }
+                        }
+                        break;
+                }
+
+                return View(PassModel);
+            }
+        }
 
     }
 }

@@ -18,8 +18,8 @@ namespace RenoCare.Persistence.Identity.Mapping
         {
             var hasher = new PasswordHasher<AppUser>();
 
-            builder.Property(p => p.FirstName).IsRequired().HasMaxLength(25);
-            builder.Property(p => p.LastName).IsRequired().HasMaxLength(25);
+            builder.Property(p => p.FirstName).HasMaxLength(25);
+            builder.Property(p => p.LastName).HasMaxLength(25);
             builder.Property(p => p.IsDeleted).HasDefaultValue(false);
 
             builder.HasData(

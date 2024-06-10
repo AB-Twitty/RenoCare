@@ -3,13 +3,14 @@ using Microsoft.AspNetCore.Mvc;
 using RenoCare.Core.Base;
 using RenoCare.Core.Features.Authentication.Contracts.Models;
 using RenoCare.Core.Features.Authentication.Mediator.Commands;
+using RenoCare.Core.Features.HealthCareProviders.Mediator.Commands;
 using RenoCare.Domain.MetaData;
 using System.Threading.Tasks;
 
 namespace RenoCare.Api.Controllers
 {
     [ApiController]
-    public class AccountController : BaseController
+    public class UserController : BaseController
     {
         #region Fields
 
@@ -19,7 +20,7 @@ namespace RenoCare.Api.Controllers
 
         #region Ctor
 
-        public AccountController(IMediator mediator)
+        public UserController(IMediator mediator)
         {
             _mediator = mediator;
         }
@@ -39,6 +40,15 @@ namespace RenoCare.Api.Controllers
         [HttpGet(Router.AccountRouting.ConfirmEmail)]
         public async Task<ActionResult<ApiResponse<string>>> ConfirmEmailAsync(string userId, string code) =>
             ApiResult(await _mediator.Send(new ConfirmEmailCommandRequest { UserId = userId, EncodedToken = code }));
+
+        [HttpPost(Router.HealthCareProviderRouting.CreateHealthCareUser)]
+        //[Authorize(Roles = "Admin")]
+        public async Task<ActionResult<ApiResponse<string>>> AddHealthCareProviderUserAsync(string email) =>
+            ApiResult(await _mediator.Send(new CreateHealthCareProviderUserCommandRequest { Email = email }));
+
+        [HttpPost(Router.AccountRouting.SetPasswordWithOtp)]
+        public async Task<ActionResult<ApiResponse<string>>> SetPasswordWithOtpAsync(OtpPasswordSetRequest passRequest) =>
+            ApiResult(await _mediator.Send(new SetPasswordWithOtpCommandRequest { PasswordModel = passRequest }));
 
         #endregion
     }
