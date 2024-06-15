@@ -36,5 +36,15 @@ namespace Reno.MVC.Services.Base.Contracts
         /// <param name="keys">A list of local storage keys</param>
         public void ClearStorage(IList<string> keys);
 
+        /// <summary>
+        /// Clear the token for the current user from loal storage.
+        /// </summary>
+        public void ClearCurrentToken();
+
+        /// <summary>
+        /// get the token for the current user from loal storage.
+        /// </summary>
+        public string GetCurrentToken();
+
     }
 }

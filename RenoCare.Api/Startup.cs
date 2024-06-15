@@ -1,9 +1,11 @@
+using AdminService.Middleware;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using RenoCare.Core;
+using RenoCare.Core.Hubs;
 using RenoCare.Core.Middleware;
 using RenoCare.Infrastructure;
 using RenoCare.Persistence;
@@ -33,9 +35,10 @@ namespace RenoCare.Api
             {
                 o.AddPolicy("CorsPolicy", builder =>
                 {
-                    builder.AllowAnyOrigin()
+                    builder.WithOrigins("https://localhost:44317")
                     .AllowAnyMethod()
-                    .AllowAnyHeader();
+                    .AllowAnyHeader()
+                    .AllowCredentials();
                 });
             });
 
@@ -55,7 +58,10 @@ namespace RenoCare.Api
 
             app.UseHttpsRedirection();
 
+            app.UseMiddleware<WebSocketsMiddleware>();
             app.UseAuthentication();
+
+            app.UseCors("CorsPolicy");
 
             app.UseRouting();
 
@@ -64,6 +70,7 @@ namespace RenoCare.Api
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapHub<ChatHub>("/chat");
             });
         }
     }

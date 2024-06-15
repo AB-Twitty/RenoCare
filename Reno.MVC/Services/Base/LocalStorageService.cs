@@ -1,6 +1,8 @@
 ﻿using Hanssens.Net;
+using Microsoft.AspNetCore.Http;
 using Reno.MVC.Services.Base.Contracts;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Reno.MVC.Services.Base
 {
@@ -12,12 +14,13 @@ namespace Reno.MVC.Services.Base
         #region Fields
 
         private readonly LocalStorage _localStorage;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
         #endregion
 
         #region Ctor
 
-        public LocalStorageService()
+        public LocalStorageService(IHttpContextAccessor httpContextAccessor)
         {
             var config = new LocalStorageConfiguration
             {
@@ -27,6 +30,7 @@ namespace Reno.MVC.Services.Base
             };
 
             _localStorage = new LocalStorage(config);
+            _httpContextAccessor = httpContextAccessor;
         }
 
         #endregion
@@ -77,6 +81,34 @@ namespace Reno.MVC.Services.Base
                 _localStorage.Remove(key);
             }
         }
+
+
+        /// <summary>
+        /// Clear the token for the current user from loal storage.
+        /// </summary>
+        public void ClearCurrentToken()
+        {
+            var userId = _httpContextAccessor.HttpContext
+                .User.Claims.Where(c => c.Type == "sub").FirstOrDefault()?.Value;
+            if (userId != null)
+                _localStorage.Remove($"{userId}_Token");
+        }
+
+
+        /// <summary>
+        /// get the token for the current user from loal storage.
+        /// </summary>
+        public string GetCurrentToken()
+        {
+            var userId = _httpContextAccessor.HttpContext
+                .User.Claims.Where(c => c.Type == "sub").FirstOrDefault()?.Value;
+
+            if (userId != null && _localStorage.Exists($"{userId}_Token"))
+                return _localStorage.Get<string>($"{userId}_Token");
+
+            return "";
+        }
+
 
         #endregion
     }

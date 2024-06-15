@@ -41,6 +41,9 @@ namespace RenoCare.Core
 
             services.AddHttpContextAccessor();
 
+            services.AddSignalR();
+            //GlobalHost.HubPipeline.RequireAuthentication();
+
             return services;
         }
     }

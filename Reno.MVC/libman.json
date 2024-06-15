@@ -13,6 +13,17 @@
     {
       "library": "datatables-buttons@3.0.2",
       "destination": "wwwroot/lib/datatables-buttons/"
+    },
+    {
+      "library": "bootstrap@4.6.2",
+      "destination": "wwwroot/bootstrap/"
+    },
+    {
+      "library": "signalr.js@2.4.3",
+      "destination": "wwwroot/signalr.js/",
+      "files": [
+        "jquery.signalR.min.js"
+      ]
     }
   ]
 }

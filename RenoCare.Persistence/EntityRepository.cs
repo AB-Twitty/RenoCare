@@ -197,11 +197,11 @@ namespace RenoCare.Persistence
 
             query = func != null ? func(query) : query;
 
-            return await query.ToPagedListAsync(pageIndex, pageSize, indexFrom);
+            return await query.ToPagedListAsync(pageIndex, pageSize, 0, indexFrom);
         }
 
         /// <summary>
-        /// Insert the entity entry
+        /// Insert the entity entrys
         /// </summary>
         /// <param name="entity">Entity entry</param>
         /// <returns>A task that represents the asynchronous operation</returns>

@@ -41,7 +41,7 @@ namespace RenoCare.Core.Extensions
                 TotalCount = totalCount > 0 ? totalCount : filterCount,
                 FilterCount = filterCount,
                 Items = items,
-                TotalPages = (int)Math.Ceiling(items.Count / (double)pageSize)
+                TotalPages = (int)Math.Ceiling(filterCount / (double)pageSize)
             };
             return pagedList;
         }

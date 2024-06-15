@@ -1,0 +1,537 @@
+﻿@model ChatModel
+
+@using Reno.MVC.Models.Chat;
+@using Reno.MVC.Services.Base.Contracts;
+@inject ILocalStorageService _localStorageService;
+
+@{
+    string access_token = _localStorageService.GetCurrentToken();
+    string user_id = User.Claims.Where(c => c.Type == "sub").FirstOrDefault()?.Value ?? "";
+}
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.8.1/font/bootstrap-icons.min.css">
+
+@section styles{
+    <style>
+        .label {
+            padding: 4px 4px;
+        }
+
+        .form-horizontal .control-label {
+            text-align: left;
+        }
+
+        .nav-tabs > li > a {
+            padding: 10px 15px 10px 6px;
+        }
+
+        .group-start {
+            height: 40px;
+            background-color: #E2e2e2;
+        }
+
+        tr {
+            line-height: 3;
+        }
+
+        .titleNav {
+            text-align: center;
+            /*margin: -20px -15px 0px 10px;*/
+        }
+
+        .example123 td {
+            text-align: left;
+        }
+
+        .well {
+            background-color: rgba(0, 0, 0, 0) !important;
+        }
+
+
+        .chat-message.right .message {
+            color: #3f3d3d;
+            background-color: #1ab394b3;
+            border-radius: 20px 0 20px 20px;
+            margin-right: 0 !important;
+        }
+
+        .chat-message.right .message-date {
+            color: #4c4c4c;
+            display: block;
+            text-align: left;
+            float: none !important;
+        }
+
+        .chat-message.left .message {
+            border-radius: 0 20px 20px 20px;
+        }
+
+        .chat-user {
+            background-color: #fff;
+            cursor: pointer;
+        }
+
+        .chat-user:hover, li.chat-user.active {
+            background-color: #edeaea;
+        }
+
+        .showtt {
+            bottom: -2px !important;
+        }
+
+        .hidett {
+            bottom: -100px !important;
+        }
+
+        #toDown {
+            position: absolute;
+            right: 22px;
+            z-index: 1000;
+            bottom: -100px;
+            width: 40px;
+            height: 40px;
+            color: rgb(255, 255, 255);
+            cursor: pointer;
+            background: #1ab394;
+            border-radius: 3px;
+            transition: all 0.4s ease 0s;
+        }
+
+        #toDown i {
+            display: block;
+            font-size: 16px;
+            padding: 10px 12px 0px 0px;
+        }
+
+        .chat-user-msg-wrapper {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .chat-user-msg {
+            font-weight: 500;
+            font-size: 0.8em;
+            flex-grow: 1;
+        }
+
+        .msg-count {
+            font-size: 0.75em;
+            align-items: center;
+            justify-content: center;
+            display: flex;
+            height: 20px;
+            width: 20px;
+            color: #fff;
+            background-color: #1ab394;
+            border-radius: 50%;
+        }
+
+        .chat-avatar {
+            width: 40px;
+            height: 40px;
+        }
+
+    </style>
+}
+
+
+<!-- Begin wrapper Content (Page Content) -->
+<div class="wrapper wrapper-content animated fadeInRight shadow" style="padding-top:25px;">
+    <!-- Begin Row-->
+    <div class="row mx-0">
+        <!-- Begin Column-->
+        <div class="col-md-12 col-xs-12">
+
+            <div class="ibox float-e-margins chat-view">
+                <div class="ibox-title shadow" style="background-color:#f7f6f6;">
+                    <input hidden id="active-chat" value="@Model.ActiveContact?.UserId" />
+                    <input hidden id="page-index" value="1" />
+                    <img class="chat-avatar rounded-circle" src="imgs/chat_avatar.jpg"
+                         alt="" style="border-radius: 50%;">
+                    <div class="chat-user-name" style="padding: 5px;">
+                        <a href="#" style="font-size: larger;">Karl Jordan</a>
+                    </div>
+
+                </div>
+
+                <div class="ibox-content" style="border:none;">
+
+                    <div class="row" style="margin-left:0px;">
+
+                        <div class="ibox col-md-9" style="height:700px">
+                            <div class="ibox-content chat-discussion" style="height:650px;position:relative;">
+                                @foreach (var message in Model.Messages)
+                                {
+                                    if (message.SenderId == user_id)
+                                    {
+                                        <div class="chat-message right">
+                                            <div class="message">
+                                                <span class="message-date">
+                                                    @message.SendingTime.ToString("ddd MMM dd yyyy - hh:mm tt")
+                                                </span>
+                                                <span class="message-content">@message.Message</span>
+                                            </div>
+                                        </div>
+                                    }
+                                    else if (message.SenderId == Model.ActiveContact.UserId)
+                                    {
+                                        <div class="chat-message left">
+                                            <img class="message-avatar" src="imgs/chat_avatar.jpg" alt="">
+                                            <div class="message">
+                                                <a class="message-author" href="#"> Michael Smith </a>
+                                                <span class="message-date">
+                                                    @message.SendingTime.ToString("ddd MMM dd yyyy - hh:mm tt")
+                                                </span>
+                                                <span class="message-content">@message.Message</span>
+                                            </div>
+                                        </div>
+                                    }
+                                }
+
+                                @*
+                                <div id="toDown"><i class="fa fa-chevron-down"></i></div>
+                                *@
+                            </div>
+
+                            <div class="ibox-footer shadow chat-message-form" style="height: 50px;">
+                                <div class="row">
+                                    <div class="col-md-11" style="padding-right: 10px;width: 95%;">
+                                        <div class="form-group">
+                                            @*<textarea class="form-control" style="height:34px;" 
+                                                placeholder="Type a message" id="msg"></textarea>*@
+                                                <input class="form-control" style="height:34px;" type="file" id="fileInput" />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-1" style="width: 5%;padding: 0;">
+                                        <button class="btn btn-primary" id="send" onclick="uploadFile()">
+                                            <i class="fa fa-send"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="chat-users shadow" style="height:700px;margin-left:-10px;">
+
+                                <div class="users-list nav" id="users-list" >
+                                    @foreach (var contact in Model.Contacts)
+                                    {
+                                        <li class="chat-user @(contact.Equals(Model.ActiveContact) ? "active" : "")"
+                                            data-user-id="@contact.UserId" onclick="changeActiveChat(this)">
+                                            <img class="chat-avatar" src="imgs/chat_avatar.jpg" alt="">
+                                            <div class="chat-user-info" style="width: 100%;">
+                                                <div class="chat-user-name" style="padding: 0;">
+                                                    @contact.Name
+                                                </div>
+                                                <div class="chat-user-msg-wrapper">
+                                                    <div class="chat-user-msg">
+                                                        this is the new msg
+                                                    </div>
+                                                    <span class="msg-count">3</span>
+                                                </div>
+                                            </div>
+                                        </li>
+                                    }
+                                    <li class="chat-user" onclick="changeActiveChat(this)">
+                                        <img class="chat-avatar" src="imgs/chat_avatar.jpg" alt="">
+                                        <div class="chat-user-info" style="width: 100%;">
+                                            <div class="chat-user-name" style="padding: 0;">
+                                                Michael Smith
+                                            </div>
+                                            <div class="chat-user-msg-wrapper">
+                                                <div class="chat-user-msg">
+                                                    this is the new msg
+                                                </div>
+                                                <span class="msg-count">3</span>
+                                            </div>
+                                        </div>
+                                    </li>
+                                </div>
+
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+                
+            </div>
+            <!-- End Column-->
+        </div>
+        <!-- End Row-->
+    </div>
+</div>
+
+@section scripts {
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/3.1.9/signalr.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+
+	<script>
+        // Scroll to the bottom of the chat discussion
+        function scrollChatDown() {
+            $('.chat-discussion').animate({
+                scrollTop: $('.chat-discussion')[0].scrollHeight
+            }, 1000); // The second parameter (1000) is the duration of the animation in milliseconds.
+        }
+
+        scrollChatDown();
+        var hasNextPage = true;
+
+        /*
+        // ToDown
+        $('#toDown').click(function () {
+            $('.chat-discussion').animate({
+                scrollDown: 0
+            }, 1000);
+        });
+        $("#toDown").addClass("hidett");
+
+        $('.chat-discussion').scroll(function () {
+            if ($(this).scrollDown() < 650) {
+                $("#toDown").addClass("hidett").removeClass("showtt");
+            } else {
+                $("#toDown").removeClass("hidett").addClass("showtt");
+            }
+        });
+        */
+
+        function changeActiveChat(elem) {
+            if ($(elem).hasClass('active'))
+                return;
+
+            let userId = $(elem).data("user-id");
+            $('li.chat-user.active').removeClass('active');
+            $(elem).addClass('active');
+
+            $('#active-chat').val(userId);
+            $('#page-index').val(0);
+            hasNextPage = true;
+            $('.chat-discussion').empty();
+            getPrevMsgs();
+            setTimeout(() => {
+                scrollChatDown();
+            }, 100);
+        }
+
+        // In the client (JavaScript)
+        const connection = new signalR.HubConnectionBuilder()
+            .withUrl("http://localhost:6982/chat", {
+                accessTokenFactory: () => '@access_token'
+            })
+            .build();
+
+        connection.on("ReceiveMessage", (msg) => {
+            console.log(msg);
+            var $chatDiscussion = $('.chat-discussion');
+            var active_chat = $('#active-chat').val();
+
+            var date = moment(msg.SendingTime);
+            var formattedDate = date.format('ddd MMM DD YYYY - hh:mm a');
+
+            if (msg.senderId == '@user_id' && msg.receiverId == active_chat) {
+                $chatDiscussion.append(
+                    `<div class="chat-message right">
+                        <div class="message">
+                            <span class="message-date"> ${formattedDate} </span>
+                            <span class="message-content">
+                            ${msg.message}
+                            </span>
+                        </div>
+                    </div>`
+                );
+            }
+            else if (msg.senderId == active_chat && msg.receiverId == '@user_id') {
+                $chatDiscussion.append(
+                    `<div class="chat-message left">
+                        <img class="message-avatar" src="imgs/chat_avatar.jpg" alt="">
+                        <div class="message">
+                            <a class="message-author" href="#"> Michael Smith </a>
+                            <span class="message-date"> ${formattedDate} </span>
+                            <span class="message-content">
+                            ${msg.message}
+                            </span>
+                        </div>
+                    </div>`
+                );
+            }
+            else if (msg.senderId != active_chat) {
+                var $chatUser = $('li.chat-user[data-user-id="' + msg.senderId + '"]');
+                if ($chatUser.length > 0) {
+                    $chatUser.find('.chat-user-msg').html(msg.message);
+                    var currentCount = parseInt($chatUser.find('.msg-count').html()); 
+                    $chatUser.find('.msg-count').html(currentCount + 1);
+                } 
+                else {
+                    $('#users-list').prepend(
+                        `<li class="chat-user" onclick="changeActiveChat(this)" data-user-id="${msg.senderId}">
+                            <img class="chat-avatar" src="imgs/chat_avatar.jpg" alt="">
+                            <div class="chat-user-info" style="width: 100%;">
+                                <div class="chat-user-name" style="padding: 0;">
+                                    Michael Smith
+                                </div>
+                                <div class="chat-user-msg-wrapper">
+                                    <div class="chat-user-msg" style="font-weight:700;">
+                                        ${msg.message}
+                                    </div>
+                                    <span class="msg-count">1</span>
+                                </div>
+                            </div>
+                        </li>`
+                    );
+                }
+            }
+
+            // Scroll to the bottom of the chat discussion
+            $chatDiscussion.scrollTop($chatDiscussion[0].scrollHeight);
+        });
+
+
+        connection.start().catch(err => console.error(err));
+
+        $('.chat-discussion').on('scroll', function () {
+            if ($(this).scrollTop() === 0) {
+                getPrevMsgs();
+            }
+        });
+
+
+        function getPrevMsgs() {
+            if (!hasNextPage)
+                return;
+            
+            var active_chat = $('#active-chat').val();
+            var page_index = $('#page-index').val();
+            page_index++;
+
+            var $chatDiscussion = $('.chat-discussion');
+            $.ajax({
+                url: `http://localhost:6982/chat/messages/${active_chat}?page=${page_index}&pageSize=10`,
+                method: "GET",
+                headers: {
+                    "Authorization": `Bearer @access_token`
+                },
+                success: function (response) {
+                    console.log(response);
+                    if (!response.error) {
+                        hasNextPage = response.hasNextPage;
+
+                        if (response.items.length > 0)
+                            $('#page-index').val(page_index);
+
+                        response.items.map(function (msg) {
+                            var date = moment(msg.SendingTime);
+                            var formattedDate = date.format('ddd MMM DD YYYY - hh:mm A');
+                            if (msg.senderId == '@user_id') {
+                                $chatDiscussion.prepend(
+                                    `<div class="chat-message right">
+                                        <div class="message">
+                                            <span class="message-date"> ${formattedDate} </span>
+                                            <span class="message-content">
+                                            ${msg.message}
+                                            </span>
+                                        </div>
+                                    </div>`
+                                )
+                            }
+                            else if (msg.senderId == active_chat) {
+                                $chatDiscussion.prepend(
+                                    `<div class="chat-message left">
+                                        <img class="message-avatar" src="imgs/chat_avatar.jpg" alt="">
+                                        <div class="message">
+                                            <a class="message-author" href="#"> Michael Smith </a>
+                                            <span class="message-date"> ${formattedDate} </span>
+                                            <span class="message-content">
+                                            ${msg.message}
+                                            </span>
+                                        </div>
+                                    </div>`
+                                )
+                            }
+                        });
+                    } else {
+                        console.log('Error:', response.msg);
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.log('An error occurred:', error);
+                }
+            });
+        }
+
+        // Send a message
+        function sendMessage() {
+            var msg = $('#msg').val();
+            var active_chat = $('#active-chat').val();
+            if (msg && active_chat) {
+                connection.invoke("SendMessage", active_chat, msg).catch(err => console.error(err));
+                $('#msg').val("");
+            }
+        }
+
+
+        async function uploadFile() {
+            var active_chat = $('#active-chat').val();
+            const fileInput = document.getElementById('fileInput');
+            const file = fileInput.files[0];
+            if (!file) {
+                console.error('No file selected.');
+                return;
+            }
+
+            // Convert file to ArrayBuffer
+            const arrayBuffer = await file.arrayBuffer();
+            const byteArray = new Uint8Array(arrayBuffer);
+
+            // Define chunk size
+            const chunkSize = 16384; // 16KB
+
+            // Send chunks to server
+            for (let offset = 0; offset < byteArray.byteLength; offset += chunkSize) {
+                const chunk = byteArray.slice(offset, Math.min(offset + chunkSize, byteArray.byteLength));
+                await connection.invoke("UploadFile", active_chat, file.name, chunk);
+            }
+
+        }
+
+        connection.on("ReceiveFile", function (msg, fileName, fileUrl) {
+            debugger;
+            console.log(msg);
+            console.log(fileName);
+            console.log(fileUrl);
+
+            var $chatDiscussion = $('.chat-discussion');
+            var active_chat = $('#active-chat').val();
+
+            var date = moment(msg.SendingTime);
+            var formattedDate = date.format('ddd MMM DD YYYY - hh:mm a');
+
+            if (msg.senderId == '@user_id' && msg.receiverId == active_chat) {
+                $chatDiscussion.append(
+                    `<div class="chat-message right">
+                                <div class="message">
+                                    <span class="message-date"> ${formattedDate} </span>
+                                    <span class="message-content">
+                                            <a href="${fileUrl}" target="_blank">${fileName}</a>
+                                    </span>
+                                </div>
+                            </div>`
+                );
+            }
+            else if (msg.senderId == active_chat && msg.receiverId == '@user_id') {
+                $chatDiscussion.append(
+                    `<div class="chat-message left">
+                                <img class="message-avatar" src="imgs/chat_avatar.jpg" alt="">
+                                <div class="message">
+                                    <a class="message-author" href="#"> Michael Smith </a>
+                                    <span class="message-date"> ${formattedDate} </span>
+                                    <span class="message-content">
+                                            <a href="${fileUrl}" target="_blank">${fileName}</a>
+                                    </span>
+                                </div>
+                            </div>`
+                );
+            }
+        });
+
+    </script>
+}

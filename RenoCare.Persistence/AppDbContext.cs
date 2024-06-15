@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using RenoCare.Domain;
+using RenoCare.Domain.Chat;
 using RenoCare.Domain.Identity;
 using RenoCare.Persistence.Mapping;
 
@@ -28,6 +29,7 @@ namespace RenoCare.Persistence
             builder.ApplyConfiguration(new MedicationRequestTypeEntityConfiguration());
             builder.ApplyConfiguration(new ReportEntityConfiguration());
             builder.ApplyConfiguration(new DialysisUnitEntityConfiguration());
+            builder.ApplyConfiguration(new ChatMessageEntityConfiguration());
         }
 
         public DbSet<AppUser> Users { get; set; }
@@ -40,5 +42,6 @@ namespace RenoCare.Persistence
         public DbSet<MedicationRequestType> MedicationRequestTypes { get; set; }
         public DbSet<DialysisUnit> DialysisUnits { get; set; }
         public DbSet<Report> Reports { get; set; }
+        public DbSet<ChatMessage> Messages { get; set; }
     }
 }

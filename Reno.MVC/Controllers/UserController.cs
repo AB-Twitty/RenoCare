@@ -6,7 +6,6 @@ using Reno.MVC.Models.User.Auth;
 using Reno.MVC.Services.Base;
 using Reno.MVC.Services.Base.Contracts;
 using System;
-using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Net;
@@ -31,7 +30,7 @@ namespace Reno.MVC.Controllers
         [HttpGet("Login")]
         public virtual IActionResult LoginAsync(string returnUrl = null)
         {
-            _localStorageService.ClearStorage(new List<string> { "Token" });
+            _localStorageService.ClearCurrentToken();
             return View();
         }
 
@@ -40,8 +39,9 @@ namespace Reno.MVC.Controllers
         {
             try
             {
+                _localStorageService.ClearCurrentToken();
+
                 await _httpContextAccessor.HttpContext.SignOutAsync();
-                _localStorageService.ClearStorage(new List<string> { "Token" });
 
                 if (!ModelState.IsValid)
                     return View(login);
@@ -74,7 +74,8 @@ namespace Reno.MVC.Controllers
                         ExpiresUtc = login.RememberMe ? DateTime.UtcNow.AddDays(7) : DateTime.UtcNow.AddHours(1)
                     });
 
-                _localStorageService.SetStorageValue("Token", result.Data.AccessToken);
+                _localStorageService.SetStorageValue($"{claims.Where(c => c.Type == "sub").FirstOrDefault().Value}_Token",
+                    result.Data.AccessToken);
 
                 return LocalRedirect(returnUrl);
             }
@@ -87,8 +88,8 @@ namespace Reno.MVC.Controllers
 
         public virtual async Task<IActionResult> LogoutAsync()
         {
+            _localStorageService.ClearCurrentToken();
             await _httpContextAccessor.HttpContext.SignOutAsync();
-            _localStorageService.ClearStorage(new List<string> { "Token" });
 
             return RedirectToAction("Index", "Home");
         }
@@ -96,7 +97,7 @@ namespace Reno.MVC.Controllers
         [HttpGet("Password/Reset/OTP")]
         public virtual IActionResult SetPasswordWithOtpAsync()
         {
-            _localStorageService.ClearStorage(new List<string> { "Token" });
+            _localStorageService.ClearCurrentToken();
             return View();
         }
 
@@ -105,7 +106,7 @@ namespace Reno.MVC.Controllers
         {
             try
             {
-                _localStorageService.ClearStorage(new List<string> { "Token" });
+                _localStorageService.ClearCurrentToken();
                 if (!ModelState.IsValid)
                     return View(PassModel);
 

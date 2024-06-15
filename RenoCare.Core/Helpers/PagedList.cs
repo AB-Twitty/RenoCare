@@ -121,7 +121,7 @@ namespace RenoCare.Core.Helpers
         /// Gets the items.
         /// </summary>
         /// <value>The items.</value>
-        public IList<TResult> Items { get; }
+        public IList<TResult> Items { get; set; }
         /// <summary>
         /// Gets the has previous page.
         /// </summary>

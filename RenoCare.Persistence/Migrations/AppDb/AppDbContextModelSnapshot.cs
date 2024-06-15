@@ -19,6 +19,49 @@ namespace RenoCare.Persistence.Migrations.AppDb
                 .HasAnnotation("ProductVersion", "5.0.17")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+            modelBuilder.Entity("RenoCare.Domain.Chat.ChatMessage", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<bool>("IsDeleted")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
+
+                    b.Property<bool>("IsRead")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
+
+                    b.Property<string>("Message")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("ReceiverId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("SenderId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime>("SendingTime")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ReceiverId")
+                        .IsUnique();
+
+                    b.HasIndex("SenderId")
+                        .IsUnique();
+
+                    b.ToTable("Messages");
+                });
+
             modelBuilder.Entity("RenoCare.Domain.DiabetesType", b =>
                 {
                     b.Property<int>("Id")
@@ -634,6 +677,25 @@ namespace RenoCare.Persistence.Migrations.AppDb
                             Description = "Individuals who currently smoke.",
                             Name = "Current Smoker"
                         });
+                });
+
+            modelBuilder.Entity("RenoCare.Domain.Chat.ChatMessage", b =>
+                {
+                    b.HasOne("RenoCare.Domain.Identity.AppUser", "Receiver")
+                        .WithOne()
+                        .HasForeignKey("RenoCare.Domain.Chat.ChatMessage", "ReceiverId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("RenoCare.Domain.Identity.AppUser", "Sender")
+                        .WithOne()
+                        .HasForeignKey("RenoCare.Domain.Chat.ChatMessage", "SenderId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Receiver");
+
+                    b.Navigation("Sender");
                 });
 
             modelBuilder.Entity("RenoCare.Domain.DialysisUnit", b =>

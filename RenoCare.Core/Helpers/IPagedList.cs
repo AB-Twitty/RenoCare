@@ -36,7 +36,7 @@ namespace RenoCare.Core.Helpers
         /// <summary>
         /// Gets the current page items.
         /// </summary>
-        IList<T> Items { get; }
+        IList<T> Items { get; set; }
         /// <summary>
         /// Gets the has previous page.
         /// </summary>
