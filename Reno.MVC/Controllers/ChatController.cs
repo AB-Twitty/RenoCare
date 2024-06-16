@@ -26,15 +26,9 @@ namespace Reno.MVC.Controllers
 
             var messages = new List<ChatMessage>();
 
-            if (active_contact != null)
-            {
-                messages = (await _client.GetUserMessagesWithAsync(active_contact.UserId, 1, 10)).Items.Reverse().ToList();
-            }
-
             var model = new ChatModel
             {
                 Contacts = contacts,
-                ActiveContact = active_contact,
                 Messages = messages
             };
 

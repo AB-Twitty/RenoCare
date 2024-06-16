@@ -1,13 +1,16 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using RenoCare.Core.Base;
 using RenoCare.Core.Conatracts.Persistence;
 using RenoCare.Core.Features.Chat.Dtos;
+using RenoCare.Core.Hubs;
 using RenoCare.Domain;
 using RenoCare.Domain.Chat;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -33,6 +36,7 @@ namespace RenoCare.Core.Features.Chat.Mediator.Queries
         private readonly IRepository<Patient> _patientRepo;
         private readonly IRepository<DialysisUnit> _dialysisUnitRepo;
         private readonly IHttpContextAccessor _ctxAccessor;
+        private readonly IHubContext<ChatHub> _chatHub;
 
         #endregion
 
@@ -40,13 +44,14 @@ namespace RenoCare.Core.Features.Chat.Mediator.Queries
 
         public GetUserContactsQueryRequestHandler(IRepository<ChatMessage> msgRepo,
             IRepository<MedicationRequest> medRequestsRepo, IHttpContextAccessor ctxAccessor,
-            IRepository<Patient> patientRepo, IRepository<DialysisUnit> dialysisUnitRepo)
+            IRepository<Patient> patientRepo, IRepository<DialysisUnit> dialysisUnitRepo, IHubContext<ChatHub> chatHub)
         {
             _msgRepo = msgRepo;
             _medRequestsRepo = medRequestsRepo;
             _ctxAccessor = ctxAccessor;
             _patientRepo = patientRepo;
             _dialysisUnitRepo = dialysisUnitRepo;
+            _chatHub = chatHub;
         }
 
         #endregion
@@ -65,7 +70,9 @@ namespace RenoCare.Core.Features.Chat.Mediator.Queries
         public async Task<ApiResponse<IList<ContactDto>>> Handle(GetUserContactsQueryRequest request, CancellationToken cancellationToken)
         {
             var curr_user = _ctxAccessor.HttpContext.User.Claims
-                .Where(c => c.Type == "sub").FirstOrDefault()?.Value;
+                .Where(c => c.Type == ClaimTypes.NameIdentifier).FirstOrDefault()?.Value;
+
+            var cnotact_comparer = new ContactComparer();
 
             IList<ContactDto> contacts = new List<ContactDto>();
 
@@ -74,7 +81,6 @@ namespace RenoCare.Core.Features.Chat.Mediator.Queries
                 var asSender = await qry.Where(x => x.SenderId == curr_user)
                     .Select(x => new ContactDto
                     {
-                        Name = x.Receiver.FirstName + " " + x.Receiver.LastName,
                         UserId = x.ReceiverId
                     }).Distinct().ToListAsync();
 
@@ -82,7 +88,6 @@ namespace RenoCare.Core.Features.Chat.Mediator.Queries
                 var asReceiver = await qry.Where(x => x.ReceiverId == curr_user)
                     .Select(x => new ContactDto
                     {
-                        Name = x.Sender.FirstName + " " + x.Sender.LastName,
                         UserId = x.SenderId
                     }).Distinct().ToListAsync();
 
@@ -104,43 +109,100 @@ namespace RenoCare.Core.Features.Chat.Mediator.Queries
                         statuses.Contains(x.Status.Name.ToLower()))
                         .Select(x => new ContactDto
                         {
-                            Name = x.Patient.User.FirstName + " " + x.Patient.User.LastName,
                             UserId = x.Patient.User.Id
                         }).Distinct().ToListAsync();
                 });
 
-                contacts = contacts.Union(medRequestsContacts).Distinct().ToList();
+                contacts = contacts.Union(medRequestsContacts).Distinct(cnotact_comparer).ToList();
 
                 foreach (var contact in contacts)
                 {
-                    int? contactId = await _patientRepo.ApplyQueryAsync(async qry =>
-                        await qry.Where(p => p.UserId == contact.UserId).Select(p => p.Id).FirstOrDefaultAsync());
+                    var obj = await _patientRepo.ApplyQueryAsync(async qry =>
+                        await qry.Where(p => p.UserId == contact.UserId)
+                        .Select(p => new
+                        {
+                            contact_id = p.Id,
+                            contact_name = p.User.FirstName + " " + p.User.LastName
+                        })
+                        .FirstOrDefaultAsync());
 
-                    if (contactId == null)
+                    if (obj == null)
                     {
                         contacts.Remove(contact);
                         continue;
                     }
 
-                    contact.ContactId = contactId.Value;
+                    var msgs = await _msgRepo.GetAllAsync(qry =>
+                        qry.Where(x => x.ReceiverId == curr_user && x.Status == 1));
+
+                    foreach (var msg in msgs)
+                    {
+                        msg.Status = 2;
+                        await _msgRepo.UpdateAsync(msg);
+                        await _msgRepo.SaveAsync();
+                        await _chatHub.Clients.User(msg.SenderId).SendAsync("MarkedAsReceived", msg);
+                    }
+
+                    (ChatMessage last_msg, int unread_cnt) = await _msgRepo.ApplyQueryAsync(async qry =>
+                    {
+                        int cnt = qry.Where(m => m.ReceiverId == curr_user && m.Status == 2).Count();
+
+                        ChatMessage last = await qry.Where(x => x.SenderId == curr_user || x.ReceiverId == curr_user)
+                             .OrderByDescending(x => x.SendingTime).FirstOrDefaultAsync();
+
+                        return (last, cnt);
+                    });
+
+                    contact.LastMsg = last_msg;
+                    contact.UnreadMsgCount = unread_cnt;
+                    contact.ContactId = obj.contact_id;
+                    contact.Name = obj.contact_name;
                 }
             }
             else if (_ctxAccessor.HttpContext.User.IsInRole("Patient"))
             {
-                contacts = contacts.Distinct().ToList();
+                contacts = contacts.Distinct(cnotact_comparer).ToList();
 
                 foreach (var contact in contacts)
                 {
-                    int? contactId = await _dialysisUnitRepo.ApplyQueryAsync(async qry =>
-                        await qry.Where(p => p.UserId == contact.UserId).Select(p => p.Id).FirstOrDefaultAsync());
+                    var obj = await _dialysisUnitRepo.ApplyQueryAsync(async qry =>
+                        await qry.Where(p => p.UserId == contact.UserId)
+                        .Select(p => new { contact_id = p.Id, contact_name = p.Name })
+                        .FirstOrDefaultAsync());
 
-                    if (contactId == null)
+                    if (obj == null)
                     {
                         contacts.Remove(contact);
                         continue;
                     }
 
-                    contact.ContactId = contactId.Value;
+
+                    var msgs = await _msgRepo.GetAllAsync(qry =>
+                        qry.Where(x => x.ReceiverId == curr_user && x.Status == 1));
+
+                    foreach (var msg in msgs)
+                    {
+                        msg.Status = 2;
+                        await _msgRepo.UpdateAsync(msg);
+                        await _msgRepo.SaveAsync();
+                        await _chatHub.Clients.User(msg.SenderId).SendAsync("MarkedAsReceived", msg);
+                    }
+
+
+                    (ChatMessage last_msg, int unread_cnt) = await _msgRepo.ApplyQueryAsync(async qry =>
+                    {
+                        int cnt = qry.Where(m => m.ReceiverId == curr_user && m.Status == 2).Count();
+
+                        ChatMessage last = await qry.Where(x => x.SenderId == curr_user || x.ReceiverId == curr_user)
+                             .OrderByDescending(x => x.SendingTime).FirstOrDefaultAsync();
+
+                        return (last, cnt);
+                    });
+
+                    contact.LastMsg = last_msg;
+                    contact.UnreadMsgCount = unread_cnt;
+                    contact.ContactId = obj.contact_id;
+                    contact.Name = obj.contact_name;
                 }
             }
 

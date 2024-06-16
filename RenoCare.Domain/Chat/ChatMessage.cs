@@ -10,7 +10,7 @@ namespace RenoCare.Domain.Chat
         public string ReceiverId { get; set; }
         public string Message { get; set; }
         public DateTime SendingTime { get; set; }
-        public bool IsRead { get; set; }
+        public int Status { get; set; }
         public bool IsDeleted { get; set; }
 
 

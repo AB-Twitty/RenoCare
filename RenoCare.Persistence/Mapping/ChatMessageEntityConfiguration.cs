@@ -29,7 +29,8 @@ namespace RenoCare.Persistence.Mapping
             builder.Property(p => p.Message).IsRequired().HasColumnType("text");
 
             builder.Property(p => p.SendingTime).IsRequired();
-            builder.Property(p => p.IsRead).IsRequired().HasDefaultValue(false);
+            builder.Property(p => p.Status).IsRequired();
+
             builder.Property(p => p.IsDeleted).IsRequired().HasDefaultValue(false);
         }
     }
