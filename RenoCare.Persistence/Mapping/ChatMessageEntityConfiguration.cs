@@ -30,7 +30,8 @@ namespace RenoCare.Persistence.Mapping
 
             builder.Property(p => p.SendingTime).IsRequired();
             builder.Property(p => p.Status).IsRequired();
-
+            builder.Property(p => p.IsFile).IsRequired().HasDefaultValue(false);
+            builder.Property(p => p.FileLink).IsRequired(false);
             builder.Property(p => p.IsDeleted).IsRequired().HasDefaultValue(false);
         }
     }

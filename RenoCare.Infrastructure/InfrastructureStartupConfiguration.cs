@@ -1,6 +1,8 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using RenoCare.Core.Conatracts.Files;
 using RenoCare.Infrastructure.Authentication;
+using RenoCare.Infrastructure.Files;
 using RenoCare.Infrastructure.Mail;
 
 namespace RenoCare.Infrastructure
@@ -19,6 +21,8 @@ namespace RenoCare.Infrastructure
         {
             services.ConfigureAuthenticationInfrastructure()
                 .ConfigureMailInfrastructure(configuration);
+
+            services.AddTransient<IFileUpload, FileUpload>();
 
             return services;
         }

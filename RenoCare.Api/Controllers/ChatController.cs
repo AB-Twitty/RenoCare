@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using RenoCare.Core.Base;
 using RenoCare.Core.Features.Chat.Dtos;
+using RenoCare.Core.Features.Chat.Mediator.Commands;
 using RenoCare.Core.Features.Chat.Mediator.Queries;
 using RenoCare.Core.Helpers;
 using RenoCare.Domain.Chat;
@@ -34,5 +35,9 @@ namespace RenoCare.Api.Controllers
                 PageSize = pageSize
             });
         }
+
+        [HttpPost("/chat/upload")]
+        public async Task<ActionResult<ApiResponse<string>>> UploadChatFileAsync([FromForm] UploadChatFileCommandRequest req) =>
+            ApiResult(await _mediator.Send(req));
     }
 }

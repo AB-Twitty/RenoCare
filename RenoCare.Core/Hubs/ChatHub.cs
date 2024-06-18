@@ -122,33 +122,5 @@ namespace RenoCare.Core.Hubs
 
             await base.OnConnectedAsync();
         }
-
-        public async Task UploadFile(string receiverId, string fileName, byte[] stream)
-        {
-            try
-            {
-                var senderId = Context.UserIdentifier;
-                if (string.IsNullOrEmpty(senderId))
-                {
-                    throw new InvalidOperationException("Sender ID cannot be null or empty.");
-                }
-
-                var msg = new ChatMessage
-                {
-                    SenderId = senderId,
-                    ReceiverId = receiverId,
-                    Message = "tis is the file name",
-                    SendingTime = DateTime.Now
-                };
-
-                // Notify clients about the new file
-                await Clients.Users(receiverId, senderId).SendAsync("ReceiveFile", msg, fileName, $"/uploads/{fileName}");
-            }
-            catch (Exception ex)
-            {
-
-                throw; // Re-throw the exception to be handled by the SignalR middleware
-            }
-        }
     }
 }

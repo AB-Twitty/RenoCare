@@ -1,9 +1,7 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Reno.MVC.Models.Chat;
 using Reno.MVC.Services.Base;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -33,26 +31,6 @@ namespace Reno.MVC.Controllers
             };
 
             return View(model);
-        }
-
-
-        [HttpPost]
-        public async Task<IActionResult> Upload(IFormFile file)
-        {
-            if (file == null || file.Length == 0)
-            {
-                return BadRequest("No file uploaded.");
-            }
-
-            using (var memoryStream = new MemoryStream())
-            {
-                await file.CopyToAsync(memoryStream);
-                return Ok(new
-                {
-                    fileName = file.FileName,
-                    fileData = memoryStream.ToArray()
-                });
-            }
         }
     }
 }

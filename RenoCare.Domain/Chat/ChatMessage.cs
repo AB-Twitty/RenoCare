@@ -12,6 +12,8 @@ namespace RenoCare.Domain.Chat
         public DateTime SendingTime { get; set; }
         public int Status { get; set; }
         public bool IsDeleted { get; set; }
+        public bool IsFile { get; set; }
+        public string FileLink { get; set; }
 
 
         public virtual AppUser Sender { get; set; }

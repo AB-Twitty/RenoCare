@@ -29,7 +29,7 @@ namespace Reno.MVC
 
             services.AddHttpClient<IClient, Client>(client =>
             {
-                client.BaseAddress = new Uri("http://localhost:6982");
+                client.BaseAddress = new Uri("https://renocareapi.azurewebsites.net");
             });
 
             services.AddHttpContextAccessor();
