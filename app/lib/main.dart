@@ -1,14 +1,27 @@
-import 'package:app/pages/home_page.dart';
-import 'package:app/pages/login_page.dart';
+import 'package:app/pages/chat_module/page/chat_home/chat_home_page.dart';
+import 'package:app/pages/chat_module/page/chat_home/chat_page.dart';
+import 'package:app/pages/home_page/home_page.dart';
+import 'package:app/pages/login_page/login_page.dart';
 import 'package:app/pages/sign_up.dart';
 import 'package:app/pages/splash_screen.dart';
 import 'package:app/services/navigation_service.dart';
 import 'package:app/tabs/appointment.dart';
 import 'package:app/tabs/home.dart';
 import 'package:app/tabs/profile_tab.dart';
+import 'package:bloc/bloc.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
-void main() {
+import 'bloc.dart';
+import 'firebase_options.dart';
+
+void main() async{
+  Bloc.observer = MyBlocObserver();
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+
   runApp(
     SplashScreen(
       key: UniqueKey(),
@@ -28,7 +41,7 @@ class MyApp extends StatelessWidget {
 
       theme: ThemeData(
         scaffoldBackgroundColor: Colors.white,
-        backgroundColor: Colors.white,
+        //backgroundColor: Colors.white,
       ),
       debugShowCheckedModeBanner: false ,
       home: LoginPage(),
@@ -42,6 +55,7 @@ class MyApp extends StatelessWidget {
         '/profile':(context)=>ProfileTab(),
         '/appointment':(context)=>Appointment(),
         '/home':(context)=>Home(),
+        '/chatHomePage':(context)=>ChatHomePage(),
 
       },
     );

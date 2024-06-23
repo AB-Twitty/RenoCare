@@ -8,9 +8,9 @@ class CustomTextFormField extends StatelessWidget {
 
   CustomTextFormField(
       {required this.onSaved,
-      required this.regEX,
-      required this.hintText,
-      required this.obscureText});
+        required this.regEX,
+        required this.hintText,
+        required this.obscureText});
 
   @override
   Widget build(BuildContext context) {
@@ -47,10 +47,10 @@ class CustomTextFormField1 extends StatelessWidget {
 
   CustomTextFormField1(
       {required this.onSaved,
-      required this.regEX,
-      required this.hintText,
-      required this.obscureText,
-      required this.icon
+        required this.regEX,
+        required this.hintText,
+        required this.obscureText,
+        required this.icon
       });
 
   @override

@@ -1,16 +1,18 @@
 
 import 'package:app/Shared/Network/authentication_service.dart';
+import 'package:app/pages/login_page/login_cubit.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../Shared/Network/api_maneger.dart';
-import '../services/navigation_service.dart';
+import '../../services/navigation_service.dart';
 
 
-import 'dart:convert';
 import 'package:http/http.dart' as http;
+
+import '../../services/token_service.dart';
 class LoginPage extends StatefulWidget {
 
 
@@ -24,14 +26,33 @@ class _LoginPageState extends State<LoginPage> {
   final AuthenticationService auth=AuthenticationService(Dio());
   late double deviceHeight;
   late double deviceWidth;
+  bool ?is_checked;
   var _formKey =GlobalKey<FormState>();
   var emailController=TextEditingController();
   var passwordController=TextEditingController();
+
   @override
   Widget build(BuildContext context) {
+
     deviceHeight = MediaQuery.of(context).size.height;
     deviceWidth = MediaQuery.of(context).size.width;
     _navigation=NavigationService();
+    return BlocProvider(
+  create: (context) => LoginCubit(),
+  child: BlocConsumer<LoginCubit, LoginState>(
+  listener: (context, state) {
+    if(state is LoginSuccessState)
+      {
+        _navigation.removeAndNavigateToRoute('/home_page');
+      }
+    else if (state is LoginErrorState) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Login Failed: ${state.error}')),
+      );
+    }
+  },
+  builder: (context, state) {
+    var cubit = LoginCubit.get(context);
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: Column(
@@ -54,7 +75,7 @@ class _LoginPageState extends State<LoginPage> {
                     height: 47,
                     width: 344,
                     child: TextFormField(
-                      controller: emailController,
+                      controller: cubit.emailController,
                       decoration: const InputDecoration(
                         fillColor: Color(0xffB8E8F7),
                         filled: true,
@@ -98,7 +119,7 @@ class _LoginPageState extends State<LoginPage> {
                     width: 339,
                     height: 47,
                     child: TextFormField(
-                      controller: passwordController,
+                      controller: cubit.passwordController,
                       obscureText: true,
                       decoration: const InputDecoration(
                         fillColor: Color(0xffB8E8F7),
@@ -132,10 +153,12 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                   ),
                   const SizedBox(height: 20),
+
                   Container(
                     width: 335,
                     height: 57,
-                    child: ElevatedButton(
+                    child:state is LoginLoadingState?Center(child: CircularProgressIndicator(),)
+                      :ElevatedButton(
                       style: ElevatedButton.styleFrom(
 
                         backgroundColor: Color(0xff019AED),
@@ -148,9 +171,16 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                       onPressed: () {
 
-                            // print("user loged sucess");
-                            // auth.login('admn@localhost.com', '121515151');
-                            _navigation.removeAndNavigateToRoute('/home_page');
+                        if(_formKey.currentState?.validate()??false)
+                          {
+                            print(cubit.emailController.text);
+                            cubit.Login(cubit.emailController.text, cubit.passwordController.text,true);
+                            print("=======================================Token=========================================");
+
+                          }
+
+
+
                       },
                       child: const Text(
                         'Login',
@@ -258,5 +288,8 @@ class _LoginPageState extends State<LoginPage> {
         ],
       ),
     );
+  },
+),
+);
   }
 }

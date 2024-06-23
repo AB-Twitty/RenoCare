@@ -1,0 +1,112 @@
+﻿@model ReportIndexVM
+
+<div class="form-group">
+    <div class="row">
+
+        <!--Patient Name-->
+        <div class="col-md-6 mb-15">
+            <label class="control-label col-md-12">Patient Name<span class="text-danger"> *</span></label>
+            <div class="col-md-12">
+                <input asp-for="@Model.Report.Patient.PatientName" class="m-b form-control BaselineSingleControl" readonly disabled />
+            </div>
+        </div>
+
+        <!--Gender Radio-->
+        <div class="col-md-6 mb-15">
+            <div class="form-group">
+                <label class="control-label col-md-12">Gender<span class=" text-danger"> *</span></label>
+                <div class="col-md-12 m-r-sm">
+                    <div class="radio col-md-4">
+                        <input asp-for="@Model.Report.Patient.Gender" type="radio" value="Male" class="i-checks isMale BaselineSingleControl" disabled /> Male
+                    </div>
+                    <div class="radio col-md-4">
+                        <input asp-for="@Model.Report.Patient.Gender" type="radio" value="Female" class="i-checks isFemale BaselineSingleControl" disabled /> Female
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="row">
+
+        <!--Date of Birth-->
+        <div class="col-md-6 mb-15">
+            <label class="control-label col-md-12">
+                Date Of Birth<span class="text-danger"> *</span>
+            </label>
+            <div class="col-md-12">
+                <input asp-for="@Model.Report.Patient.BirthDate" type="Date" class="m-b form-control datepicker BaselineSingleControl" readonly disabled/>
+            </div>
+        </div>
+
+        <!--Age-->
+        <div class="col-md-6 mb-15">
+            <label class="control-label col-md-12">Age<span class="text-danger"> *</span></label>
+            <div class="col-md-12">
+                <input asp-for="@Model.Report.Patient.Age" class="m-b form-control BaselineSingleControl" readonly disabled />
+            </div>
+        </div>
+
+    </div>
+
+    <div class="row">
+
+        <!--Hypertension-->
+        <div class="col-md-6 mb-15">
+            <label class="control-label col-md-12">
+                Hypertension<span class="text-danger"> *</span>
+            </label>
+            <div class="col-md-12">
+                <input asp-for="@Model.Report.Patient.Hypertension" type="text" class="m-b form-control BaselineSingleControl" readonly disabled />
+            </div>
+        </div>
+
+        <!--Diabetes-->
+        <div class="col-md-6 mb-15">
+            <label class="control-label col-md-12">Diabetes<span class="text-danger"> *</span></label>
+            <div class="col-md-12">
+                <input asp-for="@Model.Report.Patient.Diabetes" type="text" class="m-b form-control BaselineSingleControl" readonly disabled />
+            </div>
+        </div>
+
+    </div>
+
+    <div class="row">
+
+        <!--Smoking Status-->
+        <div class="col-md-6 mb-15">
+            <label class="control-label col-md-12">Smoking Status<span class="text-danger"> *</span></label>
+            <div class="col-md-12">
+                <input asp-for="@Model.Report.Patient.Smoking" type="text" class="m-b form-control BaselineSingleControl" readonly disabled />
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+<!--Tabs Buttons-->
+<div class="row">
+    <div class="ibox float-e-margins">
+        <div class="ibox-title">
+            <div class="col-md-6">
+                <button data-toggle="tab" id="prev_to_sessionDetails" href="#tab-1" class="tab7 btn btn-secondary">Previous</button>
+            </div>
+            <div class="col-md-6 text-end">
+                <button data-toggle="tab" id="nxt_to_vitalSigns" href="#tab-3" class="tab9 btn btn-primary">Next</button>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    $("#prev_to_sessionDetails").on('click', function () {
+        $('.nav-tabs a[href="' + "#tab-1" + '"]').tab('show');
+    });
+
+    $("#nxt_to_vitalSigns").on('click', function () {
+        $('.nav-tabs a[href="' + "#tab-3" + '"]').tab('show');
+    });
+</script>

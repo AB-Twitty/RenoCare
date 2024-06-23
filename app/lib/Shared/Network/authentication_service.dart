@@ -6,7 +6,7 @@ class AuthenticationService {
   AuthenticationService(this._dio);
 
   Future<void> login(String email, String password) async {
-    final url = 'http://localhost:6982/Api/V1/Login';
+    final url = 'https://renocareapi.azurewebsites.net/Api/V1/Login';
     final requestBody = {
       "email": email,
       "password": password,

@@ -1,7 +1,4 @@
-import 'package:app/pages/cubit/home_cubit.dart';
-import 'package:app/tabs/appointment.dart';
-import 'package:app/tabs/home.dart';
-import 'package:app/tabs/profile_tab.dart';
+import 'package:app/pages/home_page/home_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -23,14 +20,13 @@ class _HomePageState extends State<HomePage> {
         builder: (context, state) {
           var cubit = HomeCubit.get(context);
           return Scaffold(
-            appBar: AppBar(
-              automaticallyImplyLeading: false,
-              title: Text('Hemodialysis App'),
-            ),
+
             body: cubit.tabs[cubit.current_indx],
 
             bottomNavigationBar: BottomNavigationBar(
                 selectedItemColor: Color(0xff45B3EF),
+                showUnselectedLabels: true,
+                unselectedItemColor: Colors.grey,
                 currentIndex: cubit.current_indx,
                 onTap: (index) {
                   switch(index)
@@ -45,7 +41,13 @@ class _HomePageState extends State<HomePage> {
                     case 2:
                       Navigator.pushNamed(context, '/profile');
                       break;
+
+                    case 3:
+                      Navigator.pushNamed(context, '/chatHomePage');
+                      break;
+
                   }
+
 
                 },
                 items: cubit.bottomItems,

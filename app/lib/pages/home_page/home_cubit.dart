@@ -1,3 +1,5 @@
+import 'package:app/pages/chat_module/page/chat_home/chat_home_page.dart';
+import 'package:app/pages/chat_module/page/chat_home/chat_page.dart';
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -28,12 +30,17 @@ class HomeCubit extends Cubit<HomeState> {
         icon:Icon(Icons.person),
         label: "Profile"
     ),
+    BottomNavigationBarItem(
+        icon:Icon(Icons.chat_outlined),
+        label: "Chat"
+    ),
   ];
 
   List<Widget>tabs = [
     Appointment(),
     Home(),
     ProfileTab(),
+    ChatHomePage(),
   ];
 
   void changeNavBarState(int index)

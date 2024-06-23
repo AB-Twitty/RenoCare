@@ -1,0 +1,181 @@
+﻿@model ReportIndexVM
+
+<div class="form-group">
+
+    <!--Weight-->
+    <div>
+        <p>
+            Weight
+            <span class="font-12">- Kg</span>
+            <span class="text-danger"> *</span>
+        </p>
+        <div class="row">
+
+            <!--Pre Weight-->
+            <div class="col-md-6">
+                <div class="col-md-12" style="display:inline-flex;">
+                    <label class="control-label m-r-sm" style="padding-top:5px; min-width:60px;">
+                        Pre:
+                    </label>
+                    <input asp-for="@Model.Report.PreWeight" class="m-b form-control" maxlength="3" />
+                    <span class="text-danger"></span>
+                </div>
+            </div>
+
+            <!--Post Weight-->
+            <div class="col-md-6">
+                <div class="col-md-12" style="display:inline-flex;">
+                    <label class="control-label m-r-sm" style="padding-top:5px; min-width:60px;">
+                        Post:
+                    </label>
+                    <input id="postWeight" asp-for="@Model.Report.PostWeight" class="m-b form-control" maxlength="3" />
+                    <span class="text-danger"></span>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <br />
+
+    <!--Systolic Blood Pressure-->
+    <div>
+        <p>
+            Systolic Blood Pressure
+            <span class="font-12">- mmHg</span>
+            <span class="text-danger"> *</span>
+        </p>
+        <div class="row">
+
+            <!--Pre-->
+            <div class="col-md-4">
+                <div class="col-md-12" style="display:inline-flex;">
+                    <label class="control-label m-r-sm" style="padding-top:5px; min-width:60px;">
+                        Pre:
+                    </label>
+                    <div style="display:inline-flex; min-width:120px; max-width:200px;">
+                        <input id="preBloodPressure" asp-for="@Model.Report.PreSystolicBloodPressure" hidden />
+                        <input value="@Model.Report.PreSystolicBloodPressure?.Split('/')[0]"
+                               class="m-b form-control" maxlength="3" id="preSystolic"/>
+                        <div style="font-size:x-large; margin: 0 5px;">/</div>
+                        <input value="@Model.Report.PreSystolicBloodPressure?.Split('/')[1]"
+                               class="m-b form-control" maxlength="3" id="preDiastolic"/>
+                    </div>
+                    <span class="text-danger"></span>
+                </div>
+            </div>
+
+            <!--During-->
+            <div class="col-md-4">
+                <div class="col-md-12" style="display:inline-flex;">
+                    <label class="control-label m-r-sm" style="padding-top:5px; min-width:60px;">
+                        During:
+                    </label>
+                    <div style="display:inline-flex; min-width:120px; max-width:200px;">
+                        <input id="duringBloodPressure" asp-for="@Model.Report.DuringSystolicBloodPressure" hidden />
+                        <input value="@Model.Report.DuringSystolicBloodPressure?.Split('/')[0]"
+                               class="m-b form-control" maxlength="3" id="duringSystolic" />
+                        <div style="font-size:x-large; margin: 0 5px;">/</div>
+                        <input value="@Model.Report.DuringSystolicBloodPressure?.Split('/')[1]"
+                               class="m-b form-control" maxlength="3" id="duringDiastolic" />
+                    </div>
+                    <span class="text-danger"></span>
+                </div>
+            </div>
+
+            <!--Post-->
+            <div class="col-md-4">
+                <div class="col-md-12" style="display:inline-flex;">
+                    <label class="control-label m-r-sm" style="padding-top:5px; min-width:60px;">
+                        Post:
+                    </label>
+                    <div style="display:inline-flex; min-width:120px; max-width:200px;">
+                        <input id="postBloodPressure" asp-for="@Model.Report.PostSystolicBloodPressure" hidden />
+                        <input value="@Model.Report.PostSystolicBloodPressure?.Split('/')[0]"
+                               class="m-b form-control" maxlength="3" id="postSystolic" />
+                        <div style="font-size:x-large; margin: 0 5px;">/</div>
+                        <input value="@Model.Report.PostSystolicBloodPressure?.Split('/')[1]"
+                               class="m-b form-control" maxlength="3" id="postDiastolic" />
+                    </div>
+                    <span class="text-danger"></span>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <br />
+
+    <hr />
+    <div class="row">
+
+        <!--Dry Weight-->
+        <div class="col-md-6">
+            <label class="control-label col-md-12">
+                Dry Weight
+                <span class=" font-12 control-label">- kg</span>
+                <span class="text-danger"> *</span>
+            </label>
+
+            <div class="col-md-12">
+                <input asp-for="@Model.Report.DryWeight" class="m-b form-control" />
+                <span class="text-danger"></span>
+            </div>
+        </div>
+
+        <!--Heart Rate-->
+        <div class="col-md-6">
+            <label class="control-label col-md-12">
+                Heart Rate
+                <span class=" font-12 control-label">- bpm</span>
+                <span class="text-danger"> *</span>
+            </label>
+
+            <div class="col-md-12">
+                <input asp-for="@Model.Report.HeartRate" class="m-b form-control" />
+                <span class="text-danger"></span>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+<!--Tabs Buttons-->
+<div class="row">
+    <div class="ibox float-e-margins">
+        <div class="ibox-title">
+            <div class="col-md-6">
+                <button data-toggle="tab" id="prev_to_healthStatus" href="#tab-2" class="tab7 btn btn-secondary">Previous</button>
+            </div>
+            <div class="col-md-6 text-end">
+                <button data-toggle="tab" id="nxt_to_treatmentOutcomes" href="#tab-4" class="tab9 btn btn-primary">Next</button>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    $("#prev_to_healthStatus").on('click', function () {
+        $('.nav-tabs a[href="' + "#tab-2" + '"]').tab('show');
+    });
+
+    $("#nxt_to_treatmentOutcomes").on('click', function () {
+        $('.nav-tabs a[href="' + "#tab-4" + '"]').tab('show');
+    });
+
+    $('#main-form').on('submit', function () {
+        FormatBloodPressureFields("pre");
+        FormatBloodPressureFields("during");
+        FormatBloodPressureFields("post");
+    });
+
+    function FormatBloodPressureFields(prefix) {
+        var systolic = $("#" + prefix + "Systolic").val();
+        var diastolic = $("#" + prefix + "Diastolic").val();
+
+        if (systolic && diastolic)
+            $("#" + prefix + "BloodPressure").val(systolic + '/' + diastolic);
+    }
+
+
+</script>

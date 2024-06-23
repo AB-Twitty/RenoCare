@@ -1,9 +1,10 @@
-
 import 'package:app/pages/map_page.dart';
+import 'package:draggable_fab/draggable_fab.dart';
 import 'package:easy_search_bar/easy_search_bar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+
+// import 'package:google_fonts/google_fonts.dart';
 import '../services/navigation_service.dart';
 import '../Shared/components/widgets/bottom_sheet.dart';
 import '../Shared/components/widgets/center_card.dart';
@@ -21,112 +22,129 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   late NavigationService _navigation;
-  String searchValue='';
-  final List<String> _suggestions = ['Afeganistan', 'Albania', 'Algeria', 'Australia', 'Brazil', 'German', 'Madagascar', 'Mozambique', 'Portugal', 'Zambia'];
+  String searchValue = '';
+  final List<String> _suggestions = [
+    'Afeganistan',
+    'Albania',
+    'Algeria',
+    'Australia',
+    'Brazil',
+    'German',
+    'Madagascar',
+    'Mozambique',
+    'Portugal',
+    'Zambia'
+  ];
+
   @override
   Widget build(BuildContext context) {
-
-    _navigation=NavigationService();
+    _navigation = NavigationService();
     return Scaffold(
+
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {},
+        child: Icon(Icons.chat,),
+       backgroundColor: Color(0xff3C98CB) ,
+      ),
+
 
       key: _scaffoldKey,
 
-    drawer: FilterDrawer(),
+      drawer: FilterDrawer(),
       appBar: EasySearchBar(
 
         backgroundColor: Colors.transparent,
-          elevation: 0.0,
+        elevation: 0.0,
 
-          title: Text(
-              'Search',
-            style: TextStyle(
-              fontSize: 14,
-            ),
-
-
+        title: Text(
+          'Search',
+          style: TextStyle(
+            fontSize: 14,
           ),
-          onSearch: (value) {
-            setState(() {
 
-              searchValue=value;
-            });
-          },
+
+        ),
+        onSearch: (value) {
+          setState(() {
+            searchValue = value;
+          });
+        },
         suggestions: _suggestions,
 
       ),
 
       // drawer: FilterDrawer(),
       body: Column(
-
         children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
 
-                Row(
-                  children: [
-                    IconButton(
-                        onPressed: () {
-                          displayBottomSheet(context);
-                        },
-                        icon: Icon(Icons.sort,color:Color(0xff3C98CB) ,)
-                    ),
-                    Text(
+
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+
+              Row(
+                children: [
+                  IconButton(
+                      onPressed: () {
+                        displayBottomSheet(context);
+                      },
+                      icon: Icon(Icons.sort, color: Color(0xff3C98CB),)
+                  ),
+                  Text(
                       "Sort",
                       style: TextStyle(
-                        fontSize: 12
+                          fontSize: 12
                       )
 
-                    )
-                  ],
-                ),
+                  )
+                ],
+              ),
 
-                Row(
-                  children: [
-                    IconButton(
-                        onPressed: () {
-                          _scaffoldKey.currentState?.openDrawer();
-                        },
-                        icon: Icon(Icons.filter_alt,color:Color(0xff3C98CB) ,)
-                    ),
-                    Text(
+              Row(
+                children: [
+                  IconButton(
+                      onPressed: () {
+                        _scaffoldKey.currentState?.openDrawer();
+                      },
+                      icon: Icon(Icons.filter_alt, color: Color(0xff3C98CB),)
+                  ),
+                  Text(
                       "Filter",
                       style: TextStyle(
-                        fontSize: 12
+                          fontSize: 12
                       )
 
-                    )
-                  ],
-                ),
-                Row(
-                  children: [
-                    IconButton(
-                        onPressed: () {
-
-                          _navigation.navigateToPage(MapPage());
-                        },
-                        icon: Icon(Icons.map,color:Color(0xff3C98CB) ,)
-                    ),
-                    Text(
+                  )
+                ],
+              ),
+              Row(
+                children: [
+                  IconButton(
+                      onPressed: () {
+                        _navigation.navigateToPage(MapPage());
+                      },
+                      icon: Icon(Icons.map, color: Color(0xff3C98CB),)
+                  ),
+                  Text(
                       "Maps",
                       style: TextStyle(
-                        fontSize: 12
+                          fontSize: 12
                       )
 
-                    )
-                  ],
-                ),
+                  )
+                ],
+              ),
 
-              ],
-            ),
-          Divider(height: 2,color: Colors.black,),
+            ],
+          ),
+          Divider(height: 2, color: Colors.black,),
           Expanded(
             child: ListView.builder(
               itemCount: 20,
-                itemBuilder:(context, index){
-                  return CenterCard();
-                },
+              itemBuilder: (context, index) {
+                return CenterCard();
+              },
             ),
           ),
 
@@ -136,15 +154,15 @@ class _HomeState extends State<Home> {
     );
   }
 
-   displayBottomSheet(BuildContext context)
-  {
+  displayBottomSheet(BuildContext context) {
     return showBottomSheet(
-        context: context,
-        builder: (context)=>SortBottomSheet(),
+      context: context,
+      builder: (context) => SortBottomSheet(),
       shape: OutlineInputBorder(
-        borderSide: BorderSide(
-            color: Colors.black26),
-        borderRadius: BorderRadius.only(topLeft: Radius.circular(16),topRight: Radius.circular(16))
+          borderSide: BorderSide(
+              color: Colors.black26),
+          borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(16), topRight: Radius.circular(16))
       ),
     );
   }
