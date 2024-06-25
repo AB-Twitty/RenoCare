@@ -1,22 +1,24 @@
+import 'dart:convert';
+
 import 'package:signalr_core/signalr_core.dart';
 
 class SignalRUtil {
   late final HubConnection _hubConnection;
-  var accessToken ="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhNmQ2ZjQ5MS0xOTU3LTRlNzAtOThjNy05OTdlYjBkMzI1NmYiLCJlbWFpbCI6ImFkbWluQGxvY2FsaG9zdC5jb20iLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiU3lzdGVtIEFkbWluIiwianRpIjoiMmFhZWM2YjYtZjVhZi00ZWM4LTkxOTMtNjdkMjU3YTcwOTAyIiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy9yb2xlIjoiQWRtaW4iLCJleHAiOjE3MTkxMTMwNzUsImlzcyI6IlJlbm9DYXJlIiwiYXVkIjoiUmVub0NhcmUifQ.lZc30ZhI5enfGB5tlMii8865si4KvUOzW4C4Gz_euuk";
+  var accessToken =
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhNmQ2ZjQ5MS0xOTU3LTRlNzAtOThjNy05OTdlYjBkMzI1NmYiLCJlbWFpbCI6ImFkbWluQGxvY2FsaG9zdC5jb20iLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiU3lzdGVtIEFkbWluIiwianRpIjoiMmFhZWM2YjYtZjVhZi00ZWM4LTkxOTMtNjdkMjU3YTcwOTAyIiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy9yb2xlIjoiQWRtaW4iLCJleHAiOjE3MTkxMTMwNzUsImlzcyI6IlJlbm9DYXJlIiwiYXVkIjoiUmVub0NhcmUifQ.lZc30ZhI5enfGB5tlMii8865si4KvUOzW4C4Gz_euuk";
+
   SignalRUtil() {
     _hubConnection = HubConnectionBuilder()
         .withUrl(
-      "https://renocareapi.azurewebsites.net/chat",
-      HttpConnectionOptions(
+          "https://renocareapi.azurewebsites.net/chat",
+          HttpConnectionOptions(
+            logging: (level, message) => print(message),
+            accessTokenFactory: () async => accessToken,
 
-        logging: (level, message) => print(message),
-         accessTokenFactory: () async => accessToken,
-
-
-        transport: HttpTransportType.longPolling,
-        // skipNegotiation: true,
-      ),
-    )
+            transport: HttpTransportType.longPolling,
+            // skipNegotiation: true,
+          ),
+        )
         .withAutomaticReconnect()
         .build();
 
@@ -24,7 +26,8 @@ class SignalRUtil {
   }
 
   Future<void> startConnection() async {
-    print("====================================Start Connecting=======================");
+    print(
+        "====================================Start Connecting=======================");
     try {
       await _hubConnection.start();
       print("Connection started");
@@ -60,15 +63,31 @@ class SignalRUtil {
     _hubConnection.invoke("SendMessage", args: <Object>[user, message]);
   }
 
-  void _reconnect() async {
-    while (_hubConnection.state != HubConnectionState.connected) {
-      try {
-        await _hubConnection.start();
-        print("Reconnected to SignalR server.");
-      } catch (e) {
-        print("Reconnection failed: $e. Retrying...");
-        await Future.delayed(Duration(seconds: 5));
-      }
+  Future<List<Map<String, String>>> loadPreviousMessages() async {
+    try {
+      final result = await _hubConnection.invoke("GetPreviousMessages");
+      final messages = jsonDecode(result) as List;
+      return messages.map((msg) {
+        return {
+          'user': msg['user'] as String,
+          'message': msg['message'] as String,
+        };
+      }).toList();
+    } catch (e) {
+      print("Failed to load previous messages: $e");
+      return [];
     }
   }
 }
+
+// void _reconnect() async {
+//   while (_hubConnection.state != HubConnectionState.connected) {
+//     try {
+//       await _hubConnection.start();
+//       print("Reconnected to SignalR server.");
+//     } catch (e) {
+//       print("Reconnection failed: $e. Retrying...");
+//       await Future.delayed(Duration(seconds: 5));
+//     }
+//   }
+// }

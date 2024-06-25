@@ -3,8 +3,9 @@ import 'package:app/pages/chat_module/page/chat_home/chat_page.dart';
 import 'package:app/pages/home_page/home_page.dart';
 import 'package:app/pages/login_page/login_page.dart';
 import 'package:app/pages/sign_up.dart';
-import 'package:app/pages/splash_screen.dart';
+import 'package:app/pages/splash_page/splash_screen.dart';
 import 'package:app/services/navigation_service.dart';
+import 'package:app/services/session_maneger.dart';
 import 'package:app/tabs/appointment.dart';
 import 'package:app/tabs/home.dart';
 import 'package:app/tabs/profile_tab.dart';
@@ -22,6 +23,7 @@ void main() async{
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
+
   runApp(
     SplashScreen(
       key: UniqueKey(),
@@ -35,8 +37,10 @@ void main() async{
 }
 
 class MyApp extends StatelessWidget {
+
   @override
   Widget build(BuildContext context) {
+
     return MaterialApp(
 
       theme: ThemeData(
@@ -44,7 +48,7 @@ class MyApp extends StatelessWidget {
         //backgroundColor: Colors.white,
       ),
       debugShowCheckedModeBanner: false ,
-      home: LoginPage(),
+      home:LoginPage(),
       navigatorKey: NavigationService.navigatorKey,
       initialRoute: '/login',
 
@@ -64,3 +68,5 @@ class MyApp extends StatelessWidget {
 
 
 }
+
+

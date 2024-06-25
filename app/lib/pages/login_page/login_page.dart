@@ -43,11 +43,11 @@ class _LoginPageState extends State<LoginPage> {
   listener: (context, state) {
     if(state is LoginSuccessState)
       {
-        _navigation.removeAndNavigateToRoute('/home_page');
+        _navigation.removeAndNavigateToRoute2('/home_page');
       }
     else if (state is LoginErrorState) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Login Failed: ${state.error}')),
+        SnackBar(content: Text('Login Failed: The email or password is wrong')),
       );
     }
   },
@@ -80,9 +80,11 @@ class _LoginPageState extends State<LoginPage> {
                         fillColor: Color(0xffB8E8F7),
                         filled: true,
                         focusColor: Color(0xffB8E8F7),
+                        floatingLabelStyle: TextStyle(color: Colors.black),
                         focusedBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.all(Radius.circular(16)),
                           borderSide: BorderSide(
+
                               color: Color(0xffB8E8F7)
                           ),
                         ),
@@ -169,14 +171,12 @@ class _LoginPageState extends State<LoginPage> {
 
 
                       ),
-                      onPressed: () {
+                      onPressed: () async{
 
                         if(_formKey.currentState?.validate()??false)
                           {
                             print(cubit.emailController.text);
-                            cubit.Login(cubit.emailController.text, cubit.passwordController.text,true);
-                            print("=======================================Token=========================================");
-
+                            cubit.login(cubit.emailController.text, cubit.passwordController.text,true);
                           }
 
 

@@ -1,9 +1,12 @@
+import 'package:app/services/token_service.dart';
 import 'package:flutter/material.dart';
 
 import 'chat_page.dart';
 import 'model/chat_model.dart';
 
 class ChatHomePage extends StatelessWidget {
+  final loginManager = LoginDataManager();
+
 
   final List<Chat> chats = [
     Chat(id: '1', name: 'Mohamed gamal', lastMessage: 'Hey!'),
@@ -15,6 +18,17 @@ class ChatHomePage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text('Chats'),
+        actions: [
+          IconButton(onPressed: ()async{
+
+            final loadedData = await loginManager.loadLoginData();
+            print('User ID: ${loadedData['id']}');
+            print('First Name: ${loadedData['firstName']}');
+            print('Last Name: ${loadedData['lastName']}');
+            print('Access Token: ${loadedData['accessToken']}');
+
+          }, icon:Icon(Icons.add) )
+        ],
       ),
       body: ListView.builder(
         itemCount: chats.length,

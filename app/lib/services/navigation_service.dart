@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 
 class NavigationService {
-  static GlobalKey<NavigatorState> navigatorKey =
-      new GlobalKey<NavigatorState>();
+  static GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
   void removeAndNavigateToRoute(String _route) {
-    navigatorKey.currentState?.popAndPushNamed(_route);
+    navigatorKey.currentState?.pushReplacementNamed(_route);
   }
-
+  void removeAndNavigateToRoute2(String route) {
+    navigatorKey.currentState?.pushNamedAndRemoveUntil(route, (Route<dynamic> route) => false);
+  }
   void navigateToRoute(String _route) {
     navigatorKey.currentState?.pushNamed(_route);
   }

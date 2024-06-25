@@ -31,4 +31,32 @@ class AuthenticationService {
       print('Error: ${e.toString()}');
     }
   }
+
+  Future<Response> Login(String email, String password) async {
+    try {
+      final response = await _dio.post('https://renocareapi.azurewebsites.net/Api/V1/Login', data: {
+        'email': email,
+        'password': password,
+        'rememberMe':true,
+      });
+
+      if (response.statusCode == 200) {
+        return response; // Return the entire response
+      } else {
+        throw DioError(
+          requestOptions: response.requestOptions,
+          response: response,
+          type: DioErrorType.badResponse,
+          error: 'Invalid credentials',
+        );
+      }
+    } catch (e) {
+      if (e is DioError) {
+        throw e; // Rethrow Dio errors to be handled by the cubit
+      } else {
+        throw Exception('Unexpected error');
+      }
+    }
+  }
+
 }
