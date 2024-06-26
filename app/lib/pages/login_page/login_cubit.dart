@@ -43,31 +43,32 @@ class LoginCubit extends Cubit<LoginState> {
   // }
 
   Future<void> login(String email, String password, bool rememberMe) async {
+  // await loginManager.clearLoginData();
     emit(LoginLoadingState());
     try {
       final response = await auth.Login(email, password);
-      // print("=============the Token============");
-      // print(response.data['accessToken']);
+      print("=============the Token============");
+      print(response.data['accessToken']);
       // Use the full response data as needed
       if(response.statusCode==200)
-        {
+      {
+        final sessionExpiration = DateTime.now().add(Duration(seconds: 10));
+        //loginManager.saveLoginData(response.data, sessionExpiration);
 
-        }
-      final sessionExpiration = DateTime.now().add(Duration(seconds: 10));
-      //loginManager.saveLoginData(response.data, sessionExpiration);
-
-      LoginDataManager2().saveLoginData(response.data, sessionExpiration);
+        LoginDataManager2().saveLoginData(response.data, sessionExpiration);
 //=====================================For Test ======================
 
-      final loadedData = await loginManager.loadLoginData();
-      print('User ID: ${loadedData['id']}');
-      print('First Name: ${loadedData['firstName']}');
-      print('Last Name: ${loadedData['lastName']}');
-      print('Access Token: ${loadedData['accessToken']}');
-      print("======================================================");
-      print('sessionExpiryKey: ${loadedData['sessionExpiryKey']}');
-      //=======================================================
-      emit(LoginSuccessState(response: response));
+        final loadedData = await loginManager.loadLoginData();
+        print('User ID: ${loadedData['id']}');
+        print('First Name: ${loadedData['firstName']}');
+        print('Last Name: ${loadedData['lastName']}');
+        print('Access Token: ${loadedData['accessToken']}');
+        print("======================================================");
+        print('sessionExpiryKey: ${loadedData['sessionExpiryKey']}');
+        //=======================================================
+        emit(LoginSuccessState(response: response));
+      }
+
     } catch (e) {
       if (e is DioError) {
         emit(LoginErrorState(error: e.response?.data['message'] ?? e.message));

@@ -9,8 +9,7 @@ class ChatHomePage extends StatelessWidget {
 
 
   final List<Chat> chats = [
-    Chat(id: '1', name: 'Mohamed gamal', lastMessage: 'Hey!'),
-    Chat(id: '2', name: 'ahmed', lastMessage: 'What\'s up?'),
+    Chat(id: '0a7caa9a-7a24-4fbf-bf3b-364d23289c1f', name: 'Mohamed gamal', lastMessage: 'Hey!'),
   ];
 
   @override
@@ -43,7 +42,7 @@ class ChatHomePage extends StatelessWidget {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => ChatPage(chatId: chat.id, chatName: chat.name),
+                  builder: (context) => ChatPage(active_chat_Id: chat.id, chatName: chat.name),
                 ),
               );
             },

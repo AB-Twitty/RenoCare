@@ -1,88 +1,141 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:group_button/group_button.dart';
 
-class FilterDrawer extends StatelessWidget {
+import 'filter/divider.dart';
+import 'filter/groupButton.dart';
+
+class FilterDrawer extends StatefulWidget {
 
   @override
+  State<FilterDrawer> createState() => _FilterDrawerState();
+}
+
+class _FilterDrawerState extends State<FilterDrawer> {
+  @override
   Widget build(BuildContext context) {
-    return SafeArea(
-        child: Container(
-          width: MediaQuery
-              .of(context)
-              .size
-              .width,
-
-          decoration: BoxDecoration(
-              color: Colors.white
-          ),
+    return Container(
+      color: Colors.white,
+      child: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(20.0),
           child: Column(
-
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Row(
-
-                mainAxisAlignment: MainAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-
-                  Padding(
-                    padding: const EdgeInsets.only(left: 12,right: 50),
-                    child: IconButton(
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                        icon: Icon(Icons.close)
+                  IconButton(
+                    icon: const Icon(
+                      Icons.cancel,
+                      size: 33,
+                      color: Colors.grey,
                     ),
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
                   ),
-
-                  Text(
-                    "Filter By",
+                  const Text(
+                    'Filter by',
                     style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
-
-                  Padding(
-                    padding: const EdgeInsets.only(left: 70,right: 10),
-                    child: TextButton(
-                        onPressed:() {
-
-                        },
-                        child: Text(
-                          "Clear",
-                          style: TextStyle(
-                              color: Color(0xff45B3EF),
-                            fontSize: 16
-                          ),
-                        ),
-                    ),
-                  ),
+                  TextButton(
+                      onPressed: () {},
+                      child: const Text(
+                        'Clear',
+                        style: TextStyle(fontSize: 20),
+                      ))
                 ],
               ),
-              Padding(
-                padding: const EdgeInsets.only(left:28,right: 28,top: 12,bottom: 12),
-                child: Divider(height: 2,color: Colors.black,),
+              const RepeatedDivider(text: 'Treatment type'),
+              const GroupButton(
+                options: GroupButtonOptions(
+                    mainGroupAlignment: MainGroupAlignment.center,
+                    crossGroupAlignment: CrossGroupAlignment.center,
+                    spacing: 0,
+                    buttonWidth: 145,
+                    buttonHeight: 50,
+                    selectedBorderColor: Colors.black54,
+                    unselectedBorderColor: Colors.black54,
+                    selectedColor: Color.fromRGBO(60, 152, 203, 1)),
+                buttons: ["All types", "HD", "HDF"],
               ),
-              Padding(
-                padding: const EdgeInsets.only(left: 24,right: 50,bottom: 12),
-                child: Row(
-                  children: [
-                    Text("Treatment type",
-                    style: TextStyle(
-                      fontSize: 16,
-                    ),
-                    ),
-
-                  ],
+              const SizedBox(
+                height: 10,
+              ),
+              const RepeatedDivider(text: 'Accepts patients with'),
+              RepeatedGroupButton(
+                content: const ["HIV", "Heaptitis B", "Hepatitis C"],
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              const RepeatedDivider(text: 'Amenities'),
+              GroupButton(
+                isRadio: false,
+                options: GroupButtonOptions(
+                  mainGroupAlignment: MainGroupAlignment.start,
+                  crossGroupAlignment: CrossGroupAlignment.start,
+                  spacing: 20,
+                  textPadding: const EdgeInsets.symmetric(horizontal: 20),
+                  buttonHeight: 40,
+                  selectedBorderColor: Colors.black54,
+                  unselectedBorderColor: Colors.black54,
+                  borderRadius: BorderRadius.circular(20),
+                  selectedColor: Color.fromRGBO(60, 152, 203, 1),
+                  unselectedTextStyle: TextStyle(
+                    color: Colors.grey[600],
+                  ),
                 ),
+                buttons: const [
+                  "Refreshments",
+                  "WIFI",
+                  "TV screens",
+                  "Free parking"
+                ],
               ),
-
-              
-              
-              
+              const SizedBox(
+                height: 10,
+              ),
+              const RepeatedDivider(text: 'Price Range'),
+              RepeatedGroupButton(
+                content: const [
+                  "0 - 100 \$",
+                  "100 - 200 \$",
+                  "200 - 300 \$",
+                  "+300 \$"
+                ],
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              const RepeatedDivider(text: 'Shifts'),
+              RepeatedGroupButton(
+                content: const [
+                  "Morning",
+                  "Afternoon",
+                  "Evening",
+                  "night",
+                ],
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              const Divider(
+                indent: 5,
+                endIndent: 5,
+                thickness: 2,
+              ),
+              const SizedBox(
+                height: 10,
+              ),
             ],
           ),
-        )
+        ),
+      ),
     );
   }
 }

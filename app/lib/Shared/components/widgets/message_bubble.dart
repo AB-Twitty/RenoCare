@@ -1,77 +1,109 @@
+
+
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:url_launcher/url_launcher_string.dart';
+import 'package:flutter_downloader/flutter_downloader.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'package:chat_bubbles/chat_bubbles.dart';
+
 import '../../../pages/chat_module/page/chat_home/model/message_model.dart';
 
 class MessageBubble extends StatelessWidget {
   final Message message;
+  final bool isMe;
 
-  MessageBubble({required this.message});
+  MessageBubble({required this.message, required this.isMe});
 
   @override
   Widget build(BuildContext context) {
-    final bg = message.isMe ? Colors.lightBlueAccent : Colors.white;
-    final align = message.isMe ? CrossAxisAlignment.end : CrossAxisAlignment.start;
-    final radius = message.isMe
-        ? BorderRadius.only(
-      topLeft: Radius.circular(12),
-      topRight: Radius.circular(12),
-      bottomLeft: Radius.circular(12),
-    )
-        : BorderRadius.only(
-      topLeft: Radius.circular(12),
-      topRight: Radius.circular(12),
-      bottomRight: Radius.circular(12),
-    );
-
-    return Container(
-      margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 5.0, horizontal: 10.0),
       child: Column(
-        crossAxisAlignment: align,
-        children: <Widget>[
-          Container(
-            decoration: BoxDecoration(
-              color: bg,
-              borderRadius: radius,
+        crossAxisAlignment: isMe ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+        children: [
+          BubbleSpecialThree(
+            delivered: false,
+            seen: true,
+            sent: true,
+            text: message.message,
+            isSender: isMe,
+            color: isMe ? Colors.blue : Colors.grey[300]!,
+            tail: true,
+            textStyle: TextStyle(
+              color: isMe ? Colors.white : Colors.black,
+              fontSize: 16,
             ),
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  message.sender,
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: message.isMe ? Colors.white : Colors.black,
-                  ),
-                ),
-                SizedBox(height: 5),
-                if (message.content.isNotEmpty)
-                  Text(
-                    message.content,
-                    style: TextStyle(
-                      color: message.isMe ? Colors.white : Colors.black,
-                    ),
-                  ),
-                if (message.fileUrl != null)
-                  Padding(
-                    padding: const EdgeInsets.only(top: 8.0),
-                    child: GestureDetector(
-                      onTap: () {
-                        // Handle file opening logic here
-                      },
-                      child: Text(
-                        "File: ${message.fileUrl}",
-                        style: TextStyle(
-                          color: Colors.blue,
-                          decoration: TextDecoration.underline,
-                        ),
-                      ),
-                    ),
-                  ),
-              ],
+          ),
+          if (message.isFile == true) _buildFileMessage(context),
+          SizedBox(height: 5),
+          Text(
+            message.sendingTime.toLocal().toString(),
+            style: TextStyle(
+              color: isMe ? Colors.white70 : Colors.black54,
+              fontSize: 10,
             ),
           ),
         ],
       ),
     );
+  }
+
+  Widget _buildFileMessage(BuildContext context) {
+    final fileName = message.fileLink ?? "Unknown File";
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        // Text(
+        //   'File Name: $fileName',
+        //   style: TextStyle(
+        //     fontWeight: FontWeight.bold,
+        //     color: isMe ? Colors.white : Colors.black,
+        //   ),
+        // ),
+        // SizedBox(height: 8),
+        GestureDetector(
+          onTap: () {
+            _downloadFile(context, message.fileLink, fileName);
+          },
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                'Download',
+                style: TextStyle(
+                  fontSize: 14,
+                  color: Colors.blue,
+                  decoration: TextDecoration.underline,
+                ),
+              ),
+              Icon(Icons.download_rounded, size: 34),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  void _downloadFile(BuildContext context, String? url, String fileName) async {
+    if (url != null) {
+      final status = await Permission.storage.request();
+      if (status.isGranted) {
+        final externalDir = await getExternalStorageDirectory();
+        final taskId = await FlutterDownloader.enqueue(
+          url: url,
+          savedDir: externalDir!.path,
+          fileName: fileName,
+          showNotification: true,
+          openFileFromNotification: true,
+        );
+        print('Download started with taskId: $taskId');
+      } else {
+        print('Permission denied to access storage');
+      }
+    } else {
+      print('Invalid URL');
+    }
   }
 }

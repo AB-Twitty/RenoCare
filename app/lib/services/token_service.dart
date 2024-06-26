@@ -143,6 +143,10 @@ class LoginDataManager {
 
     };
   }
+  Future<String?> getAccessToken()async{
+    final pref=await SharedPreferences.getInstance();
+    return pref.getString('accessToken');
+  }
 }
 
 class LoginDataManager2 {
@@ -204,5 +208,15 @@ class LoginDataManager2 {
     await prefs.remove(_lastNameKey);
     await prefs.remove(_accessTokenKey);
     await prefs.remove(_sessionExpiryKey);
+  }
+
+  Future<String?> getAccessToken()async{
+    final pref=await SharedPreferences.getInstance();
+    return pref.getString('accessToken');
+  }
+
+  Future<String?> getId()async{
+    final pref=await SharedPreferences.getInstance();
+    return pref.getString('id');
   }
 }

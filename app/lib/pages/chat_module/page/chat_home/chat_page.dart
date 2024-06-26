@@ -1,17 +1,20 @@
+import 'package:chat_bubbles/chat_bubbles.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:signalr_core/signalr_core.dart';
 
 import '../../../../Shared/components/widgets/message_bubble.dart';
 import '../../../../services/firebase_service.dart';
 import '../../../../services/media_service.dart';
 import '../../../../services/signalR_service.dart';
+import '../../../../services/token_service.dart';
 import 'model/message_model.dart';
 
 class ChatPage extends StatefulWidget {
-  final String chatId;
+  final String active_chat_Id;
   final String chatName;
 
-  ChatPage({required this.chatId, required this.chatName});
+  ChatPage({required this.active_chat_Id, required this.chatName});
 
   @override
   _ChatPageState createState() => _ChatPageState();
@@ -19,78 +22,176 @@ class ChatPage extends StatefulWidget {
 
 class _ChatPageState extends State<ChatPage> {
   final FilePickerUtil filePickerUtil = FilePickerUtil();
-  final List<Message> messages = [
-    Message(
-        sender: 'mohamed',
-        content: 'Hey!',
-        timestamp: DateTime.now().subtract(Duration(minutes: 2)),
-        isMe: false),
-    Message(
-        sender: 'You',
-        content: 'Hello!',
-        timestamp: DateTime.now().subtract(Duration(minutes: 1)),
-        isMe: true),
-  ];
+  final List<Message> messages = [];
   final TextEditingController _controller = TextEditingController();
-  final FirebaseUtil firebaseUtil = FirebaseUtil();
 
-  final SignalRUtil signalRUtil = SignalRUtil();
 
+  late final HubConnection _hubConnection;
+  final loginDataManager2=LoginDataManager2();
+  String currId="";
+  String accessToken ="";
   @override
   void initState() {
-    print("======================hmada====================");
     super.initState();
-     _initilizeSignalR();
+
+    // _initSignalrConnection();
+    _initialize();
+    //add all events and their handler
+    //on receiving a message event
+    // _hubConnection.on("ReceiveMessage", _handleReceivedMessage);
+    // //on message marked as received (gets the whole msg)
+    // _hubConnection.on("MarkedAsReceived", _markMessageAsReceived);
+    // //on message marked as seen (gets only the msg_id)
+    // _hubConnection.on("MarkedAsRead", _markMessageAsRead);
   }
+
+
+
+
+
 
   @override
   void dispose() {
-    signalRUtil.stopConnection();
+    _hubConnection.stop();
+    //loginDataManager2.clearLoginData();
     super.dispose();
   }
 
-  void _initilizeSignalR() async {
-    print("==============initilize signalR============");
-    await signalRUtil.startConnection();
-    signalRUtil.onMessageReceived((user, message) {
+
+  void _initSignalrConnection() async{
+   print("=====================init access token$accessToken=====================");
+    try{
+      _hubConnection = HubConnectionBuilder()
+          .withUrl(
+        "https://renocareapi.azurewebsites.net/chat",
+        HttpConnectionOptions(
+          logging: (level, message) => print(message),
+          accessTokenFactory: () async => accessToken,
+
+
+          transport: HttpTransportType.longPolling,
+        ),
+      )
+          .withAutomaticReconnect()
+          .build();
+
+
+      await _hubConnection.start();
+    }
+    catch(e)
+    {
+      print(" Error establishing signalR connection");
+      _reconnect();
+    }
+
+  }
+
+Future<void>_initialize()async{
+    accessToken=await loginDataManager2.getAccessToken()??"";
+
+    if(accessToken !=null)
+      {
+        print("================================Access Token is ++++++++$accessToken");
+        _initSignalrConnection();
+      }
+    else
+      print("===============Error : Access Token is null");
+
+    _hubConnection.on("ReceiveMessage", _handleReceivedMessage);
+    //on message marked as received (gets the whole msg)
+    _hubConnection.on("MarkedAsReceived", _markMessageAsReceived);
+    //on message marked as seen (gets only the msg_id)
+    _hubConnection.on("MarkedAsRead", _markMessageAsRead);
+
+}
+
+  //sending message to the hub
+  void _sendMessage(String message, {String? fileUrl})async {
+    if(message.isNotEmpty){
+      final currUserId=await loginDataManager2.getId()??"";
+      currId=currUserId;
+      final msg=Message(senderId: currUserId, receiverId: widget.active_chat_Id, message: message, sendingTime: DateTime.now(), Id: '');
       setState(() {
-        messages.add(Message(
-            sender: user,
-            content: message,
-            timestamp: DateTime.now(),
-            isMe: user == 'a6d6f491-1957-4e70-98c7-997eb0d3256f'));
+        messages.add(msg);
       });
+      _controller.clear();
+      await _hubConnection.invoke("SendMessage", args: <Object>[widget.active_chat_Id, message]);
+
+    }
+  }
+
+  void _markMessageAsReceived(List<Object?>? arguments) {
+    if (arguments == null || arguments.isEmpty) return;
+
+    final messageJson = arguments[0] as Map<String, dynamic>;
+    final receivedMessage = Message.fromJson(messageJson);
+
+    setState(() {
+      final messageIndex = messages.indexWhere((msg) => msg.Id == receivedMessage.Id);
+      if (messageIndex != -1) {
+        messages[messageIndex] = receivedMessage.copyWith(status: 2); // 2 means delivered
+      } else {
+        messages.add(receivedMessage.copyWith(status: 2));
+      }
     });
   }
 
-  void _sendMessage(String content, {String? fileUrl}) {
-    print("==============================Enter SendMessage Func");
-    if (content.isNotEmpty) {
+  void _markMessageAsRead(List<Object?>? arguments) {
+    if (arguments == null || arguments.isEmpty) return;
+
+    final messageId = arguments[0] as String;
+    setState(() {
+      final messageIndex = messages.indexWhere((msg) => msg.Id == messageId);
+      if (messageIndex != -1) {
+        messages[messageIndex] = messages[messageIndex].copyWith(status: 3); // 3 means seen
+      }
+    });
+  }
+
+  void _handleReceivedMessage(List<Object?>? arguments) async {
+    if (arguments == null || arguments.isEmpty) return;
+
+    final String currUserId = await loginDataManager2.getId() ?? "";
+    print("===========================A message received==========================");
+    print("==============================SEnder ID $currUserId");
+    final Message msg = Message.fromJson(arguments[0] as Map<String, dynamic>);
+    String curr_user_id = currUserId;
+
+    bool shouldMarkRead = false;
+    bool shouldMarkReceived = false;
+
+    if (msg.senderId == curr_user_id && msg.receiverId == widget.active_chat_Id) {
+      // Add the message as I am the sender
       setState(() {
-        // messages.add(
-        //   Message(sender: 'You', content: content, timestamp: DateTime.now(), isMe: true),
-        // );
-        messages.add(
-          Message(
-            sender: 'a6d6f491-1957-4e70-98c7-997eb0d3256f',
-            content: content,
-            timestamp: DateTime.now(),
-            isMe: true,
-            fileUrl: fileUrl,
-          ),
-        );
-        print("+++++++++++++++++++++++++====Message to send");
-        signalRUtil.sendMessage('a6d6f491-1957-4e70-98c7-997eb0d3255f', content);
-        print("=====================================Message Sent===========================");
+        messages.add(msg);
+        print("===========================A message Content==========================");
+        print(msg);
+      });
+    } else if (msg.senderId == widget.active_chat_Id && msg.receiverId == curr_user_id) {
+      // Add the message as I am the receiver
+      setState(() {
+        messages.add(msg);
       });
 
+      // As a receiver, invoke an event as received and seen, because this is the active chat
+      shouldMarkRead = true;
+    } else if (msg.senderId != curr_user_id) {
+      // Message from another chat, just notify the user with the new message
 
-      _controller.clear();
+      // As a receiver, invoke an event as received only, because this is not the active chat
+      shouldMarkReceived = true;
+    }
+
+    if (shouldMarkRead) {
+      await _hubConnection.invoke("MarkRead", args: <Object>[msg.Id]);
+    } else if (shouldMarkReceived) {
+      await _hubConnection.invoke("MarkReceived", args: <Object>[msg.Id]);
     }
   }
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.chatName),
@@ -102,7 +203,7 @@ class _ChatPageState extends State<ChatPage> {
               itemCount: messages.length,
               itemBuilder: (context, index) {
                 final message = messages[index];
-                return MessageBubble(message: message);
+                return MessageBubble(message: message,isMe: message.senderId==currId,);
               },
             ),
           ),
@@ -112,7 +213,7 @@ class _ChatPageState extends State<ChatPage> {
               children: [
                 IconButton(
                   onPressed: () {
-                    _pickFile();
+                    // _pickFile();
                   },
                   icon: Icon(Icons.attach_file_outlined),
                   color: Colors.black,
@@ -130,6 +231,7 @@ class _ChatPageState extends State<ChatPage> {
                   icon: Icon(Icons.send),
                   onPressed: () => _sendMessage(_controller.text),
                 ),
+
               ],
             ),
           ),
@@ -138,24 +240,36 @@ class _ChatPageState extends State<ChatPage> {
     );
   }
 
-  Future<void> _pickFile() async {
-    PlatformFile? file = await filePickerUtil.pickFile();
+  // Future<void> _pickFile() async {
+  //   PlatformFile? file = await filePickerUtil.pickFile();
+  //
+  //   if (file != null) {
+  //     String? downloadUrl = await firebaseUtil.uploadFile(file);
+  //
+  //     if (downloadUrl != null) {
+  //       print('File uploaded: $downloadUrl');
+  //       _sendMessage('', fileUrl: downloadUrl);
+  //       // You can now send a message with the file URL or handle it as needed
+  //     } else {
+  //       print('File upload failed');
+  //     }
+  //   } else {
+  //     // User canceled the picker
+  //     print('File picker canceled');
+  //   }
+  // }
 
-    if (file != null) {
-      String? downloadUrl = await firebaseUtil.uploadFile(file);
 
-      if (downloadUrl != null) {
-        print('File uploaded: $downloadUrl');
-        _sendMessage('', fileUrl: downloadUrl);
-        // You can now send a message with the file URL or handle it as needed
-      } else {
-        print('File upload failed');
+
+  void _reconnect() async {
+    while (_hubConnection.state != HubConnectionState.connected) {
+      try {
+        await _hubConnection.start();
+        print("Reconnected to SignalR server.");
+      } catch (e) {
+        print("Reconnection failed: $e. Retrying...");
+        await Future.delayed(Duration(seconds: 5));
       }
-    } else {
-      // User canceled the picker
-      print('File picker canceled');
     }
   }
-
-
 }

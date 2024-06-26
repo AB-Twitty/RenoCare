@@ -41,11 +41,11 @@ class _HomeState extends State<Home> {
     _navigation = NavigationService();
     return Scaffold(
 
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {},
-        child: Icon(Icons.chat,),
-       backgroundColor: Color(0xff3C98CB) ,
-      ),
+      // floatingActionButton: FloatingActionButton(
+      //   onPressed: () {},
+      //   child: Icon(Icons.chat,),
+      //  backgroundColor: Color(0xff3C98CB) ,
+      // ),
 
 
       key: _scaffoldKey,
