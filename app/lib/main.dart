@@ -16,13 +16,12 @@ import 'package:flutter/material.dart';
 import 'bloc.dart';
 import 'firebase_options.dart';
 
-void main() async{
+void main() async {
   Bloc.observer = MyBlocObserver();
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-
 
   runApp(
     SplashScreen(
@@ -37,36 +36,26 @@ void main() async{
 }
 
 class MyApp extends StatelessWidget {
-
   @override
   Widget build(BuildContext context) {
-
     return MaterialApp(
-
       theme: ThemeData(
         scaffoldBackgroundColor: Colors.white,
         //backgroundColor: Colors.white,
       ),
-      debugShowCheckedModeBanner: false ,
-      home:LoginPage(),
+      debugShowCheckedModeBanner: false,
+      home: LoginPage(),
       navigatorKey: NavigationService.navigatorKey,
       initialRoute: '/login',
-
       routes: {
-        '/login':(context)=>LoginPage(),
-        '/home_page':(context)=>HomePage(),
-        '/signup':(context)=>SignUp(),
-        '/profile':(context)=>ProfileTab(),
-        '/appointment':(context)=>Appointment(),
-        '/home':(context)=>Home(),
-        '/chatHomePage':(context)=>ChatHomePage(),
-
+        '/login': (context) => LoginPage(),
+        '/home_page': (context) => HomePage(),
+        '/signup': (context) => SignUp(),
+        '/profile': (context) => ProfileTab(),
+        '/appointment': (context) => Appointment(),
+        '/home': (context) => Home(),
+        '/chatHomePage': (context) => ChatHomePage(),
       },
     );
   }
-
-
-
 }
-
-
