@@ -121,6 +121,7 @@ class cardLists extends StatelessWidget {
                                     borderRadius: BorderRadius.circular(20))),
                             onPressed: () {
                               showModalBottomSheet(
+                                  isScrollControlled: true,
                                   shape: const RoundedRectangleBorder(
                                     borderRadius: BorderRadius.vertical(
                                       top: Radius.circular(20),
