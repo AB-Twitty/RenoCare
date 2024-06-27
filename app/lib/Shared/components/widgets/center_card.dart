@@ -13,89 +13,116 @@ class CenterCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onTap: () {
-        _navigation.navigateToRoute('/detailsPage');
-      },
-      child: Container(
-        margin: EdgeInsets.all(12),
-        width: MediaQuery.of(context).size.width * 0.95,
-        height: MediaQuery.of(context).size.height * 0.40,
-        decoration: BoxDecoration(
-            color: Colors.transparent,
-            border: Border.all(color: Colors.grey, width: 0.6),
-            borderRadius: BorderRadius.only(
-                topRight: Radius.circular(32), topLeft: Radius.circular(32))),
-        child: Column(
-          children: [
-            Container(
-              decoration: BoxDecoration(),
-              child: ClipRRect(
-                  borderRadius: BorderRadius.only(
-                      topRight: Radius.circular(32),
-                      topLeft: Radius.circular(32)),
-                  child:Image.asset("assets/images/center.png")
-
-
+    // return Container(
+    //   margin: EdgeInsets.all(12),
+    //   width: MediaQuery.of(context).size.width * 0.95,
+    //   height: MediaQuery.of(context).size.height * 0.40,
+    //   decoration: BoxDecoration(
+    //     color: Colors.transparent,
+    //     border: Border.all(color: Colors.grey,width: 0.6),
+    //     borderRadius: BorderRadius.only(topRight: Radius.circular(32),topLeft: Radius.circular(32))
+    //   ),
+    return Container(
+      padding: EdgeInsets.all(10),
+      child: InkWell(
+        child: Card(
+          margin: const EdgeInsets.all(8),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
+          clipBehavior: Clip.hardEdge,
+          elevation: 2,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Image(
+                fit: BoxFit.cover,
+                width: double.infinity,
+                image: AssetImage("assets/images/center.png"),
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(top: 8, left: 22),
-              child: Row(
-                children: [Text(centerModel.name??"No Name")],
+              SizedBox(
+                height: 15,
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(top: 8, left: 18),
-              child: Row(
-                children: [
-                  Icon(
-                    CupertinoIcons.location_solid,
-                    size: 16,
-                    color: Colors.grey,
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                child: Text(
+                 centerModel.name??"No Name",
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16,
                   ),
-                  Text(
-                    "${centerModel.address},${centerModel.city},${centerModel.country}",
-                    style: TextStyle(fontSize: 10, color: Colors.grey),
-                  ),
-                ],
+                ),
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(top: 8, left: 22),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    (centerModel.isHdSupported==true && centerModel.isHdfSupported==true)
-                        ? "HD \$${centerModel.hdPrice??125} -- HDF \$${centerModel.hdfPrice??230}"
-                        : (centerModel.isHdSupported==true)
-                            ? "HD \$${centerModel.hdPrice??132}"
-                            : "HDF \$${centerModel.hdfPrice??226}",
-                    style: TextStyle(
-                      fontSize: 13,
+              SizedBox(
+                height: 10,
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                child: Row(
+                  children: [
+                    Icon(
+                      CupertinoIcons.location_solid,
+                      size: 20,
+                      color: Colors.grey,
                     ),
-                  ),
-                  Row(
-                    children: [
-                      Text(
-                        centerModel.rating.toString(),
-                        style: TextStyle(fontSize: 13),
-                      ),
-                      Text(
-                        "${centerModel.reviewsCnt}",
-                        style: TextStyle(color: Colors.grey, fontSize: 8),
-                      ),
-                      Icon(
-                        CupertinoIcons.star,
-                        color: Color(0xff3C98CB),
-                      )
-                    ],
-                  )
-                ],
+                    SizedBox(
+                      width: 5,
+                    ),
+                    Text(
+                      "${centerModel.address},${centerModel.city},${centerModel.country}",
+                      style: TextStyle(fontSize: 12, color: Colors.grey),
+                    ),
+                  ],
+                ),
               ),
-            ),
-          ],
+              SizedBox(
+                height: 10,
+              ),
+              Padding(
+                padding:
+                const EdgeInsets.only(left: 8.0, right: 8.0, bottom: 10.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      (centerModel.isHdSupported==true && centerModel.isHdfSupported==true)
+                          ? "HD \$${centerModel.hdPrice??125} -- HDF \$${centerModel.hdfPrice??230}"
+                          : (centerModel.isHdSupported==true)
+                          ? "HD \$${centerModel.hdPrice??132}"
+                          : "HDF \$${centerModel.hdfPrice??226}",
+                      style: TextStyle(
+                        fontSize: 14,
+                      ),
+                    ),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          centerModel.rating.toString(),
+                          style: TextStyle(fontSize: 14),
+                        ),
+                        SizedBox(
+                          width: 5,
+                        ),
+                        Text(
+                          "${centerModel.reviewsCnt}",
+                          style: TextStyle(color: Colors.grey, fontSize: 12),
+                        ),
+                        SizedBox(
+                          width: 5,
+                        ),
+                        Icon(
+                          CupertinoIcons.star,
+                          color: Color(0xff3C98CB),
+                        )
+                      ],
+                    )
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
