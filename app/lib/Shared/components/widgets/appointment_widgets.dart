@@ -122,7 +122,7 @@ class cardLists extends StatelessWidget {
                       onPressed: () {},
                       child: Text(
                         activeButton
-                            ? 'Cancel Appoinment'
+                            ? 'Cancel'
                             : 'Enter Review',
                         style: TextStyle(
                           fontWeight: FontWeight.bold,

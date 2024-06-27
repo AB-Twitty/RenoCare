@@ -1,29 +1,20 @@
-import 'dart:async';
+import 'package:shared_preferences/shared_preferences.dart';
 
-import 'package:app/services/token_service.dart';
+class SessionService {
+  static const String _tokenKey = 'auth_token';
 
-import 'navigation_service.dart';
-
-class SessionManager {
-  static final SessionManager _instance = SessionManager._internal();
-
-  factory SessionManager() => _instance;
-
-  SessionManager._internal();
-
-  Timer? _timer;
-
-  void startSessionCheck(NavigationService navigationService) {
-    _timer = Timer.periodic(Duration(seconds: 1), (timer) async {
-      bool isValid = await LoginDataManager2().isSessionValid();
-      if (!isValid) {
-        await LoginDataManager2().clearLoginData();
-        navigationService.removeAndNavigateToRoute2('/login');
-      }
-    });
+  Future<void> saveToken(String token) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString(_tokenKey, token);
   }
 
-  void stopSessionCheck() {
-    _timer?.cancel();
+  Future<String?> getToken() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString(_tokenKey);
+  }
+
+  Future<void> clearToken() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.remove(_tokenKey);
   }
 }

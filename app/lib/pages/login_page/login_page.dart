@@ -46,7 +46,7 @@ class _LoginPageState extends State<LoginPage> {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
                   content:
-                      Text('Login Failed: The email or password is wrong')),
+                      Text(state.error)),
             );
           }
         },
@@ -54,288 +54,287 @@ class _LoginPageState extends State<LoginPage> {
           var cubit = LoginCubit.get(context);
           return Scaffold(
             resizeToAvoidBottomInset: false,
-            body: Padding(
-              padding: const EdgeInsets.all(20.0),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                mainAxisSize: MainAxisSize.max,
-                children: [
-                  Container(
-                    width: 390,
-                    height: 280,
-                    child: Image.asset("assets/images/DoctorsImage.jpg"),
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  Text(
-                    'Welcome to our medical app',
-                    style: GoogleFonts.courgette(
-                      fontSize: 18,
-                      color: Color.fromRGBO(60, 152, 203, 1),
+            body: SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.max,
+                  children: [
+                    Container(
+                      width: 390,
+                      height: 280,
+                      child: Image.asset("assets/images/DoctorsImage.jpg",fit: BoxFit.cover,),
                     ),
-                  ),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  Form(
-                    key: _formKey,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        TextFormField(
-                          controller: cubit.emailController,
-                          decoration: InputDecoration(
-                            errorStyle: TextStyle(
-                              color: Colors.red,
-                            ),
-                            errorBorder: OutlineInputBorder(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(20)),
-                              borderSide: BorderSide(
+                    Text(
+                      'Welcome to our medical app',
+                      style: GoogleFonts.courgette(
+                        fontSize: 18,
+                        color: Color.fromRGBO(60, 152, 203, 1),
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    Form(
+                      key: _formKey,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          TextFormField(
+                            controller: cubit.emailController,
+                            decoration: InputDecoration(
+                              errorStyle: TextStyle(
                                 color: Colors.red,
                               ),
-                            ),
-                            focusedErrorBorder: OutlineInputBorder(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(20)),
-                              borderSide: BorderSide(
-                                color: Colors.red,
+                              errorBorder: OutlineInputBorder(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(20)),
+                                borderSide: BorderSide(
+                                  color: Colors.red,
+                                ),
+                              ),
+                              focusedErrorBorder: OutlineInputBorder(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(20)),
+                                borderSide: BorderSide(
+                                  color: Colors.red,
+                                ),
+                              ),
+                              floatingLabelStyle:
+                                  TextStyle(color: emailLabelColor),
+                              focusedBorder: OutlineInputBorder(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(20)),
+                                borderSide: BorderSide(
+                                  color: Color(0xffB8E8F7),
+                                  width: 3,
+                                ),
+                              ),
+                              enabledBorder: OutlineInputBorder(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(20)),
+                                borderSide: BorderSide(
+                                  color: Color(0xffB8E8F7),
+                                  width: 3,
+                                ),
+                              ),
+                              labelText: 'Enter your Email',
+                              labelStyle: TextStyle(
+                                color: emailLabelColor,
+                                fontSize: 12,
                               ),
                             ),
-                            floatingLabelStyle:
-                                TextStyle(color: emailLabelColor),
-                            focusedBorder: OutlineInputBorder(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(20)),
-                              borderSide: BorderSide(
-                                color: Color(0xffB8E8F7),
-                                width: 3,
-                              ),
-                            ),
-                            enabledBorder: OutlineInputBorder(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(20)),
-                              borderSide: BorderSide(
-                                color: Color(0xffB8E8F7),
-                                width: 3,
-                              ),
-                            ),
-                            labelText: 'Enter your Email',
-                            labelStyle: TextStyle(
-                              color: emailLabelColor,
-                              fontSize: 12,
-                            ),
-                          ),
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              setState(() {
-                                emailLabelColor = Colors.red;
-                              });
-                              return 'Please enter your email';
-                            } else {
-                              setState(() {
-                                emailLabelColor = Colors.black;
-                              });
-                            }
-                            final bool emailValid = RegExp(
-                                    r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
-                                .hasMatch(value);
-                            if (!emailValid) {
-                              setState(() {
-                                emailLabelColor = Colors.red;
-                              });
-                              return "Please Enter Valid Email";
-                            } else {
-                              setState(() {
-                                emailLabelColor = Colors.black;
-                              });
-                            }
-                            return null;
-                          },
-                        ),
-                        const SizedBox(
-                          height: 30,
-                        ),
-                        TextFormField(
-                          obscureText: _obsecureText,
-                          controller: cubit.passwordController,
-                          decoration: InputDecoration(
-                            suffixIcon: GestureDetector(
-                              onTap: () {
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
                                 setState(() {
-                                  _obsecureText = !_obsecureText;
+                                  emailLabelColor = Colors.red;
                                 });
-                              },
-                              child: Icon(_obsecureText
-                                  ? Icons.visibility_off
-                                  : Icons.visibility),
-                            ),
-                            errorStyle: TextStyle(
-                              color: Colors.red,
-                            ),
-                            errorBorder: OutlineInputBorder(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(20)),
-                              borderSide: BorderSide(
-                                color: Colors.red,
-                              ),
-                            ),
-                            focusedErrorBorder: OutlineInputBorder(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(20)),
-                              borderSide: BorderSide(
-                                color: Colors.red,
-                              ),
-                            ),
-                            floatingLabelStyle:
-                                TextStyle(color: passwordLabelColor),
-                            focusedBorder: OutlineInputBorder(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(20)),
-                              borderSide: BorderSide(
-                                color: Color(
-                                  0xffB8E8F7,
-                                ),
-                                width: 3,
-                              ),
-                            ),
-                            enabledBorder: OutlineInputBorder(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(20)),
-                              borderSide: BorderSide(
-                                color: Color(0xffB8E8F7),
-                                width: 3,
-                              ),
-                            ),
-                            labelText: 'Enter your password',
-                            labelStyle: TextStyle(
-                              color: passwordLabelColor,
-                              fontSize: 12,
-                            ),
+                                return 'Please enter your email';
+                              } else {
+                                setState(() {
+                                  emailLabelColor = Colors.black;
+                                });
+                              }
+                              final bool emailValid = RegExp(
+                                      r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+                                  .hasMatch(value);
+                              if (!emailValid) {
+                                setState(() {
+                                  emailLabelColor = Colors.red;
+                                });
+                                return "Please Enter Valid Email";
+                              } else {
+                                setState(() {
+                                  emailLabelColor = Colors.black;
+                                });
+                              }
+                              return null;
+                            },
                           ),
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              setState(() {
-                                passwordLabelColor = Colors.red;
-                              });
-                              return 'Please enter your password';
-                            } else {
-                              setState(() {
-                                passwordLabelColor = Colors.black;
-                              });
-                            }
-                            return null;
-                          },
-                        ),
-                        const SizedBox(height: 30),
-                        state is LoginLoadingState
-                            ? Center(
-                                child: CircularProgressIndicator(),
-                              )
-                            : ElevatedButton(
-                                style: ElevatedButton.styleFrom(
-                                  padding: EdgeInsets.all(15.0),
-                                  backgroundColor: Color(0xff019AED),
-                                  textStyle: TextStyle(
-                                    fontSize: 20,
-                                    color: Colors.black,
-                                  ),
-                                ),
-                                onPressed: () async {
-                                  if (_formKey.currentState?.validate() ??
-                                      false) {
-                                    print(cubit.emailController.text);
-                                    cubit.login(cubit.emailController.text,
-                                        cubit.passwordController.text, true);
-                                  }
+                          const SizedBox(
+                            height: 30,
+                          ),
+                          TextFormField(
+                            obscureText: _obsecureText,
+                            controller: cubit.passwordController,
+                            decoration: InputDecoration(
+                              suffixIcon: GestureDetector(
+                                onTap: () {
+                                  setState(() {
+                                    _obsecureText = !_obsecureText;
+                                  });
                                 },
-                                child: const Text(
-                                  'Login',
-                                  style: TextStyle(
-                                    color: Colors.black,
-                                  ),
+                                child: Icon(_obsecureText
+                                    ? Icons.visibility_off
+                                    : Icons.visibility),
+                              ),
+                              errorStyle: TextStyle(
+                                color: Colors.red,
+                              ),
+                              errorBorder: OutlineInputBorder(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(20)),
+                                borderSide: BorderSide(
+                                  color: Colors.red,
                                 ),
                               ),
-                        SizedBox(
-                          height: 20,
-                        ),
-                        Row(
-                          children: [
-                            Expanded(
-                              child: Divider(
-                                endIndent: 10,
-                                indent: 10,
-                                height: 2,
-                                color: Colors.black,
-                                thickness: 1.5,
+                              focusedErrorBorder: OutlineInputBorder(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(20)),
+                                borderSide: BorderSide(
+                                  color: Colors.red,
+                                ),
+                              ),
+                              floatingLabelStyle:
+                                  TextStyle(color: passwordLabelColor),
+                              focusedBorder: OutlineInputBorder(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(20)),
+                                borderSide: BorderSide(
+                                  color: Color(
+                                    0xffB8E8F7,
+                                  ),
+                                  width: 3,
+                                ),
+                              ),
+                              enabledBorder: OutlineInputBorder(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(20)),
+                                borderSide: BorderSide(
+                                  color: Color(0xffB8E8F7),
+                                  width: 3,
+                                ),
+                              ),
+                              labelText: 'Enter your password',
+                              labelStyle: TextStyle(
+                                color: passwordLabelColor,
+                                fontSize: 12,
                               ),
                             ),
-                            Text(
-                              "OR",
-                              style:
-                                  TextStyle(color: Colors.black, fontSize: 12),
-                            ),
-                            Expanded(
-                              child: Divider(
-                                endIndent: 10,
-                                indent: 10,
-                                height: 2,
-                                color: Colors.black,
-                                thickness: 1.5,
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                setState(() {
+                                  passwordLabelColor = Colors.red;
+                                });
+                                return 'Please enter your password';
+                              } else {
+                                setState(() {
+                                  passwordLabelColor = Colors.black;
+                                });
+                              }
+                              return null;
+                            },
+                          ),
+                          const SizedBox(height: 30),
+                          state is LoginLoadingState
+                              ? Center(
+                                  child: CircularProgressIndicator(),
+                                )
+                              : ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                    padding: EdgeInsets.all(15.0),
+                                    backgroundColor: Color(0xff019AED),
+                                    textStyle: TextStyle(
+                                      fontSize: 20,
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                  onPressed: () async {
+                                    if (_formKey.currentState?.validate() ??
+                                        false) {
+                                      print(cubit.emailController.text);
+                                      cubit.login(cubit.emailController.text,
+                                          cubit.passwordController.text, true);
+                                    }
+                                  },
+                                  child: const Text(
+                                    'Login',
+                                    style: TextStyle(
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                ),
+                          SizedBox(
+                            height: 20,
+                          ),
+                          Row(
+                            children: [
+                              Expanded(
+                                child: Divider(
+                                  endIndent: 10,
+                                  indent: 10,
+                                  height: 2,
+                                  color: Colors.black,
+                                  thickness: 1.5,
+                                ),
                               ),
-                            ),
-                          ],
-                        ),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            InkWell(
-                              child: Row(
+                              Text(
+                                "OR",
+                                style:
+                                    TextStyle(color: Colors.black, fontSize: 12),
+                              ),
+                              Expanded(
+                                child: Divider(
+                                  endIndent: 10,
+                                  indent: 10,
+                                  height: 2,
+                                  color: Colors.black,
+                                  thickness: 1.5,
+                                ),
+                              ),
+                            ],
+                          ),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              InkWell(
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Container(
+                                      child: Image.asset(
+                                          "assets/images/google_logo.png"),
+                                      width: 50,
+                                      height: 50,
+                                    ),
+                                    Text("Continue with Google")
+                                  ],
+                                ),
+                              ),
+                              Row(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                mainAxisSize: MainAxisSize.max,
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  Container(
-                                    child: Image.asset(
-                                        "assets/images/google_logo.png"),
-                                    width: 50,
-                                    height: 50,
+                                  Text(
+                                    "Don't have an account?",
+                                    style: TextStyle(
+                                        color: Colors.grey.shade600,
+                                        fontSize: 14),
                                   ),
-                                  Text("Continue with Google")
+                                  TextButton(
+                                      onPressed: () {
+                                        _navigation
+                                            .removeAndNavigateToRoute('/signup');
+                                      },
+                                      child: Text(
+                                        "sign up",
+                                        style:
+                                            TextStyle(color: Color(0xff45B3EF)),
+                                      )),
                                 ],
                               ),
-                            ),
-                            Row(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              mainAxisSize: MainAxisSize.max,
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text(
-                                  "Don't have an account?",
-                                  style: TextStyle(
-                                      color: Colors.grey.shade600,
-                                      fontSize: 14),
-                                ),
-                                TextButton(
-                                    onPressed: () {
-                                      _navigation
-                                          .removeAndNavigateToRoute('/signup');
-                                    },
-                                    child: Text(
-                                      "sign up",
-                                      style:
-                                          TextStyle(color: Color(0xff45B3EF)),
-                                    )),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ],
+                            ],
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           );

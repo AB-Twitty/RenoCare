@@ -1,4 +1,5 @@
 import 'package:app/pages/login_page/model/login_response.dart';
+import 'package:app/services/session_maneger.dart';
 import 'package:bloc/bloc.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
@@ -24,6 +25,7 @@ class LoginCubit extends Cubit<LoginState> {
   var emailController = TextEditingController();
   var passwordController = TextEditingController();
   final loginManager = LoginDataManager2();
+  final SessionService _sessionService=SessionService();
 
 
   // void Login(String email,String pass,bool rememberMe)async
@@ -56,6 +58,7 @@ class LoginCubit extends Cubit<LoginState> {
         //loginManager.saveLoginData(response.data, sessionExpiration);
 
         LoginDataManager2().saveLoginData(response.data, sessionExpiration);
+
 //=====================================For Test ======================
 
         final loadedData = await loginManager.loadLoginData();
@@ -65,6 +68,7 @@ class LoginCubit extends Cubit<LoginState> {
         print('Access Token: ${loadedData['accessToken']}');
         print("======================================================");
         print('sessionExpiryKey: ${loadedData['sessionExpiryKey']}');
+        await _sessionService.saveToken(loadedData['accessToken']!);
         //=======================================================
         emit(LoginSuccessState(response: response));
       }

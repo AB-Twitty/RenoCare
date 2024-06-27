@@ -1,3 +1,5 @@
+// dialysis_unit.dart
+
 class CenterModel {
   final int id;
   final String name;
@@ -8,10 +10,10 @@ class CenterModel {
   final double rating;
   final int reviewsCnt;
   final bool isHdSupported;
-  final double hdPrice;
+  final double? hdPrice;
   final bool isHdfSupported;
-  final double hdfPrice;
-  final String thumbnailImage;
+  final double? hdfPrice;
+  final String? thumbnailImage;
 
   CenterModel({
     required this.id,
@@ -23,26 +25,26 @@ class CenterModel {
     required this.rating,
     required this.reviewsCnt,
     required this.isHdSupported,
-    required this.hdPrice,
+    this.hdPrice,
     required this.isHdfSupported,
-    required this.hdfPrice,
-    required this.thumbnailImage,
+    this.hdfPrice,
+    this.thumbnailImage,
   });
 
   factory CenterModel.fromJson(Map<String, dynamic> json) {
     return CenterModel(
-      id: json['id'],
-      name: json['name'],
-      address: json['address'],
-      country: json['country'],
-      city: json['city'],
-      contactNumber: json['contactNumber'],
-      rating: json['rating'],
-      reviewsCnt: json['reviewsCnt'],
-      isHdSupported: json['isHdSupported'],
-      hdPrice: json['hdPrice'],
-      isHdfSupported: json['isHdfSupported'],
-      hdfPrice: json['hdfPrice'],
+      id: json['id'] ?? 0, // Provide default values if fields are null
+      name: json['name'] ?? '',
+      address: json['address'] ?? '',
+      country: json['country'] ?? '',
+      city: json['city'] ?? '',
+      contactNumber: json['contactNumber'] ?? '',
+      rating: json['rating'] != null ? json['rating'].toDouble() : 0.0,
+      reviewsCnt: json['reviewsCnt'] ?? 0,
+      isHdSupported: json['isHdSupported'] ?? false,
+      hdPrice: json['hdPrice'] != null ? json['hdPrice'].toDouble() : null,
+      isHdfSupported: json['isHdfSupported'] ?? false,
+      hdfPrice: json['hdfPrice'] != null ? json['hdfPrice'].toDouble() : null,
       thumbnailImage: json['thumbnailImage'],
     );
   }
