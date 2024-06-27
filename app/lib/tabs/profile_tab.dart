@@ -14,14 +14,16 @@ class ProfileTab extends StatelessWidget {
         extendBodyBehindAppBar: true,
         backgroundColor: Colors.white,
         // appBar: AppBar(
-        //   toolbarHeight: MediaQuery.of(context).size.height*0.15,
+        //   toolbarHeight: MediaQuery.of(context).size.height * 0.15,
         //   centerTitle: true,
-        //   title: Text('Profile',style: TextStyle(
-        //     fontSize: 14,
-        //     fontWeight: FontWeight.bold,
-        //   ),),
+        //   title: Text(
+        //     'Profile',
+        //     style: TextStyle(
+        //       fontSize: 14,
+        //       fontWeight: FontWeight.bold,
+        //     ),
+        //   ),
         //   backgroundColor: Color(0xffB8E8F7),
-        //
         // ),
         body: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -37,7 +39,6 @@ class ProfileTab extends StatelessWidget {
                   "Edit Profile",
                   style: TextStyle(fontSize: 12, color: Colors.black),
                 )),
-
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
               child: Row(
@@ -49,7 +50,6 @@ class ProfileTab extends StatelessWidget {
                 ],
               ),
             ),
-
             Padding(
               padding: const EdgeInsets.only(left: 12, right: 12, top: 12),
               child: Row(
