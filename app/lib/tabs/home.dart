@@ -10,9 +10,7 @@ import '../Shared/components/widgets/bottom_sheet.dart';
 import '../Shared/components/widgets/center_card.dart';
 import '../Shared/components/widgets/fliter_drawer.dart';
 
-
 class Home extends StatefulWidget {
-
   const Home({Key? key}) : super(key: key);
 
   @override
@@ -40,29 +38,25 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     _navigation = NavigationService();
     return Scaffold(
-
       floatingActionButton: FloatingActionButton(
         onPressed: () {},
-        child: Icon(Icons.chat,),
-       backgroundColor: Color(0xff3C98CB) ,
+        child: Icon(
+          Icons.chat,
+        ),
+        backgroundColor: Color(0xff3C98CB),
       ),
-
 
       key: _scaffoldKey,
 
       drawer: FilterDrawer(),
       appBar: EasySearchBar(
-
         backgroundColor: Colors.transparent,
         elevation: 0.0,
-
         title: Text(
           'Search',
           style: TextStyle(
             fontSize: 14,
           ),
-
-
         ),
         onSearch: (value) {
           setState(() {
@@ -70,87 +64,117 @@ class _HomeState extends State<Home> {
           });
         },
         suggestions: _suggestions,
-
       ),
 
       // drawer: FilterDrawer(),
       body: Column(
         children: [
-
-
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-
-              Row(
-                children: [
-                  IconButton(
-                      onPressed: () {
-                        displayBottomSheet(context);
-                      },
-                      icon: Icon(Icons.sort, color: Color(0xff3C98CB),)
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                InkWell(
+                  onTap: () {
+                    displayBottomSheet(context);
+                  },
+                  child: Card(
+                    color: Colors.grey[100],
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(15),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 20,
+                        vertical: 10,
+                      ),
+                      child: Row(
+                        children: [
+                          Icon(
+                            Icons.sort,
+                            color: Color(0xff3C98CB),
+                          ),
+                          SizedBox(
+                            width: 5,
+                          ),
+                          Text("Sort", style: TextStyle(fontSize: 12))
+                        ],
+                      ),
+                    ),
                   ),
-                  Text(
-                      "Sort",
-                      style: TextStyle(
-                          fontSize: 12
-                      )
-
-                  )
-                ],
-              ),
-
-              Row(
-                children: [
-                  IconButton(
-                      onPressed: () {
-                        _scaffoldKey.currentState?.openDrawer();
-                      },
-                      icon: Icon(Icons.filter_alt, color: Color(0xff3C98CB),)
+                ),
+                InkWell(
+                  onTap: () {
+                    _scaffoldKey.currentState?.openDrawer();
+                  },
+                  child: Card(
+                    color: Colors.grey[100],
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(15),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 20,
+                        vertical: 10,
+                      ),
+                      child: Row(
+                        children: [
+                          Icon(
+                            Icons.filter_alt,
+                            color: Color(0xff3C98CB),
+                          ),
+                          SizedBox(
+                            width: 5,
+                          ),
+                          Text("Filter", style: TextStyle(fontSize: 12))
+                        ],
+                      ),
+                    ),
                   ),
-                  Text(
-                      "Filter",
-                      style: TextStyle(
-                          fontSize: 12
-                      )
-
-                  )
-                ],
-              ),
-              Row(
-                children: [
-                  IconButton(
-                      onPressed: () {
-                        _navigation.navigateToPage(MapPage());
-                      },
-                      icon: Icon(Icons.map, color: Color(0xff3C98CB),)
+                ),
+                InkWell(
+                  onTap: () {
+                    _navigation.navigateToPage(MapPage());
+                  },
+                  child: Card(
+                    color: Colors.grey[100],
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(15),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 20,
+                        vertical: 10,
+                      ),
+                      child: Row(
+                        children: [
+                          Icon(
+                            Icons.map,
+                            color: Color(0xff3C98CB),
+                          ),
+                          SizedBox(
+                            width: 5,
+                          ),
+                          Text("Maps", style: TextStyle(fontSize: 12))
+                        ],
+                      ),
+                    ),
                   ),
-                  Text(
-                      "Maps",
-                      style: TextStyle(
-                          fontSize: 12
-                      )
-
-                  )
-                ],
-              ),
-
-            ],
+                ),
+              ],
+            ),
           ),
-          Divider(height: 2, color: Colors.black,),
           Expanded(
             child: ListView.builder(
-              itemCount: 20,
+              itemCount: 15,
               itemBuilder: (context, index) {
                 return CenterCard();
               },
             ),
           ),
-
         ],
       ),
-
     );
   }
 
@@ -159,11 +183,9 @@ class _HomeState extends State<Home> {
       context: context,
       builder: (context) => SortBottomSheet(),
       shape: OutlineInputBorder(
-          borderSide: BorderSide(
-              color: Colors.black26),
+          borderSide: BorderSide(color: Colors.black26),
           borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(16), topRight: Radius.circular(16))
-      ),
+              topLeft: Radius.circular(16), topRight: Radius.circular(16))),
     );
   }
 }
