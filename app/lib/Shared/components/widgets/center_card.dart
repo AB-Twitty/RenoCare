@@ -1,3 +1,4 @@
+import 'package:app/models/home_page_center_card/CenterModel.dart';
 import 'package:app/models/home_page_center_card/center_card.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -5,7 +6,7 @@ import 'package:flutter/material.dart';
 import '../../../services/navigation_service.dart';
 
 class CenterCard extends StatelessWidget {
-  final CenterModel centerModel;
+  final Items centerModel;
   final NavigationService _navigation = NavigationService();
 
   CenterCard({required this.centerModel});
@@ -41,7 +42,7 @@ class CenterCard extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.only(top: 8, left: 22),
               child: Row(
-                children: [Text(centerModel.name)],
+                children: [Text(centerModel.name??"No Name")],
               ),
             ),
             Padding(
@@ -66,11 +67,11 @@ class CenterCard extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    (centerModel.isHdSupported && centerModel.isHdfSupported)
-                        ? "HD \$${centerModel.hdPrice} -- HDF \$${centerModel.hdfPrice}"
-                        : (centerModel.isHdSupported)
-                            ? "HD \$${centerModel.hdPrice}"
-                            : "HDF \$${centerModel.hdfPrice}",
+                    (centerModel.isHdSupported==true && centerModel.isHdfSupported==true)
+                        ? "HD \$${centerModel.hdPrice??125} -- HDF \$${centerModel.hdfPrice??230}"
+                        : (centerModel.isHdSupported==true)
+                            ? "HD \$${centerModel.hdPrice??132}"
+                            : "HDF \$${centerModel.hdfPrice??226}",
                     style: TextStyle(
                       fontSize: 13,
                     ),

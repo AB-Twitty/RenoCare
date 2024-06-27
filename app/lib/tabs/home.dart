@@ -6,6 +6,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 // import 'package:google_fonts/google_fonts.dart';
+import '../models/home_page_center_card/CenterModel.dart';
 import '../models/home_page_center_card/center_card.dart';
 import '../services/navigation_service.dart';
 import '../Shared/components/widgets/bottom_sheet.dart';
@@ -27,9 +28,10 @@ class _HomeState extends State<Home> {
   String accessToken = "";
   String searchValue = '';
   final ApiHandler _apiService = ApiHandler();
-int page=1;
-  late Future<List<CenterModel>> futureCenterUnit;
-  List<CenterModel> units = [];
+  int page=1;
+  // late Future<List<CenterModel>> futureCenterUnit;
+  late Future<CenterModel> futureCenterUnit;
+  List<Items> units = [];
 
   final controller = ScrollController();
 
@@ -63,14 +65,16 @@ int page=1;
   }
 
   Future<void> _fetchData(int page) async {
-    try {
-      List<CenterModel> centers = await _apiService.getCenterData(page);
+    try{
+
+      CenterModel centerModel =await _apiService.getCenterData(page);
       setState(() {
-        units.addAll(centers);
+        units.addAll(centerModel.data?.items??[]);
+
       });
-    } catch (e) {
-      // Handle error
-      print('Error fetching data: $e');
+    }catch(e)
+    {
+      print("Error Fetching data: $e");
     }
   }
 
@@ -146,7 +150,7 @@ int page=1;
               ],
             ),
             Expanded(
-              child: FutureBuilder<List<CenterModel>>(
+              child: FutureBuilder<CenterModel>(
                 future: futureCenterUnit,
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
@@ -154,7 +158,7 @@ int page=1;
                   } else if (snapshot.hasError) {
                     return Center(child: Text('Error: ${snapshot.error}'));
                   } else if (snapshot.hasData) {
-                    units = snapshot.data!;
+                    units = snapshot.data!.data?.items??[];
                     return ListView.builder(
                       controller: controller,
                       itemCount: units.length + 1,
