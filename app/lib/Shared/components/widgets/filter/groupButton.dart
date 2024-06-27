@@ -12,7 +12,7 @@ class RepeatedGroupButton extends StatelessWidget {
       options: GroupButtonOptions(
         mainGroupAlignment: MainGroupAlignment.start,
         crossGroupAlignment: CrossGroupAlignment.start,
-        spacing: 20,
+        spacing: 15,
         textPadding: const EdgeInsets.symmetric(horizontal: 20),
         buttonHeight: 40,
         selectedBorderColor: Colors.black54,

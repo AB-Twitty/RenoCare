@@ -1,3 +1,4 @@
+import 'package:app/Shared/components/widgets/commentScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -12,7 +13,6 @@ class cardLists extends StatelessWidget {
     bool activeselect = Hospitals.category == Category.upcoming ||
         Hospitals.category == Category.completed;
     bool activeButton = Hospitals.category == Category.upcoming;
-
     return Padding(
       padding: const EdgeInsets.all(4.0),
       child: Card(
@@ -82,8 +82,8 @@ class cardLists extends StatelessWidget {
                                   color: Hospitals.category == Category.upcoming
                                       ? Color.fromARGB(255, 199, 183, 38)
                                       : Hospitals.category == Category.cancelled
-                                      ? Colors.red
-                                      : Colors.green),
+                                          ? Colors.red
+                                          : Colors.green),
                             ),
                           ),
                         )
@@ -112,36 +112,43 @@ class cardLists extends StatelessWidget {
               ),
               activeselect
                   ? Row(
-                children: [
-                  OutlinedButton(
-                      style: OutlinedButton.styleFrom(
-                          side: BorderSide(
-                              color: Color.fromARGB(255, 109, 153, 222)),
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(20))),
-                      onPressed: () {},
-                      child: Text(
-                        activeButton
-                            ? 'Cancel'
-                            : 'Enter Review',
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: Color.fromARGB(255, 109, 153, 222),
-                        ),
-                      )),
-                  Spacer(),
-                  ElevatedButton(
-                      style: OutlinedButton.styleFrom(
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(20))),
-                      onPressed: () {},
-                      child: Text(
-                          activeButton ? 'Reshedule' : 'View Report')),
-                ],
-              )
+                      children: [
+                        OutlinedButton(
+                            style: OutlinedButton.styleFrom(
+                                side: BorderSide(
+                                    color: Color.fromARGB(255, 109, 153, 222)),
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(20))),
+                            onPressed: () {
+                              showModalBottomSheet(
+                                  shape: const RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.vertical(
+                                      top: Radius.circular(20),
+                                    ),
+                                  ),
+                                  context: context,
+                                  builder: (context) => CommentScreen());
+                            },
+                            child: Text(
+                              activeButton ? 'Cancel' : 'Enter Review',
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: Color.fromARGB(255, 109, 153, 222),
+                              ),
+                            )),
+                        Spacer(),
+                        ElevatedButton(
+                            style: OutlinedButton.styleFrom(
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(20))),
+                            onPressed: () {},
+                            child: Text(
+                                activeButton ? 'Reshedule' : 'View Report')),
+                      ],
+                    )
                   : SizedBox(
-                height: 15,
-              ),
+                      height: 15,
+                    ),
             ],
           ),
         ),

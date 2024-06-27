@@ -1,5 +1,6 @@
 import 'package:app/models/home_page_center_card/CenterModel.dart';
 import 'package:app/models/home_page_center_card/center_card.dart';
+import 'package:app/pages/center_details_page/center_details/details.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -25,6 +26,14 @@ class CenterCard extends StatelessWidget {
     return Container(
       padding: EdgeInsets.all(10),
       child: InkWell(
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => DetailsScreen(),
+            ),
+          );
+        },
         child: Card(
           margin: const EdgeInsets.all(8),
           shape: RoundedRectangleBorder(
@@ -46,7 +55,7 @@ class CenterCard extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 8.0),
                 child: Text(
-                 centerModel.name??"No Name",
+                  centerModel.name ?? "No Name",
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 16,
@@ -80,16 +89,17 @@ class CenterCard extends StatelessWidget {
               ),
               Padding(
                 padding:
-                const EdgeInsets.only(left: 8.0, right: 8.0, bottom: 10.0),
+                    const EdgeInsets.only(left: 8.0, right: 8.0, bottom: 10.0),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      (centerModel.isHdSupported==true && centerModel.isHdfSupported==true)
-                          ? "HD \$${centerModel.hdPrice??125} -- HDF \$${centerModel.hdfPrice??230}"
-                          : (centerModel.isHdSupported==true)
-                          ? "HD \$${centerModel.hdPrice??132}"
-                          : "HDF \$${centerModel.hdfPrice??226}",
+                      (centerModel.isHdSupported == true &&
+                              centerModel.isHdfSupported == true)
+                          ? "HD \$${centerModel.hdPrice ?? 125} -- HDF \$${centerModel.hdfPrice ?? 230}"
+                          : (centerModel.isHdSupported == true)
+                              ? "HD \$${centerModel.hdPrice ?? 132}"
+                              : "HDF \$${centerModel.hdfPrice ?? 226}",
                       style: TextStyle(
                         fontSize: 14,
                       ),
@@ -103,14 +113,15 @@ class CenterCard extends StatelessWidget {
                           style: TextStyle(fontSize: 14),
                         ),
                         SizedBox(
-                          width: 5,
+                          width: 8,
                         ),
                         Text(
-                          "${centerModel.reviewsCnt}",
-                          style: TextStyle(color: Colors.grey, fontSize: 12),
+                          "(${centerModel.reviewsCnt})",
+                          style:
+                              TextStyle(color: Colors.grey[700], fontSize: 12),
                         ),
                         SizedBox(
-                          width: 5,
+                          width: 8,
                         ),
                         Icon(
                           CupertinoIcons.star,

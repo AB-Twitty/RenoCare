@@ -40,12 +40,12 @@ class _LoginPageState extends State<LoginPage> {
       child: BlocConsumer<LoginCubit, LoginState>(
         listener: (context, state) {
           if (state is LoginSuccessState) {
-            _navigation.removeAndNavigateToRoute2('/home_page');
+            _navigation.removeAndNavigateToRoute2('/bottomnav');
           } else if (state is LoginErrorState) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
                   content:
-                  Text('Login Failed: The email or password is wrong')),
+                      Text('Login Failed: The email or password is wrong')),
             );
           }
         },
@@ -101,23 +101,23 @@ class _LoginPageState extends State<LoginPage> {
                                   ),
                                   errorBorder: OutlineInputBorder(
                                     borderRadius:
-                                    BorderRadius.all(Radius.circular(20)),
+                                        BorderRadius.all(Radius.circular(20)),
                                     borderSide: BorderSide(
                                       color: Colors.red,
                                     ),
                                   ),
                                   focusedErrorBorder: OutlineInputBorder(
                                     borderRadius:
-                                    BorderRadius.all(Radius.circular(20)),
+                                        BorderRadius.all(Radius.circular(20)),
                                     borderSide: BorderSide(
                                       color: Colors.red,
                                     ),
                                   ),
                                   floatingLabelStyle:
-                                  TextStyle(color: emailLabelColor),
+                                      TextStyle(color: emailLabelColor),
                                   focusedBorder: OutlineInputBorder(
                                     borderRadius:
-                                    BorderRadius.all(Radius.circular(20)),
+                                        BorderRadius.all(Radius.circular(20)),
                                     borderSide: BorderSide(
                                       color: Color(0xffB8E8F7),
                                       width: 3,
@@ -125,7 +125,7 @@ class _LoginPageState extends State<LoginPage> {
                                   ),
                                   enabledBorder: OutlineInputBorder(
                                     borderRadius:
-                                    BorderRadius.all(Radius.circular(20)),
+                                        BorderRadius.all(Radius.circular(20)),
                                     borderSide: BorderSide(
                                       color: Color(0xffB8E8F7),
                                       width: 3,
@@ -153,7 +153,7 @@ class _LoginPageState extends State<LoginPage> {
                                     });
                                   }
                                   final bool emailValid = RegExp(
-                                      r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+                                          r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
                                       .hasMatch(value);
                                   if (!emailValid) {
                                     setState(() {
@@ -197,23 +197,23 @@ class _LoginPageState extends State<LoginPage> {
                                   ),
                                   errorBorder: OutlineInputBorder(
                                     borderRadius:
-                                    BorderRadius.all(Radius.circular(20)),
+                                        BorderRadius.all(Radius.circular(20)),
                                     borderSide: BorderSide(
                                       color: Colors.red,
                                     ),
                                   ),
                                   focusedErrorBorder: OutlineInputBorder(
                                     borderRadius:
-                                    BorderRadius.all(Radius.circular(20)),
+                                        BorderRadius.all(Radius.circular(20)),
                                     borderSide: BorderSide(
                                       color: Colors.red,
                                     ),
                                   ),
                                   floatingLabelStyle:
-                                  TextStyle(color: passwordLabelColor),
+                                      TextStyle(color: passwordLabelColor),
                                   focusedBorder: OutlineInputBorder(
                                     borderRadius:
-                                    BorderRadius.all(Radius.circular(20)),
+                                        BorderRadius.all(Radius.circular(20)),
                                     borderSide: BorderSide(
                                       color: Color(
                                         0xffB8E8F7,
@@ -223,7 +223,7 @@ class _LoginPageState extends State<LoginPage> {
                                   ),
                                   enabledBorder: OutlineInputBorder(
                                     borderRadius:
-                                    BorderRadius.all(Radius.circular(20)),
+                                        BorderRadius.all(Radius.circular(20)),
                                     borderSide: BorderSide(
                                       color: Color(0xffB8E8F7),
                                       width: 3,
@@ -252,37 +252,37 @@ class _LoginPageState extends State<LoginPage> {
                               const SizedBox(height: 30),
                               state is LoginLoadingState
                                   ? Center(
-                                child: CircularProgressIndicator(),
-                              )
+                                      child: CircularProgressIndicator(),
+                                    )
                                   : ElevatedButton(
-                                style: ElevatedButton.styleFrom(
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius:
-                                      BorderRadius.circular(20)),
-                                  padding: EdgeInsets.all(15.0),
-                                  backgroundColor: Color(0xff019AED),
-                                  textStyle: TextStyle(
-                                    fontSize: 20,
-                                    color: Colors.black,
-                                  ),
-                                ),
-                                onPressed: () async {
-                                  if (_formKey.currentState?.validate() ??
-                                      false) {
-                                    print(cubit.emailController.text);
-                                    cubit.login(
-                                        cubit.emailController.text,
-                                        cubit.passwordController.text,
-                                        true);
-                                  }
-                                },
-                                child: const Text(
-                                  'Login',
-                                  style: TextStyle(
-                                    color: Colors.black,
-                                  ),
-                                ),
-                              ),
+                                      style: ElevatedButton.styleFrom(
+                                        shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(20)),
+                                        padding: EdgeInsets.all(15.0),
+                                        backgroundColor: Color(0xff019AED),
+                                        textStyle: TextStyle(
+                                          fontSize: 20,
+                                          color: Colors.black,
+                                        ),
+                                      ),
+                                      onPressed: () async {
+                                        if (_formKey.currentState?.validate() ??
+                                            false) {
+                                          print(cubit.emailController.text);
+                                          cubit.login(
+                                              cubit.emailController.text,
+                                              cubit.passwordController.text,
+                                              true);
+                                        }
+                                      },
+                                      child: const Text(
+                                        'Login',
+                                        style: TextStyle(
+                                          color: Colors.black,
+                                        ),
+                                      ),
+                                    ),
                               SizedBox(
                                 height: 20,
                               ),
@@ -322,7 +322,7 @@ class _LoginPageState extends State<LoginPage> {
                                   InkWell(
                                     child: Row(
                                       mainAxisAlignment:
-                                      MainAxisAlignment.center,
+                                          MainAxisAlignment.center,
                                       children: [
                                         Container(
                                           child: Image.asset(
@@ -336,7 +336,7 @@ class _LoginPageState extends State<LoginPage> {
                                   ),
                                   Row(
                                     crossAxisAlignment:
-                                    CrossAxisAlignment.center,
+                                        CrossAxisAlignment.center,
                                     mainAxisSize: MainAxisSize.max,
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
@@ -351,7 +351,7 @@ class _LoginPageState extends State<LoginPage> {
                                           onPressed: () {
                                             _navigation
                                                 .removeAndNavigateToRoute(
-                                                '/signup');
+                                                    '/signup');
                                           },
                                           child: Text(
                                             "sign up",

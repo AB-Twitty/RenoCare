@@ -6,7 +6,6 @@ import 'filter/divider.dart';
 import 'filter/groupButton.dart';
 
 class FilterDrawer extends StatefulWidget {
-
   @override
   State<FilterDrawer> createState() => _FilterDrawerState();
 }
@@ -18,7 +17,7 @@ class _FilterDrawerState extends State<FilterDrawer> {
       color: Colors.white,
       child: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.all(20.0),
+          padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 40.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -51,17 +50,19 @@ class _FilterDrawerState extends State<FilterDrawer> {
                 ],
               ),
               const RepeatedDivider(text: 'Treatment type'),
-              const GroupButton(
-                options: GroupButtonOptions(
-                    mainGroupAlignment: MainGroupAlignment.center,
-                    crossGroupAlignment: CrossGroupAlignment.center,
-                    spacing: 0,
-                    buttonWidth: 145,
-                    buttonHeight: 50,
-                    selectedBorderColor: Colors.black54,
-                    unselectedBorderColor: Colors.black54,
-                    selectedColor: Color.fromRGBO(60, 152, 203, 1)),
-                buttons: ["All types", "HD", "HDF"],
+              Center(
+                child: const GroupButton(
+                  options: GroupButtonOptions(
+                      mainGroupAlignment: MainGroupAlignment.center,
+                      crossGroupAlignment: CrossGroupAlignment.center,
+                      spacing: 0,
+                      buttonWidth: 110,
+                      buttonHeight: 50,
+                      selectedBorderColor: Colors.black54,
+                      unselectedBorderColor: Colors.black54,
+                      selectedColor: Color.fromRGBO(60, 152, 203, 1)),
+                  buttons: ["All types", "HD", "HDF"],
+                ),
               ),
               const SizedBox(
                 height: 10,
@@ -132,6 +133,26 @@ class _FilterDrawerState extends State<FilterDrawer> {
               const SizedBox(
                 height: 10,
               ),
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed: () {},
+                  child: Text(
+                    'Apply',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  style: ElevatedButton.styleFrom(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      backgroundColor: Color.fromRGBO(60, 152, 203, 1),
+                      padding: EdgeInsets.all(20)),
+                ),
+              )
             ],
           ),
         ),

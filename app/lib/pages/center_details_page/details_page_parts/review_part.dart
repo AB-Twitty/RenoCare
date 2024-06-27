@@ -22,7 +22,7 @@ class ReviewPart extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final Color selectedcolor = Color.fromRGBO(60, 152, 203, 1);
-    final formatter = DateFormat.yMMMEd();
+    final formatter = DateFormat.yMd();
     // TODO: implement build
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -85,6 +85,9 @@ class ReviewPart extends StatelessWidget {
                           color: selectedcolor,
                         ),
                     ],
+                    SizedBox(
+                      width: 5,
+                    ),
                     Text(
                       formatter.format(DateTime.now()),
                     )
@@ -96,15 +99,15 @@ class ReviewPart extends StatelessWidget {
             Card(
               shape: istsart
                   ? RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(20),
-                side: BorderSide(color: selectedcolor, width: 3),
-              )
+                      borderRadius: BorderRadius.circular(20),
+                      side: BorderSide(color: selectedcolor, width: 3),
+                    )
                   : RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(20),
-              ),
+                      borderRadius: BorderRadius.circular(20),
+                    ),
               child: Padding(
                 padding: const EdgeInsets.symmetric(
-                  horizontal: 14,
+                  horizontal: 8,
                   vertical: 8,
                 ),
                 child: Row(

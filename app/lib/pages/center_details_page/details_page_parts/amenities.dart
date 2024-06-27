@@ -19,7 +19,7 @@ class AmenitiesPart extends StatelessWidget {
         height: 16,
       ),
       Wrap(
-        spacing: 50,
+        spacing: 35,
         runSpacing: 16,
         children: [
           Row(

@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import '../Shared/components/widgets/appointment_widgets.dart';
 import '../models/center_model/center_model.dart';
 
-
 class Appointment extends StatefulWidget {
   const Appointment({super.key});
   @override
@@ -23,27 +22,27 @@ class _AppointmentCardState extends State<Appointment> {
 
     return Scaffold(
         body: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 35.0, horizontal: 16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Appointment',
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              SizedBox(
-                height: 10,
-              ),
-              Card(
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(20.0)),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: Category.values
-                      .map((category) => FilterChip(
+      padding: const EdgeInsets.symmetric(vertical: 40.0, horizontal: 16.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'Appointment',
+            style: TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          SizedBox(
+            height: 10,
+          ),
+          Card(
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(20.0)),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: Category.values
+                  .map((category) => FilterChip(
                       backgroundColor: Color.fromARGB(255, 65, 171, 246),
                       selected: selectedCategories.contains(category.name),
                       label: Text(
@@ -59,21 +58,21 @@ class _AppointmentCardState extends State<Appointment> {
                           }
                         });
                       }))
-                      .toList(),
-                ),
-              ),
-              Expanded(
-                child: ListView.builder(
-                    scrollDirection: Axis.vertical,
-                    shrinkWrap: true,
-                    itemCount: filteredCategories.length,
-                    itemBuilder: ((context, index) {
-                      final product = filteredCategories[index];
-                      return cardLists(product);
-                    })),
-              )
-            ],
+                  .toList(),
+            ),
           ),
-        ));
+          Expanded(
+            child: ListView.builder(
+                scrollDirection: Axis.vertical,
+                shrinkWrap: true,
+                itemCount: filteredCategories.length,
+                itemBuilder: ((context, index) {
+                  final product = filteredCategories[index];
+                  return cardLists(product);
+                })),
+          )
+        ],
+      ),
+    ));
   }
 }
