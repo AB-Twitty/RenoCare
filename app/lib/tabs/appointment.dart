@@ -63,13 +63,14 @@ class _AppointmentCardState extends State<Appointment> {
           ),
           Expanded(
             child: ListView.builder(
-                scrollDirection: Axis.vertical,
-                shrinkWrap: true,
-                itemCount: filteredCategories.length,
-                itemBuilder: ((context, index) {
-                  final product = filteredCategories[index];
-                  return cardLists(product);
-                })),
+              scrollDirection: Axis.vertical,
+              shrinkWrap: true,
+              itemCount: filteredCategories.length,
+              itemBuilder: ((context, index) {
+                final product = filteredCategories[index];
+                return cardLists(product);
+              }),
+            ),
           )
         ],
       ),

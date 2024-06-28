@@ -41,7 +41,7 @@ class ReviewPart extends StatelessWidget {
               ),
             ),
             SizedBox(
-              width: 5,
+              width: 10,
             ),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -95,35 +95,6 @@ class ReviewPart extends StatelessWidget {
                 ),
               ],
             ),
-            Spacer(),
-            Card(
-              shape: istsart
-                  ? RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20),
-                      side: BorderSide(color: selectedcolor, width: 3),
-                    )
-                  : RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-              child: Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 8,
-                  vertical: 8,
-                ),
-                child: Row(
-                  children: [
-                    Icon(
-                      Icons.thumb_up,
-                      color: selectedcolor,
-                    ),
-                    SizedBox(
-                      width: 5,
-                    ),
-                    Text('55'),
-                  ],
-                ),
-              ),
-            )
           ],
         ),
         SizedBox(
