@@ -68,8 +68,7 @@ class _SecondSignUpPageState extends State<SecondSignUpPage> {
                     "Create your account",
                     style: TextStyle(
                       fontSize: 15,
-                      color: Color(0xff45B3EF),
-                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
                     ),
                   ),
                   SizedBox(
@@ -81,19 +80,19 @@ class _SecondSignUpPageState extends State<SecondSignUpPage> {
                     label: labels[0],
                   ),
                   DropDownButtonSingUp(
-                    items: choices[0],
-                    selectedItem: selectedChoice[0],
-                    label: labels[0],
+                    items: choices[1],
+                    selectedItem: selectedChoice[1],
+                    label: labels[1],
                   ),
                   DropDownButtonSingUp(
-                    items: choices[0],
-                    selectedItem: selectedChoice[0],
-                    label: labels[0],
+                    items: choices[2],
+                    selectedItem: selectedChoice[2],
+                    label: labels[2],
                   ),
                   DropDownButtonSingUp(
-                    items: choices[0],
-                    selectedItem: selectedChoice[0],
-                    label: labels[0],
+                    items: choices[3],
+                    selectedItem: selectedChoice[3],
+                    label: labels[3],
                   ),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 5.0),

@@ -58,7 +58,7 @@ class _SignUpState extends State<SignUp> {
         context: context,
         initialDate: now,
         firstDate: DateTime(1944),
-        lastDate: DateTime(2025),
+        lastDate: now,
         barrierColor: Colors.white);
     setState(() {
       _selectedDate = pickedDate;
@@ -84,29 +84,25 @@ class _SignUpState extends State<SignUp> {
           child: Padding(
             padding: const EdgeInsets.all(30),
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Column(
-                  children: <Widget>[
-                    const Text(
-                      "Sign up",
-                      style: TextStyle(
-                          fontSize: 30,
-                          fontWeight: FontWeight.bold,
-                          color: Color(0xff45B3EF)),
-                    ),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    Text(
-                      "Create your account",
-                      style: TextStyle(
-                        fontSize: 15,
-                        color: Colors.black,
-                      ),
-                    )
-                  ],
+                const Text(
+                  "Sign up",
+                  style: TextStyle(
+                      fontSize: 30,
+                      fontWeight: FontWeight.bold,
+                      color: Color(0xff45B3EF)),
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                Text(
+                  "Create your account",
+                  style: TextStyle(
+                    fontSize: 15,
+                    color: Colors.black,
+                  ),
                 ),
                 SizedBox(
                   height: 40,
@@ -395,6 +391,9 @@ class _SignUpState extends State<SignUp> {
                                   "===================================================");
                               // _navigation.removeAndNavigateToRoute('/home');
                             }),
+                      ),
+                      SizedBox(
+                        height: 10,
                       ),
                       Row(
                         crossAxisAlignment: CrossAxisAlignment.center,
