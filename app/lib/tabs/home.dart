@@ -83,7 +83,9 @@ class _HomeState extends State<Home> {
     _navigation = NavigationService();
     return Scaffold(
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed: () {
+          _navigation.navigateToRoute('/chatHomePage');
+        },
         child: Icon(
           Icons.chat,
         ),
@@ -92,7 +94,7 @@ class _HomeState extends State<Home> {
 
       key: _scaffoldKey,
 
-      drawer: FilterDrawer(),
+      drawer: FilterDrawer(page),
       appBar: EasySearchBar(
         backgroundColor: Colors.transparent,
         elevation: 0.0,

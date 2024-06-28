@@ -44,11 +44,14 @@ class cardLists extends StatelessWidget {
                                 overflow: TextOverflow.ellipsis,
                               ),
                             ),
-                            Icon(
-                              color: Color.fromARGB(255, 109, 153, 222),
-                              size: 30.0,
-                              IconData(0xe5c9, fontFamily: 'MaterialIcons'),
-                            ),
+                            if (Hospitals.category == Category.upcoming ||
+                                Hospitals.category == Category.completed) ...{
+                              Icon(
+                                color: Color.fromARGB(255, 109, 153, 222),
+                                size: 30.0,
+                                IconData(0xe5c9, fontFamily: 'MaterialIcons'),
+                              ),
+                            }
                           ],
                         ),
                         SizedBox(

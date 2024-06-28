@@ -41,10 +41,8 @@ class _SecondSignUpPageState extends State<SecondSignUpPage> {
     ["Type1", "Type2"],
     ["Type1", "Type2"],
     ["Type1", "Type2"],
-    ["Type1", "Type2"],
   ];
   List<String> selectedChoice = [
-    "Type1",
     "Type1",
     "Type1",
     "Type1",
@@ -52,7 +50,6 @@ class _SecondSignUpPageState extends State<SecondSignUpPage> {
   List<String> labels = [
     "Diabetes",
     "Hypertension",
-    "Viruses",
     "Smoking status",
   ];
   final TextEditingController _textController = TextEditingController();
@@ -162,9 +159,9 @@ class _SecondSignUpPageState extends State<SecondSignUpPage> {
                     height: 15,
                   ),
                   DropDownButtonSingUp(
-                    items: choices[3],
-                    selectedItem: selectedChoice[3],
-                    label: labels[3],
+                    items: choices[2],
+                    selectedItem: selectedChoice[2],
+                    label: labels[2],
                   ),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 5.0),

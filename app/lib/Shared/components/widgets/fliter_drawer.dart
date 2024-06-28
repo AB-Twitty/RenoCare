@@ -247,7 +247,6 @@ final ApiHandler _apiHandler=ApiHandler();
                     _apiHandler.getCenterData(amenitis: idString,widget.page!);
 
                     Navigator.pop(context,{
-                      'amenityIds': idString,
 
                     });
                     _navigationService.goBack();
