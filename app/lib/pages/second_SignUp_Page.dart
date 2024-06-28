@@ -136,7 +136,9 @@ class _SecondSignUpPageState extends State<SecondSignUpPage> {
                           style: TextStyle(
                               fontSize: 18, fontWeight: FontWeight.bold),
                         ),
-                        onPressed: () {}),
+                        onPressed: () {
+                          _navigation.removeAndNavigateToRoute('/bottomnav');
+                        }),
                   ),
                   SizedBox(
                     height: 10,
