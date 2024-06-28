@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using RenoCare.Core.Base;
 using RenoCare.Core.Conatracts.Persistence;
@@ -7,7 +8,6 @@ using RenoCare.Core.Features.Patients.DTOs;
 using RenoCare.Core.Helpers;
 using RenoCare.Core.Helpers.Contracts;
 using RenoCare.Domain;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Dynamic.Core;
@@ -40,14 +40,22 @@ namespace RenoCare.Core.Features.Patients.Mediator.Queries
         #region Fields
 
         private readonly IRepository<Patient> _patientRepo;
+        private readonly IRepository<MedicationRequest> _medReqRepo;
+        private readonly IRepository<Domain.MedicationRequestStatus> _medStatusRepo;
+        private readonly IHttpContextAccessor _ctxAccessor;
 
         #endregion
 
         #region Ctor
 
-        public GetPatientListQueryRequestHandler(IRepository<Patient> patientRepo)
+        public GetPatientListQueryRequestHandler(IRepository<Patient> patientRepo,
+            IRepository<MedicationRequest> medReqRepo, IHttpContextAccessor ctxAccessor,
+            IRepository<Domain.MedicationRequestStatus> medStatusRepo)
         {
             _patientRepo = patientRepo;
+            _medReqRepo = medReqRepo;
+            _ctxAccessor = ctxAccessor;
+            _medStatusRepo = medStatusRepo;
         }
 
         #endregion
@@ -66,35 +74,135 @@ namespace RenoCare.Core.Features.Patients.Mediator.Queries
         public async Task<ApiResponse<IPagedList<PatientListItemDto>>> Handle(GetPatientListQueryRequest request,
             CancellationToken cancellationToken)
         {
-            var list = await _patientRepo.ApplyQueryAsync(async query =>
+            IPagedList<PatientListItemDto> list = new PagedList<PatientListItemDto>();
+
+            var statuses = await _medStatusRepo.GetAllAsync(q => q.OrderBy(s => s.Id));
+
+            var statuses_names = statuses.Select(x => x.Name);
+
+            if (_ctxAccessor.HttpContext.User.IsInRole("HealthCare"))
             {
-                DateTime now = DateTime.Now;
-                DateTime birth = DateTime.Now.AddYears(-32);
+                int.TryParse(_ctxAccessor.HttpContext.Items["unitId"].ToString(), out int unitId);
 
-                var qry = query
-                    .Include(p => p.User)
-                    .Select(p => new PatientListItemDto
+                var patientIdsQuery = _medReqRepo.Table
+                                 .Where(x => x.DialysisUnitId == unitId)
+                                 .Select(x => x.Patient.Id)
+                                 .Distinct();
+
+                var pagedPatientIds = (await patientIdsQuery.ToPagedListAsync(request.PageIndex, request.PageSize)).Items;
+
+                list = await _medReqRepo.ApplyQueryAsync(async q =>
+                {
+                    var qry = q.Where(x => pagedPatientIds.Contains(x.Patient.Id))
+                         .Include(x => x.Patient).ThenInclude(p => p.User)
+                         .Include(x => x.Patient).ThenInclude(p => p.Reports)
+                         .Include(x => x.Patient).ThenInclude(p => p.Viruses)
+                         .Select(p => new PatientListItemDto
+                         {
+                             Id = p.Patient.Id,
+                             PatientName = p.Patient.User.FirstName + " " + p.Patient.User.LastName,
+                             ReportsSameUnit = p.Patient.Reports.Where(x => x.DialysisUnitId == unitId).Count(),
+                             ReportsOverral = p.Patient.Reports.Count(),
+                             Diabetes = p.Patient.DiabetesType.Name,
+                             Hypertension = p.Patient.HypertensionType.Name,
+                             Gender = p.Patient.Gender.ToString(),
+                             BirthDate = p.Patient.BirthDate,
+                             Age = AgeFormatter.CalculateAge(p.Patient.BirthDate),
+                             Smoking = p.Patient.SmokingStatus.Name ?? "--",
+                             Viruses = string.Join(", ", p.Patient.Viruses.OrderBy(x => x.Id).Select(x => x.Abbreviation))
+                         });
+
+                    var totalCount = qry.Count();
+
+                    var sorting_by_medStatus = statuses_names.Contains(request.SortColumn);
+
+                    if (!sorting_by_medStatus && !string.IsNullOrEmpty(request.SortColumn) && !string.IsNullOrEmpty(request.SortDirection))
+                        qry = qry.OrderBy($"{request.SortColumn} {request.SortDirection}");
+
+                    var paged_list = await qry.ToPagedListAsync(request.PageIndex, request.PageSize, totalCount);
+
+                    foreach (var patient in paged_list.Items)
                     {
-                        Id = p.Id,
-                        PatientName = p.User.FirstName + " " + p.User.LastName,
-                        ReportsSameUnit = 12,
-                        ReportsOverral = 42,
-                        Diabetes = p.DiabetesType.Name,
-                        Hypertension = p.HypertensionType.Name,
-                        Gender = "Male",
-                        Age = now.Year - birth.Year,
-                        Smoking = p.SmokingStatus.Name ?? "--"
-                    });
+                        patient.MedReqCnts = await _medReqRepo.ApplyQueryAsync(async q =>
+                        {
+                            var medReqs = await q
+                                .Where(m => m.PatientId == patient.Id)
+                                .ToListAsync();
 
-                var totalCount = qry.Count();
+                            return medReqs
+                                .GroupBy(m => m.Status.Name)
+                                .Where(g => statuses_names.Contains(g.Key))
+                                .ToDictionary(g => g.Key, g => g.Count());
+                        });
+                    }
 
-                qry = qry.FilterQuery(request);
 
-                if (!string.IsNullOrEmpty(request.SortColumn) && !string.IsNullOrEmpty(request.SortDirection))
-                    qry = qry.OrderBy($"{request.SortColumn} {request.SortDirection}");
+                    if (sorting_by_medStatus)
+                    {
+                        string sortExpression = $"MedReqCnts.Where(Key == \"{request.SortColumn}\").Select(Value).DefaultIfEmpty(0).FirstOrDefault() {request.SortDirection}";
 
-                return await qry.ToPagedListAsync(request.PageIndex, request.PageSize, totalCount);
-            });
+                        paged_list.Items = paged_list.Items.AsQueryable().OrderBy(sortExpression).ToList();
+                    }
+
+                    return paged_list;
+                });
+            }
+
+            else if (_ctxAccessor.HttpContext.User.IsInRole("Admin"))
+            {
+                list = await _patientRepo.ApplyQueryAsync(async query =>
+                {
+                    var qry = query
+                        .Include(p => p.User).Include(p => p.Reports).Include(p => p.Viruses)
+                        .Select(p => new PatientListItemDto
+                        {
+                            Id = p.Id,
+                            PatientName = p.User.FirstName + " " + p.User.LastName,
+                            ReportsOverral = p.Reports.Count(),
+                            Diabetes = p.DiabetesType.Name,
+                            Hypertension = p.HypertensionType.Name,
+                            Gender = p.Gender.ToString(),
+                            BirthDate = p.BirthDate,
+                            Age = AgeFormatter.CalculateAge(p.BirthDate),
+                            Smoking = p.SmokingStatus.Name ?? "--",
+                            Viruses = string.Join(", ", p.Viruses.OrderBy(x => x.Id).Select(x => x.Abbreviation))
+                        });
+
+                    var totalCount = qry.Count();
+
+                    var sorting_by_medStatus = statuses_names.Contains(request.SortColumn);
+
+                    if (!sorting_by_medStatus && !string.IsNullOrEmpty(request.SortColumn) && !string.IsNullOrEmpty(request.SortDirection))
+                        qry = qry.OrderBy($"{request.SortColumn} {request.SortDirection}");
+
+                    var paged_list = await qry.ToPagedListAsync(request.PageIndex, request.PageSize, totalCount);
+
+                    foreach (var patient in paged_list.Items)
+                    {
+                        patient.MedReqCnts = await _medReqRepo.ApplyQueryAsync(async q =>
+                        {
+                            var medReqs = await q
+                                .Where(m => m.PatientId == patient.Id)
+                                .ToListAsync();
+
+                            return medReqs
+                                .GroupBy(m => m.Status.Name)
+                                .Where(g => statuses_names.Contains(g.Key))
+                                .ToDictionary(g => g.Key, g => g.Count());
+                        });
+                    }
+
+
+                    if (sorting_by_medStatus)
+                    {
+                        string sortExpression = $"MedReqCnts.Where(Key == \"{request.SortColumn}\").Select(Value).DefaultIfEmpty(0).FirstOrDefault() {request.SortDirection}";
+
+                        paged_list.Items = paged_list.Items.AsQueryable().OrderBy(sortExpression).ToList();
+                    }
+
+                    return paged_list;
+                });
+            }
 
             return Success(list);
         }

@@ -1,0 +1,90 @@
+﻿@model DialysisUnitIndexModel;
+
+@{
+    var propertiesToCheck = new[]
+    {
+        nameof(Model.FirstName),
+        nameof(Model.LastName),
+        nameof(Model.Phone)
+    };
+
+    var initialForm = propertiesToCheck.All(prop =>
+        Model.GetType().GetProperty(prop).GetValue(Model) == null);
+
+    var change_to_warning = !initialForm && propertiesToCheck.Any(prop =>
+        ViewData.ModelState[$".{prop}"]?.Errors.Any() ?? false);
+}
+
+<div class="form-group">
+    <div class="row">
+
+        <!--First Name-->
+        <div class="col-md-6 mb-15">
+            <label class="control-label col-md-12">First Name<span class="text-danger"> *</span></label>
+            <div class="col-md-12">
+                <input asp-for="@Model.FirstName" class="m-b form-control BaselineSingleControl" />
+                <span asp-validation-for="@Model.FirstName" class="text-danger"></span>
+            </div>
+        </div>
+
+        <!--Last Name-->
+        <div class="col-md-6 mb-15">
+            <label class="control-label col-md-12">Last Name<span class="text-danger"> *</span></label>
+            <div class="col-md-12">
+                <input asp-for="@Model.LastName" class="m-b form-control BaselineSingleControl" />
+                <span asp-validation-for="@Model.LastName" class="text-danger"></span>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="row">
+
+        <!--Email-->
+        <div class="col-md-6 mb-15">
+            <label class="control-label col-md-12">
+                Email<span class="text-danger"> *</span>
+            </label>
+            <div class="col-md-12">
+                <input asp-for="@Model.Email" type="text" class="m-b form-control BaselineSingleControl" readonly disabled />
+                <span asp-validation-for="@Model.Email" class="text-danger"></span>
+            </div>
+        </div>
+
+        <!--Phone-->
+        <div class="col-md-6 mb-15">
+            <label class="control-label col-md-12">Phone<span class="text-danger"> *</span></label>
+            <div class="col-md-12">
+                <input asp-for="@Model.Phone" type="text" class="m-b form-control BaselineSingleControl" placeholder="(xxx)-xxxx-xxx" />
+                <span asp-validation-for="@Model.Phone" class="text-danger"></span>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+<!--Tab Buttons-->
+<div class="row">
+    <div class="ibox float-e-margins" style="float:right">
+        <div class="ibox-title">
+            <div class="col-md-6 text-end">
+                <button data-toggle="tab" id="nxt_to_unit_spcf" href="#tab-2" class="tab9 btn btn-primary">Next</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $("#nxt_to_unit_spcf").on('click', function () {
+        $('.nav-tabs a[href="' + "#tab-2" + '"]').tab('show');
+    });
+
+
+    var init = @initialForm.ToString().ToLower();
+    if (!init) {
+        const $tabIcon = $('.nav-tabs a[href="#tab-1"] i');
+        $tabIcon.removeClass('label label-danger fa fa-window-close').addClass(@change_to_warning.ToString().ToLower()
+                ? 'label label-danger fa fa-window-close' : 'label label-primary fa fa-check');
+    }
+</script>

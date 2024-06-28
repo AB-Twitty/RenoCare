@@ -62,7 +62,8 @@ namespace RenoCare.Infrastructure.Authentication
                 jwtOptions.Events.OnTokenValidated = async (context) =>
                 {
                     //cache the logged user for further need.
-                    context.HttpContext.User.AddIdentity(context.Principal.Identity as ClaimsIdentity);
+                    var claimsIdentity = context.Principal.Identity as ClaimsIdentity;
+                    context.HttpContext.User.AddIdentity(claimsIdentity);
 
                     if (context.HttpContext.User.IsInRole("HealthCare"))
                     {

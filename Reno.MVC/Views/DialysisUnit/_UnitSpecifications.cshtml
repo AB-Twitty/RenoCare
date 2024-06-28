@@ -1,0 +1,309 @@
+﻿@using Reno.MVC.Services.Base;
+@model DialysisUnitIndexModel;
+
+@inject IClient _client;
+
+@{
+    var propertiesToCheck = new[]
+    {
+        nameof(Model.UnitSpec.Name),
+        nameof(Model.UnitSpec.Address),
+        nameof(Model.UnitSpec.Country),
+        nameof(Model.UnitSpec.City),
+        nameof(Model.UnitSpec.PhoneNumber),
+        nameof(Model.UnitSpec.Description),
+        nameof(Model.UnitSpec.HdfPrice),
+        nameof(Model.UnitSpec.HdfPrice)
+    };
+
+    var initialForm = propertiesToCheck.All(prop =>
+        Model.UnitSpec.GetType().GetProperty(prop).GetValue(Model.UnitSpec) == null);
+
+    var change_to_warning = !initialForm && (ViewData.ModelState["HdOrHdf"]?.Errors.Any() ?? false)
+        && propertiesToCheck.Any(prop =>
+            ViewData.ModelState[$".{prop}"]?.Errors.Any() ?? false);
+
+    var amenities = (await _client.GetAmentitiesAsync(null)).Data.OrderBy(x => x.Id);
+    var amenitiesJson = Newtonsoft.Json.JsonConvert.SerializeObject(amenities);
+
+    var viruses = (await _client.GetVirusesAsync(null)).Data.OrderBy(x => x.Id);
+    var viruses_select = new SelectList(viruses, "Id", "Abbreviation");
+}
+
+
+<style>
+    .image-container {
+        padding: 10px 20px;
+        gap: 25px;
+        display: flex;
+        overflow-x: scroll;
+    }
+
+    .image {
+        padding: 8px;
+        background-color: #fff;
+        text-align: center;
+        position: relative;
+    }
+
+    .img-del {
+        position: absolute;
+        right: 15px;
+        top: 15px;
+        border: none;
+        border-radius: 50%;
+        width: 30px;
+        height: 30px;
+        opacity: 0.3;
+    }
+
+    .img-del:hover {
+        opacity: 1;
+    }
+
+    .img-label {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .thumbnail {
+        margin-top:5px;
+    }
+
+</style>
+
+<div class="form-group">
+    <div class="row">
+
+        <!--Dialysis Unit Name-->
+        <div class="col-md-12 mb-15">
+            <label class="control-label col-md-12">Dialysis Unit Name<span class="text-danger"> *</span></label>
+            <div class="col-md-12">
+                <input asp-for="@Model.UnitSpec.Name" class="m-b form-control BaselineSingleControl" />
+                <span asp-validation-for="@Model.UnitSpec.Name" class="text-danger"></span>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="row">
+
+        <!--Address-->
+        <div class="col-md-12 mb-15">
+            <label class="control-label col-md-12">Address<span class="text-danger"> *</span></label>
+            <div class="col-md-12">
+                <input asp-for="@Model.UnitSpec.Address" class="m-b form-control BaselineSingleControl" />
+                <span asp-validation-for="@Model.UnitSpec.Address" class="text-danger"></span>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="row">
+
+        <!--Country-->
+        <div class="col-md-6 mb-15">
+            <label class="control-label col-md-12">
+                Country<span class="text-danger"> *</span>
+            </label>
+            <div class="col-md-12">
+                <select asp-for="@Model.UnitSpec.Country" id="country-select" placeholder="Select Country...">
+                </select>
+                <span asp-validation-for="@Model.UnitSpec.Country" class="text-danger"></span>
+            </div>
+        </div>
+
+        <!--City-->
+        <div class="col-md-6 mb-15">
+            <label class="control-label col-md-12">City<span class="text-danger"> *</span></label>
+            <div class="col-md-12">
+                <select asp-for="@Model.UnitSpec.City" id="city-select" placeholder="Select City...">
+                </select>
+                <span asp-validation-for="@Model.UnitSpec.City" class="text-danger"></span>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="row">
+
+        <!--Contact Number-->
+        <div class="col-md-6 mb-15">
+            <label class="control-label col-md-12">Contact Number<span class="text-danger"> *</span></label>
+            <div class="col-md-12">
+                <input asp-for="@Model.UnitSpec.PhoneNumber" class="m-b form-control" />
+                <span asp-validation-for="@Model.UnitSpec.PhoneNumber" class="text-danger"></span>
+            </div>
+        </div>
+
+        <!--Supported Dialysis Type checkbox-->
+        <div class="col-md-6 mb-15">
+            <div class="form-group">
+                <div class="col-md-12">
+                    <label class="control-label">Supported Dialysis Treatment<span class=" text-danger"> *</span></label>
+                    @if (ViewData.ModelState["UnitSpec.HdOrHdf"]?.Errors.Any() ?? false)
+                    {
+                        <span class="text-danger field-validation-error" style="display:block;">
+                            @ViewData.ModelState["UnitSpec.HdOrHdf"].Errors.First().ErrorMessage
+                        </span>
+                    }
+                </div>
+
+                <div class="col-md-12 m-r-sm">
+                    <div class="radio col-md-4">
+                        <input asp-for="@Model.UnitSpec.IsHdSupported" type="checkbox" id="hd-check" class="i-checks BaselineSingleControl" /> HD
+                        <span asp-validation-for="@Model.UnitSpec.IsHdSupported" class="text-danger"></span>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">$</span>
+                            </div>
+                            <input asp-for="@Model.UnitSpec.HdPrice" type="text" class="form-control BaselineSingleControl" style="z-index:0;" id="hd-price" disabled />
+                            <span asp-validation-for="@Model.UnitSpec.HdPrice" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="radio col-md-4">
+                        <input asp-for="@Model.UnitSpec.IsHdfSupported" type="checkbox" id="hdf-check" class="i-checks BaselineSingleControl" /> HDF
+                        <span asp-validation-for="@Model.UnitSpec.IsHdfSupported" class="text-danger"></span>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">$</span>
+                            </div>
+                            <input asp-for="@Model.UnitSpec.HdfPrice" type="text" class="form-control BaselineSingleControl" style="z-index:0;" id="hdf-price" disabled />
+                            <span asp-validation-for="@Model.UnitSpec.HdfPrice" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="row">
+
+        <!--Amenities-->
+        <div class="col-md-6 mb-15">
+            <label class="control-label col-md-12">Amenities</label>
+            <div class="col-md-12">
+                <select multiple id="amenities-select" asp-for="@Model.Amenities" placeholder="Select Amenities.." >
+                </select>
+            </div>
+        </div>
+
+        <!--Accepting Viruses-->
+        <div class="col-md-6 mb-15">
+            <label class="control-label col-md-12">Accepting Patient with Viruses</label>
+            <div class="col-md-12">
+                <select multiple class="multiple-select" asp-items="@viruses_select" asp-for="@Model.Viruses" >
+                </select>
+            </div>
+        </div>
+
+    </div>
+
+
+    <div class="row">
+
+        <!--Description-->
+        <div class="col-md-12 mb-15">
+            <label class="control-label col-md-12">Description<span class="text-danger"> *</span></label>
+            <div class="col-md-12">
+                <textarea asp-for="@Model.UnitSpec.Description" oninput="autoResize(this)" class="m-b form-control BaselineSingleControl"></textarea>
+                <span asp-validation-for="@Model.UnitSpec.Description" class="text-danger"></span>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="row">
+
+        <!--Images-->
+        <div class="col-md-12 mb-15">
+            <div class="col-md-12 img-label">
+                <label class="control-label">Images<span class="text-danger"> *</span></label>
+                <button type="button" id="upload-btn" class="btn btn-white" style="margin-right:10px">
+                    <i class="fa fa-plus" style="margin-right:5px;"></i>
+                    Upload
+                </button>
+                <input asp-for="@Model.Images" type="file" id="image-input" accept="image/*" style="display:none;" multiple>
+            </div>
+            <span asp-validation-for="@Model.Images" class="text-danger"></span>
+            <div class="col-md-12">
+                <div class="image-container">
+                    
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+<!--Tabs Buttons-->
+<div class="row">
+    <div class="ibox float-e-margins">
+        <div class="ibox-title">
+            <div class="col-md-6">
+                <button data-toggle="tab" id="prev_to_provider_info" href="#tab-1" class="tab7 btn btn-secondary">Previous</button>
+            </div>
+            <div class="col-md-6 text-end">
+                <button data-toggle="tab" id="nxt_to_available_sessions" href="#tab-3" class="tab9 btn btn-primary">Next</button>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script src="~/js/app/countryandcityselect.js"></script>
+<script src="~/js/pages/unitspec.js"></script>
+
+<script>
+    $("#prev_to_provider_info").on('click', function () {
+        $('.nav-tabs a[href="' + "#tab-1" + '"]').tab('show');
+    });
+
+    $("#nxt_to_available_sessions").on('click', function () {
+        $('.nav-tabs a[href="' + "#tab-3" + '"]').tab('show');
+    });
+
+    function autoResize(textarea) {
+        textarea.style.height = 'auto';
+        textarea.style.height = textarea.scrollHeight + 'px';
+    }
+
+    $('document').ready(() => {
+        var init = @initialForm.ToString().ToLower();
+        if (!init) {
+            const $tabIcon = $('.nav-tabs a[href="#tab-2"] i');
+            $tabIcon.removeClass('label label-danger fa fa-window-close').addClass(@change_to_warning.ToString().ToLower()
+                            ? 'label label-danger fa fa-window-close' : 'label label-primary fa fa-check');
+        }
+
+        VirtualSelect.init({
+            ele: '#amenities-select',
+            dropboxWrapper: 'self',
+            optionsCount: 5,
+            selectAllText: 'Select all',
+            optionsSelectedText: 'options selected',
+            allOptionsSelectedText: 'All',
+            showValueAsTags: true,
+            noOfDisplayValues: 5,
+            alwaysShowSelectedOptionsLabel: false,
+            dropboxWidth: "100%",
+            focusSelectedOptionOnOpen: true,
+            showDropboxAsPopup: true,
+            popupDropboxBreakpoint: '576px',
+            popupPosition: 'center',
+            hideValueTooltipOnSelectAll: true,
+            maxWidth: '100%'
+        });
+
+        var amentities = @Html.Raw(amenitiesJson);
+        var amenities_opts = amentities.map(function (amenity) {
+            return { label: `<i class="${amenity.icon}"></i> ${amenity.name}`, value: amenity.id };
+        });
+
+        document.querySelector('#amenities-select').setOptions(amenities_opts);
+
+    });
+</script>

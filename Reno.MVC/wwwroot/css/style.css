@@ -10343,7 +10343,7 @@ table {
     padding-bottom: 10px;
 }
 
-.laodingModal {
+.loadingModal {
     display: block;
     position: fixed;
     top: 0px;
@@ -10384,7 +10384,7 @@ table {
 }
 
 .sk-spinner-wave div {
-    background-color: black;
+    background-color: #1ab394;
     height: 100%;
     width: 6px;
     display: inline-block;
@@ -10617,4 +10617,10 @@ a.ForgotPassword {
 }
 .customwidth  th{
     min-width:250px !important;
+}
+.mt-15 {
+    margin-top: 15px !important;
+}
+.pb-0 {
+    padding-bottom: 0 !important;
 }

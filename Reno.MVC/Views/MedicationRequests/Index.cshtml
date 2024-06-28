@@ -122,10 +122,7 @@
                                     
                                     <th>Session Report</th>
                                     <th>Patient Name</th>
-                                    @if (User.IsInRole("Admin"))
-                                    {
-                                        
-                                    }<th>Dialysis Unit Name</th>
+                                    <th>Dialysis Unit Name</th>
                                     <th>Status</th>
                                     <th>Booking Type</th>
                                     <th>Medication Date</th>
@@ -171,26 +168,40 @@
                 },
                 serverSide: true,
                 filter: true,
-                processing: true,
-                language: {
-                    processing: "Processing, Please Wait..."
-                },
+                processing: false,
                 order: [[1, 'asc']],
                 columns: [
                     {
                         data: "reportId",
                         name: "ReportId",
                         render: function (data, type, row, meta) {
-                            if (data==null && row.status!="Completed")
-                                return "N/A";
+                            if (@User.IsInRole("Admin").ToString().ToLower()) {
+                                if (data != null && row.status == "Completed")
+                                    return `<a href="/Reports/${row.reportId}" target="_blank"
+                                                   class="btn btn-default">View Report</a>`;
+                                else 
+                                    return "N/A";
+                            }
+                                
 
-                            if (data==null)
-                                return `<a href="/Reports/Create/${row.patientId}/${row.id}" 
+                            if (data == null && row.status == "Completed")
+                                return `<a href="/Reports/Create/${row.id}" target="_blank" 
                                            class="btn btn-primary">Create</a>`;
 
-                            else
-                                return `<a href="/Reports?id=${row.reportId}"
-                                           class="btn btn-default">View</a>`;
+                            else if (data != null && row.status == "Completed")
+                                return `<a href="/Reports/${row.reportId}" target="_blank"
+                                           class="btn btn-default">View Report</a>`;
+
+                            else if (row.status == "Pending")
+                                return `<a href="/Medication/Request/Details/${row.id}" target="_blank" class="btn btn-default" style="padding-right:17.5px;padding-left:17.5px;">Previous Reports</a>
+                                                    <div><a href="/Reports/1014" class="btn btn-primary" style="margin-right: 10px;">Accept</a>
+                                                    <a href="/Reports/1014" class="btn btn-danger">Reject</a></div>`;
+                            
+                            else if (row.status == "Upcoming")
+                                return `<a href="/Medication/Request/Details/${row.id}" target="_blank" class="btn btn-default" style="padding - right: 17.5px;padding - left: 17.5px;">Previous Reports</a>`;
+
+                            else if (row.status == "Cancelled" || row.status == "Rejected")
+                                return "N/A";
                         },
                         sortable: false,
                         searchable: false
@@ -289,6 +300,10 @@
                 return `${day}-${month}-${year}`;
             }
 
+            /*setInterval(function () {
+                Table.ajax.reload();
+            }, 30000);
+            */
         });
     </script>
 }

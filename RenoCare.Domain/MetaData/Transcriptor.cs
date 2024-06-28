@@ -24,7 +24,7 @@
             public const string UserNotFound = "Unable to load user with '{0}'.";
             public const string ConfirmationEmailSent = "Verification email sent. Please check your email.";
             public const string EmailConfirmedSuccess = "Thank you for confirming your email.";
-            public const string EmailSendingFailure = "Error sending the email.";
+            public const string EmailSendingFailure = "The server encounters an error while sending the email, please try again.";
             public const string ResetPasswordEmailSent = "Reset password email sent. Please check your email.";
         }
 

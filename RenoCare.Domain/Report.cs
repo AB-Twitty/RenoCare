@@ -60,6 +60,8 @@ namespace RenoCare.Domain
         /// </summary>
         public DialyzerType DialyzerType { get; set; }
 
+        public string GeneralRemarks { get; set; }
+
         #endregion
 
         #region Vital Signs

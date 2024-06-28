@@ -24,13 +24,13 @@ namespace RenoCare.Core.Extensions
         /// <param name="indexFrom">The start index value.</param>
         /// <returns>An instance of the inherited from <see cref="IPagedList{T}"/> interface.</returns>
         public static async Task<IPagedList<T>> ToPagedListAsync<T>(this IQueryable<T> source,
-            int pageIndex, int pageSize, int totalCount = 0, int indexFrom = 1, CancellationToken cancellationToken = default(CancellationToken))
+            int pageIndex, int pageSize, int totalCount = 0, int indexFrom = 1, int filterCount = 0, CancellationToken cancellationToken = default(CancellationToken))
         {
             if (indexFrom > pageIndex)
             {
                 throw new ArgumentException($"indexFrom: {indexFrom} > pageIndex: {pageIndex}, must indexFrom <= pageIndex");
             }
-            var filterCount = await source.CountAsync(cancellationToken).ConfigureAwait(false);
+            filterCount = filterCount > 0 ? filterCount : await source.CountAsync(cancellationToken).ConfigureAwait(false);
             var items = await source.Skip((pageIndex - indexFrom) * pageSize)
                                     .Take(pageSize).ToListAsync(cancellationToken).ConfigureAwait(false);
             var pagedList = new PagedList<T>()
@@ -55,7 +55,7 @@ namespace RenoCare.Core.Extensions
         /// <returns></returns>
         public static IQueryable<T> FilterQuery<T>(this IQueryable<T> source, ISearchable search)
         {
-            if (search.SearchDict?.Count <= 0)
+            if (search.SearchDict == null || search.SearchDict?.Count <= 0)
                 return source;
 
             foreach (var searchControl in search.SearchDict)
@@ -73,14 +73,25 @@ namespace RenoCare.Core.Extensions
                 {
                     var filterValues = stringValue.Split(',');
 
-                    if (filterValues.Length == 1)
+                    if (property.PropertyType == typeof(bool) || property.PropertyType == typeof(bool?))
                     {
-                        var qry = $"{property.Name}.ToLower().Contains(\"{filterValues[0].ToLower()}\")";
-                        source = source.Where(qry);
+                        bool boolValue;
+                        if (bool.TryParse(filterValues[0], out boolValue))
+                        {
+                            source = source.Where($"{property.Name} == @0", boolValue);
+                        }
                     }
                     else
                     {
-                        source = source.Where($"@0.Contains({property.Name})", stringValue);
+                        if (filterValues.Length == 1)
+                        {
+                            var qry = $"{property.Name}.ToLower().Contains(\"{filterValues[0].ToLower()}\")";
+                            source = source.Where(qry);
+                        }
+                        else
+                        {
+                            source = source.Where($"@0.Contains({property.Name})", stringValue);
+                        }
                     }
                 }
                 catch
@@ -91,6 +102,7 @@ namespace RenoCare.Core.Extensions
 
             return source;
         }
+
     }
 }
 

@@ -11,16 +11,13 @@
         },
         serverSide: true,
         filter: true,
-        processing: true,
-        language: {
-            processing: "Processing, Please Wait..."
-        },
+        processing: false,
         columns: [
             { data: "patientName", name: "PatientName" },
             { data: "reportsSameUnit", name: "ReportsSameUnit" },
-            { data: "reportsOverral", name: "ReportsOverral" },
-            { data: "gender", name: "Gender" },
-            { data: "age", name: "Age" },
+            { data: "reportsOverral", name: "ReportsOverral", searchable: false },
+            { data: "gender", name: "Gender", sortable: false },
+            { data: "age", name: "BirthDate", searchable: false },
             { data: "diabetes", name: "Diabetes" },
             { data: "hypertension", name: "Hypertension" },
             { data: "smoking", name: "Smoking" }

@@ -113,3 +113,14 @@ body {
         border-left-color: rgba(0, 0, 0, 0);
         border-top-color: rgba(0, 0, 0, 0);
     }
+
+
+::-moz-selection { /* Code for Firefox */
+    color: #fff;
+    background: #1ab394;
+}
+
+::selection {
+    color: #fff;
+    background: #1ab394;
+}

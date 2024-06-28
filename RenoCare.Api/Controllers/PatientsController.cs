@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using RenoCare.Core.Base;
 using RenoCare.Core.Features.Patients.DTOs;
@@ -30,6 +31,7 @@ namespace RenoCare.Api.Controllers
         #region Methods
 
         [HttpPost(Router.PatientRouting.List)]
+        [Authorize(Roles = "Admin, HealthCare")]
         public async Task<ActionResult<ApiResponse<IPagedList<PatientListItemDto>>>> GetAllPatientsAsync(
             [FromBody] GetPatientListQueryRequest request, [FromQuery] int page = 1)
         {

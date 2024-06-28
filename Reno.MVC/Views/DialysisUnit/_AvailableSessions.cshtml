@@ -1,0 +1,161 @@
+﻿@model DialysisUnitIndexModel
+
+<style>
+    .input-group.clockpicker {
+        width: fit-content;
+        margin-left: auto;
+        margin-bottom: 5px;
+    }
+
+    .clockpicker-header {
+        display: flex;
+        flex-flow: wrap-reverse;
+    }
+
+    .btn-group i {
+        margin-right: 2.5px;
+    }
+
+    .clockpicker-content {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin: 5px;
+    }
+
+    .time-slot {
+        background-color: #1ab39440;
+        border-radius: 50px;
+        border: 1px solid #1ab394;
+        padding: 5px 8px;
+        font-weight: 600;
+    }
+
+        .time-slot button {
+            border: none;
+            border-radius: 50%;
+            background-color: #cbcbcb2b;
+        }
+
+            .time-slot button:hover {
+                background-color: #cbcbcbb3;
+            }
+
+</style>
+
+
+@*<link rel="stylesheet" href="https://weareoutman.github.io/clockpicker/dist/jquery-clockpicker.min.css">*@
+<link href="~/css/plugins/clockpicker/clockpicker.min.css" rel="stylesheet" />
+
+
+@{
+    bool is_first_day = true;
+
+    var propertiesToCheck = new List<string>();
+
+    foreach (DayOfWeek day in Enum.GetValues(typeof(DayOfWeek))) {
+        propertiesToCheck.Add(day.ToString());
+    }
+
+    var change_to_warning = propertiesToCheck.Any(prop =>
+        ViewData.ModelState[$".{prop}"]?.Errors.Any() ?? false);
+}
+
+<div hidden id="session-inputs" data-cnt="@Model.Sessions.Count()">
+    @foreach (var session in Model.Sessions)
+    {
+        int idx = Model.Sessions.IndexOf(session);
+        <div hidden data-idx="@idx">
+            <input hidden name="Sessions[@idx].Day" value="@session.Day" />
+            <input hidden name="Sessions[@idx].Time" value="@session.Time" />
+            <input hidden name="Sessions[@idx].Deleted" value="false" />
+        </div>
+    }
+</div>
+
+@foreach (var day in Enum.GetValues(typeof(DayOfWeek)))
+{
+    var hasError = ViewData.ModelState[$"{day}"]?.Errors.Any() ?? false;
+
+    <div class="ibox @(is_first_day || hasError ? "" : "collapsed")" data-day="@day">
+        <!--day title and collapse-->
+        <div class="ibox-title" style="background-color:#fff;">
+            <h5><span class="fa fa-calendar" style="margin-right:5px;"></span>@day</h5>
+            <div class="ibox-tools">
+                <a class="collapse-link">
+                    <i class="fa fa-chevron-up"></i>
+                </a>
+            </div>
+        </div>
+
+        <!--Session times of the day-->
+        <div class="ibox-content" style="background-color:#fff;">
+            @if (hasError)
+            {
+                <span class="text-danger field-validation-error m-b" style="display:block;">
+                    @ViewData.ModelState[$"{day}"].Errors.First().ErrorMessage
+                </span>
+            }
+            
+            <div class="clockpicker-header">
+                <div class="btn-group">
+                    <button class="btn btn-white" type="button"><i class="bi bi-brightness-high"></i>Morning</button>
+                    <button class="btn btn-primary" type="button"><i class="bi bi-cloud-sun-fill"></i>Evening</button>
+                    <button class="btn btn-white" type="button"><i class="bi bi-moon"></i>Night</button>
+                </div>
+
+                <div class="input-group clockpicker" data-autoclose="true">
+                    <input type="text" class="form-control clock-input" placeholder="Add Session" />
+                    <div class="input-group-prepend" style="height:34px;">
+                        <span class="input-group-text fa fa-clock-o"></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="clockpicker-content">
+                @foreach (var session in Model.Sessions.Where(x => x.Day == (DayOfWeek)day))
+                {
+                    int idx = Model.Sessions.IndexOf(session);
+                    <div class="time-slot" data-id="@idx">
+                        @DateTime.Today.Add(session.Time).ToString("hh:mm tt")
+                        <button type="button">
+                            <i class="fa fa-times"></i>
+                        </button>
+                    </div>
+                }
+            </div>
+        </div>
+
+    </div>
+
+    is_first_day = false;
+}
+
+<!--Tabs Buttons-->
+<div class="row">
+    <div class="ibox float-e-margins">
+        <div class="ibox-title">
+            <div class="col-md-6">
+                <button data-toggle="tab" id="prev_to_treatmentOutcomes" href="#tab-2" class="tab7 btn btn-secondary">Previous</button>
+            </div>
+            <div class="col-md-6 text-end">
+                <button type="submit" class="tab9 btn btn-primary">
+                    <i class="fa fa-check"></i>
+                    &nbsp;Submit
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://weareoutman.github.io/clockpicker/dist/jquery-clockpicker.min.js"></script>
+<script src="~/js/pages/availablesessions.js"></script>
+
+<script>
+    var error = '@change_to_warning';
+    if (error) {
+        const $tabIcon = $('.nav-tabs a[href="#tab-3"] i');
+        $tabIcon.removeClass('label label-danger fa fa-window-close').addClass(@change_to_warning.ToString().ToLower()
+                    ? 'label label-danger fa fa-window-close' : 'label label-primary fa fa-check');
+    }
+</script>

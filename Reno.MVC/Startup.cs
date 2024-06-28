@@ -9,6 +9,7 @@ using Reno.MVC.Helpers;
 using Reno.MVC.Helpers.Contracts;
 using Reno.MVC.Services.Base;
 using Reno.MVC.Services.Base.Contracts;
+using RenoCare.MVC.Middlewares;
 using System;
 
 namespace Reno.MVC
@@ -29,7 +30,7 @@ namespace Reno.MVC
 
             services.AddHttpClient<IClient, Client>(client =>
             {
-                client.BaseAddress = new Uri("https://renocareapi.azurewebsites.net");
+                client.BaseAddress = new Uri("http://localhost:6982/");
             });
 
             services.AddHttpContextAccessor();
@@ -57,10 +58,12 @@ namespace Reno.MVC
             }
             else
             {
-                app.UseExceptionHandler("/Home/Error");
+                app.UseMiddleware<ExceptionHandlerMiddleware>();
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
+
+            //app.UseMiddleware<ExceptionHandlerMiddleware>();
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();

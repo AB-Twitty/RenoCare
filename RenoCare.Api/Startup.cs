@@ -41,7 +41,6 @@ namespace RenoCare.Api
                     .AllowCredentials();
                 });
             });
-
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -60,9 +59,11 @@ namespace RenoCare.Api
 
             app.UseMiddleware<WebSocketsMiddleware>();
             app.UseAuthentication();
+            app.UseAuthorization();
 
             app.UseCors("CorsPolicy");
 
+            app.UseWebSockets();
             app.UseRouting();
 
             app.UseAuthorization();
@@ -72,6 +73,7 @@ namespace RenoCare.Api
                 endpoints.MapControllers();
                 endpoints.MapHub<ChatHub>("/chat");
             });
+
         }
     }
 }

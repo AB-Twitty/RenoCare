@@ -25,7 +25,8 @@ namespace RenoCare.Infrastructure.Authentication
         #endregion
 
         #region Ctor
-        public AuthService(UserManager<AppUser> userManager, SignInManager<AppUser> signInManager, ITokenProvider tokenProvider)
+        public AuthService(UserManager<AppUser> userManager,
+            SignInManager<AppUser> signInManager, ITokenProvider tokenProvider)
         {
             _userManager = userManager;
             _signInManager = signInManager;
@@ -135,24 +136,24 @@ namespace RenoCare.Infrastructure.Authentication
         /// <param name="role">user role</param>
         /// <returns>
         /// A task that represents the asynchronous operation,
-        /// the task result contains the OTP token.
+        /// the task result contains the OTP token and the new user.
         /// </returns>
-        public async Task<string> CreateAccountWithOTPAsync(string email, string role)
+        public async Task<(string, AppUser)> CreateAccountWithOTPAsync(string email, string role)
         {
-            /*var result = await _userManager.CreateAsync(new AppUser { Email = email, UserName = email });
+            var result = await _userManager.CreateAsync(new AppUser { Email = email, UserName = email });
 
             if (!result.Succeeded)
             {
                 throw new Exception();
-            }*/
+            }
 
             var user = await _userManager.FindByNameAsync(email);
 
-            //await _userManager.AddToRoleAsync(user, role);
+            await _userManager.AddToRoleAsync(user, role);
 
             var code = await _userManager.GenerateTwoFactorTokenAsync(user, TokenOptions.DefaultEmailProvider);
 
-            return code;
+            return (code, user);
         }
 
         /// <summary>
@@ -246,6 +247,30 @@ namespace RenoCare.Infrastructure.Authentication
                 errors.Add(new ValidationFailure("Password", error.Description));
 
             return (result.Succeeded, errors);
+        }
+
+        /// <summary>
+        /// Update the given user
+        /// </summary>
+        /// <param name="user">the updated user</param>
+        /// <returns>
+        /// A task that represents the asynchronous operation.
+        /// </returns>
+        public async Task UpdateUserInfoAsync(AppUser user)
+        {
+            await _userManager.UpdateAsync(user);
+        }
+
+        /// <summary>
+        /// Delete a given user
+        /// </summary>
+        /// <param name="user">the user</param>
+        /// <returns>
+        /// A task that represents the asynchronous operation.
+        /// </returns>
+        public async Task DeleteUserAsync(AppUser user)
+        {
+            await _userManager.DeleteAsync(user);
         }
 
         #endregion

@@ -3,9 +3,9 @@ using Microsoft.EntityFrameworkCore;
 using RenoCare.Core.Base;
 using RenoCare.Core.Conatracts.Persistence;
 using RenoCare.Core.Features.Patients.DTOs;
+using RenoCare.Core.Helpers;
 using RenoCare.Domain;
 using RenoCare.Domain.MetaData;
-using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -56,19 +56,20 @@ namespace RenoCare.Core.Features.Patients.Mediator.Queries
         {
             var patient = await _patientRepo.ApplyQueryAsync(async query =>
             {
-                return await query.Where(x => x.Id == request.Id)
+                return await query.Where(x => x.Id == request.Id).Include(p => p.Viruses)
                                   .Select(x => new PatientDto
                                   {
                                       Id = x.Id,
                                       PatientName = x.User.FirstName + " " + x.User.LastName,
                                       Hypertension = x.HypertensionType.Name,
                                       Diabetes = x.DiabetesType.Name,
-                                      BirthDate = DateTime.Now.AddHours(-24),
-                                      Age = 24,
-                                      Gender = "Male",
-                                      Smoking = x.SmokingStatus.Name
+                                      BirthDate = x.BirthDate,
+                                      Age = AgeFormatter.CalculateAge(x.BirthDate),
+                                      Gender = x.Gender,
+                                      Smoking = x.SmokingStatus.Name,
+                                      Viruses = string.Join(", ", x.Viruses.OrderBy(v => v.Id).Select(v => v.Abbreviation))
                                   }).FirstOrDefaultAsync();
-            });
+            }, true);
 
             if (patient == null)
                 return NotFound<PatientDto>(string.Format(Transcriptor.Response.EntityNotFound, request.Id));

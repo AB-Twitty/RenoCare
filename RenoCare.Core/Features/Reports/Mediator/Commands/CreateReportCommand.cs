@@ -6,6 +6,7 @@ using RenoCare.Core.Conatracts.Persistence;
 using RenoCare.Core.Features.Reports.Dtos;
 using RenoCare.Core.Features.Reports.Mediator.Queries;
 using RenoCare.Domain;
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -62,8 +63,6 @@ namespace RenoCare.Core.Features.Reports.Mediator.Commands
         /// </returns>
         public async Task<ApiResponse<ReportDto>> Handle(CreateReportCommandRequest request, CancellationToken cancellationToken)
         {
-            var requestId = 1;
-
             int unitId;
             var ctxUnitId = _httpContextAccessor.HttpContext.Items["unitId"];
 
@@ -72,7 +71,7 @@ namespace RenoCare.Core.Features.Reports.Mediator.Commands
 
             // allowed to create a report for it or not
             var medRequest = await _medicationRequestsRepo.Table.Include(x => x.Status)
-                .FirstOrDefaultAsync(x => x.Id == requestId && x.DialysisUnitId == unitId);
+                .FirstOrDefaultAsync(x => x.Id == request.Report.MedReqId && x.DialysisUnitId == unitId);
 
             if (medRequest == null)
                 return Unauthorized<ReportDto>();
@@ -81,21 +80,18 @@ namespace RenoCare.Core.Features.Reports.Mediator.Commands
                 return BadRequest<ReportDto>();
 
             //Calculate some report fields
-
-            double urr = 50.3;
-            double rate = 60;
-            double kt = 1.3;
-
             var report = new Report
             {
+                MedicationRequest = medRequest,
+
                 DialysisUnitId = unitId,
-                MedicationRequestId = medRequest.Id,
                 PatientId = medRequest.PatientId,
                 Nephrologist = request.Report.Nephrologist,
                 DialysisDuration = request.Report.DialysisDuration,
                 DialysisFrequency = request.Report.DialysisFrequency,
                 VascularAccessType = request.Report.VascularAccessType,
                 DialyzerType = request.Report.DialyzerType,
+                GeneralRemarks = request.Report.GeneralRemarks,
                 PreWeight = request.Report.PreWeight,
                 PostWeight = request.Report.PostWeight,
                 PreBloodPressure = request.Report.PreBloodPressure,
@@ -107,19 +103,24 @@ namespace RenoCare.Core.Features.Reports.Mediator.Commands
                 PostUrea = request.Report.PostUrea,
                 TotalFluidRemoval = request.Report.TotalFluidRemoval,
                 UrineOutput = request.Report.UrineOutput,
-                UreaReductionRatio = urr,
-                FluidRemovalRate = rate,
-                Kt_V = kt,
+                UreaReductionRatio = request.Report.UreaReductionRatio,
+                FluidRemovalRate = request.Report.FluidRemovalRate,
+                Kt_V = request.Report.Kt_V,
                 Creatinine = request.Report.Creatinine,
                 Potassium = request.Report.Potassium,
                 Hemoglobin = request.Report.Hemoglobin,
                 Hematocrit = request.Report.Hematocrit,
-                Albumin = request.Report.Albumin
-            };
+                Albumin = request.Report.Albumin,
 
+                CreatedDate = DateTime.Now,
+                LastModifiedDate = DateTime.Now,
+            };
 
             await _reportsRepo.InsertAsync(report);
             await _reportsRepo.SaveAsync();
+
+            medRequest.ReportId = report.Id;
+            await _medicationRequestsRepo.SaveAsync();
 
             return await _mediator.Send(new GetReportQueryRequest { Id = report.Id });
         }

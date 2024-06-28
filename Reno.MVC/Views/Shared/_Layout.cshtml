@@ -1,4 +1,11 @@
-﻿<!DOCTYPE html>
+﻿@using Reno.MVC.Services.Base.Contracts;
+@inject ILocalStorageService _localStorageService;
+
+@{
+    string access_token = _localStorageService.GetCurrentToken();
+}
+
+<!DOCTYPE html>
 <html>
 <head>
 
@@ -8,6 +15,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>RenoCare | @ViewBag.Title</title>
 
+	
     <link href="~/lib/bootstrap/dist/css/bootstrap.css" rel="stylesheet" />
     
     <link href="~/css/animate.css" rel="stylesheet" />
@@ -27,8 +35,7 @@
     <link href="~/css/plugins/touchspin/jquery.bootstrap-touchspin.min.css" rel="stylesheet" />
     <link href="~/css/plugins/perfect-scrollbar/css/perfect-scrollbar.css" rel="stylesheet" />
     <link href="~/css/plugins/steps/jquery.steps.css" rel="stylesheet" />*@
-    @* <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">*@
-    @*
+    @*<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">*@
     
     <style>
         input[type=number]::-webkit-outer-spin-button,
@@ -41,7 +48,6 @@
             -moz-appearance: textfield;
         }
     </style>
-    *@
 
     <link href="~/css/site.css" rel="stylesheet" />
     @RenderSection("styles", required: false)
@@ -59,10 +65,10 @@
         <div id="page-wrapper" class="white-bg">
             <!-- Top Navbar -->
             <partial name="_TopNavbar" />
-            <div class="laodingModal" ng-click="CloseLoading"></div>
+            <div class="loadingModal" ng-click="CloseLoading"></div>
             <form id="LoadingForm">
                 <div class="loadingPopup">
-                    <div style="color:white;background-color:dimgray;display:none;" id="waittext">Please wait we are preparing your data</div>
+                    <div style="color:white;background-color:dimgray;" id="waittext">Processing, please wait</div>
                     <div class="sk-spinner sk-spinner-wave">
                         <div class="sk-rect1"></div>
                         <div class="sk-rect2"></div>
@@ -74,6 +80,9 @@
             </form>
             <!-- Main view  -->
             @RenderBody()
+
+
+            <partial name="_AddHealthcarePartial" />
             <br />
             <!-- Footer -->
             <partial name="_Footer" />
@@ -81,41 +90,37 @@
         <!-- End page wrapper-->
     </div>
     <!-- End wrapper-->
-    @*  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    @*<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>*@
-    @*<script>
-        function showHideSpinner(state) {
-            if (state === true) {
-                $(".laodingModal").show();
-                $(".loadingPopup").show();
-            }
-            else if (state === false) {
-                $(".laodingModal").hide();
-                $(".loadingPopup").hide();
-            }
-        }
-        if ($("body").hasClass("pace-running")) {
-            showHideSpinner(true);
-        }
-        else {
-            showHideSpinner(false);
-        }
-        $(document).ready(function () {
-            $("#SMAReportLink").click(function () {
-                showHideSpinner(true);
-                $("#waittext").show();
-            })
-        });
-    </script>*@
-
     
+    <script>
+        window.paceOptions = { ajax: { ignoreURLs: ['mainHub', '__browserLink', 'browserLinkSignalR'], trackWebSockets: false } }
+
+        document.addEventListener('DOMContentLoaded', function () {
+
+            // Ensure Pace is restarted for each AJAX request
+            $(document).ajaxStart(function () {
+                Pace.restart();
+                $(".loadingModal").show();
+                $(".loadingPopup").show();
+            });
+
+            $(document).ajaxStop(function () {
+                $(".loadingModal").hide();
+                $(".loadingPopup").hide();
+            });
+        });
+    </script>
+
+
     <script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
     <script src="~/js/site.js"></script>
 
     @*<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.23.0/moment.min.js"></script>*@
+
     <script src="~/js/plugins/metisMenu/metisMenu.min.js"></script>
-    @*<script src="~/js/plugins/pace/pace.min.js"></script>*@
+	<script src="~/js/plugins/pace/pace.min.js"></script>
     <script src="~/js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
     <script src="~/js/app/inspinia.js"></script>
 
@@ -123,6 +128,8 @@
 
 	<script src="~/lib/datatables/datatables.min.js"></script>
     <script src="~/lib/datatables/js/datatables.bootstrap4.min.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/3.1.9/signalr.min.js"></script>
 
     @*<script src="~/js/plugins/select2/select2.full.min.js"></script>
     <script src="~/js/plugins/dataTables/datatables.min.js"></script>*@
@@ -225,7 +232,7 @@
                 // Maximum no.of values to show in the tooltip for multi-select
                 noOfDisplayValues: 3,
 
-
+                alwaysShowSelectedOptionsLabel: false,
                 // Custom width
                 dropboxWidth: "100%",
 
@@ -247,9 +254,20 @@
                 maxWidth: '100%'
 
             });
+
+
+            // SignalR connection setup
+            const connection = new signalR.HubConnectionBuilder()
+                .withUrl("https://renocareapi.azurewebsites.net/chat", {
+                    accessTokenFactory: () => '@access_token'
+                })
+                .build();
+
+            connection.start().catch(err => console.error(err));
+
         });
     </script>
 
-    @RenderSection("Scripts", required: false)
+    @RenderSection("scripts", required: false)
 </body>
 </html>

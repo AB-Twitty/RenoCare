@@ -88,12 +88,14 @@ namespace RenoCare.Core.Features.MedicationRequests.Mediator.Queries
                         Id = x.Id,
                         PatientName = x.Patient.User.FirstName + " " + x.Patient.User.LastName,
                         DialysisUnitName = x.DialysisUnit.Name,
+                        DialysisUnitId = x.DialysisUnitId,
                         Date = x.AppointmentDate,
                         Time = x.AppointmentHour,
                         Status = x.Status.Name,
                         Type = x.Type.Name,
                         ReportId = x.ReportId,
                         PatientId = x.PatientId,
+                        PatientProblem = x.PatientProblem
                     });
 
                 var totalCount = qry.Count();

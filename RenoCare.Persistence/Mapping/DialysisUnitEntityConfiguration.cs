@@ -20,19 +20,34 @@ namespace RenoCare.Persistence.Mapping
 
             builder.Property(x => x.Name).IsRequired().HasMaxLength(100);
             builder.Property(x => x.Description).IsRequired().HasColumnType("text");
-            builder.Property(x => x.PhoneNumber).IsRequired(true).HasMaxLength(15);
+            builder.Property(x => x.PhoneNumber).IsRequired(true).HasMaxLength(50);
 
             builder.Property(x => x.Address).IsRequired();
             builder.Property(x => x.Country).IsRequired().HasMaxLength(50);
             builder.Property(x => x.City).IsRequired().HasMaxLength(50);
 
-            builder.Property(x => x.IsHDSupported).IsRequired();
-            builder.Property(x => x.IsHDFSupported).IsRequired();
+            builder.Property(x => x.IsHdSupported).IsRequired();
+            builder.Property(x => x.HdfPrice).IsRequired(false);
+
+            builder.Property(x => x.IsHdfSupported).IsRequired();
+            builder.Property(x => x.HdfPrice).IsRequired(false);
 
             builder.Property(p => p.UserId);
             builder.HasOne(p => p.User).WithOne().HasForeignKey<DialysisUnit>(p => p.UserId);
 
             builder.Property(p => p.IsDeleted).IsRequired().HasDefaultValue(false);
+
+            builder.HasMany(d => d.Images).WithOne().HasForeignKey(i => i.DialysisUnitId).IsRequired();
+
+            builder.HasMany(d => d.Reviews).WithOne(r => r.DialysisUnit).HasForeignKey(r => r.DialysisUnitId);
+
+            builder.HasMany(d => d.Sessions).WithOne(s => s.DialysisUnit).HasForeignKey(s => s.DialysisUnitId);
+
+
+            builder.HasMany(d => d.Amenities)
+                .WithMany(a => a.DialysisUnits)
+                .UsingEntity(t => t.ToTable("Amenities_Units_Mapping"));
+
 
             builder.HasData(
                 new DialysisUnit
@@ -44,8 +59,10 @@ namespace RenoCare.Persistence.Mapping
                     Country = "France",
                     City = "Paris",
                     Address = "the street where the unit is located",
-                    IsHDSupported = true,
-                    IsHDFSupported = true,
+                    IsHdSupported = true,
+                    HdPrice = 310,
+                    IsHdfSupported = true,
+                    HdfPrice = 340,
                     PhoneNumber = "123456789"
                 });
         }

@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using RenoCare.Core.Base;
 using RenoCare.Core.Features.MedicationRequests.DTOs;
@@ -41,7 +42,13 @@ namespace RenoCare.Api.Controllers
             return ApiResult(await _mediator.Send(request));
         }
 
+        [HttpGet(Router.MedicationRequestRouting.Details)]
+        [Authorize(Roles = "Admin, HealthCare")]
+        public async Task<ActionResult<ApiResponse<MedicationRequestListItemDto>>> GetMedicationRequestDetailsAsync([FromRoute] int requestId) =>
+            ApiResult(await _mediator.Send(new GetMedicationRequestQueryRequest { Id = requestId }));
+
         [HttpGet(Router.MedicationRequestRouting.Status)]
+        [Authorize(Roles = "Admin, HealthCare, Patient")]
         public async Task<ActionResult<ApiResponse<IList<MedicationRequestStatus>>>> GetMedicationRequestStatusListAsync(
             [FromQuery] int? id = null)
         {
@@ -49,11 +56,17 @@ namespace RenoCare.Api.Controllers
         }
 
         [HttpGet(Router.MedicationRequestRouting.Types)]
+        [Authorize(Roles = "Admin, HealthCare, Patient")]
         public async Task<ActionResult<ApiResponse<IList<MedicationRequestType>>>> GetMedicationRequestTypesAsync(
             [FromQuery] int? id = null, bool active = true)
         {
             return ApiResult(await _mediator.Send(new GetMedicationRequestTypesQueryRequest { Id = id, IsActive = active }));
         }
+
+        [HttpGet(Router.MedicationRequestRouting.List)]
+        [Authorize(Roles = "Admin, HealthCare, Patient")]
+        public async Task<ActionResult<ApiResponse<IList<MedicationRequestListItemDto>>>> GetMedReqAllForPatientAsync([FromQuery] int? patientId) =>
+            ApiResult(await _mediator.Send(new GetMedReqAllForPatientQueryRequest { PatientId = patientId }));
 
         #endregion
     }

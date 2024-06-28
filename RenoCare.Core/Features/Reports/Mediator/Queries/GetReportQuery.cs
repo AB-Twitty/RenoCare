@@ -4,9 +4,9 @@ using RenoCare.Core.Base;
 using RenoCare.Core.Conatracts.Persistence;
 using RenoCare.Core.Features.Patients.DTOs;
 using RenoCare.Core.Features.Reports.Dtos;
+using RenoCare.Core.Helpers;
 using RenoCare.Domain;
 using RenoCare.Domain.MetaData;
-using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -60,19 +60,23 @@ namespace RenoCare.Core.Features.Reports.Mediator.Queries
                 var b = query.Where(x => x.Id == request.Id).FirstOrDefault();
 
                 return await query.Where(x => x.Id == request.Id)
-                                  .Include(x => x.Patient)
+                                  .Include(x => x.Patient).ThenInclude(p => p.Viruses)
                                   .Select(x => new ReportDto
                                   {
                                       Id = x.Id,
+                                      MedReqId = x.MedicationRequestId,
+                                      DialysisUnitId = x.DialysisUnitId,
                                       Patient = new PatientDto
                                       {
                                           Id = x.Patient.Id,
                                           PatientName = x.Patient.User.FirstName + " " + x.Patient.User.LastName,
-                                          BirthDate = DateTime.Now.AddYears(-26),
-                                          Age = 26,
+                                          BirthDate = x.Patient.BirthDate,
+                                          Age = AgeFormatter.CalculateAge(x.Patient.BirthDate),
+                                          Gender = x.Patient.Gender,
                                           Hypertension = x.Patient.HypertensionType.Name,
                                           Diabetes = x.Patient.DiabetesType.Name,
-                                          Smoking = x.Patient.SmokingStatus.Name ?? "N/A"
+                                          Smoking = x.Patient.SmokingStatus.Name ?? "N/A",
+                                          Viruses = string.Join(", ", x.Patient.Viruses.OrderBy(v => v.Id).Select(v => v.Abbreviation))
                                       },
                                       CreatedDate = x.CreatedDate,
                                       LastModifiedDate = x.LastModifiedDate,
@@ -80,7 +84,8 @@ namespace RenoCare.Core.Features.Reports.Mediator.Queries
                                       Nephrologist = x.Nephrologist,
                                       DialysisDuration = x.DialysisDuration,
                                       DialysisFrequency = x.DialysisFrequency,
-                                      DialysisUnitName = "Unit Name",
+                                      DialysisUnitName = x.DialysisUnit.Name,
+                                      GeneralRemarks = x.GeneralRemarks,
                                       VascularAccessType = x.VascularAccessType,
                                       DialyzerType = x.DialyzerType,
                                       PreWeight = x.PreWeight,

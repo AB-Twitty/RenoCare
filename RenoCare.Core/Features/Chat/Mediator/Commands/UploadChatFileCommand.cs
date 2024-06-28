@@ -76,7 +76,7 @@ namespace RenoCare.Core.Features.Chat.Mediator.Commands
                 return BadRequest<string>("No file was provided.");
 
 
-            var file_path = await _fileUpload.UploadFileAsync(request.File);
+            var file_path = await _fileUpload.UploadFileAsync(request.File, FileDir.Uploads);
 
             var file_msg = new ChatMessage
             {

@@ -28,6 +28,17 @@
         public static class HealthCareProviderRouting
         {
             public const string CreateHealthCareUser = Rule + "/HealthCare/Create";
+            public const string NewCome = Rule + "/Unit/Newcome";
+        }
+
+        /// <summary>
+        /// Represents dialysis unit methods end points routing.
+        /// </summary>
+        public static class DialysisUnitRouting
+        {
+            public const string Details = Rule + "/Dialysis-Unit/Details/{id}";
+            public const string List = Rule + "/Dialysis-Unit/List";
+            public const string ListForPatients = Rule + "/Dialysis-Units/List-For-Patients";
         }
 
         /// <summary>
@@ -37,6 +48,15 @@
         {
             public const string List = Rule + "/Patients";
             public const string Medical = Rule + "/Patients/{id}";
+        }
+
+        /// <summary>
+        /// Represents reviews controller end points routing.
+        /// </summary>
+        public static class ReviewRouting
+        {
+            public const string ListForUnit = Rule + "/Reviews";
+            public const string Create = Rule + "/Review/Create";
         }
 
         /// <summary>
@@ -55,8 +75,25 @@
         public static class MedicationRequestRouting
         {
             public const string List = Rule + "/Medication/Requests";
+            public const string Details = Rule + "/Medication/Requests/{requestId}";
             public const string Status = Rule + "/Medication/Requests/Status";
             public const string Types = Rule + "/Medication/Requests/Types";
+        }
+
+        /// <summary>
+        /// Represents ametities controller end points routing.
+        /// </summary>
+        public static class AmentitiesRouting
+        {
+            public const string List = Rule + "/Amentities";
+        }
+
+        /// <summary>
+        /// Represents viruses controller end points routing.
+        /// </summary>
+        public static class VirusesRouting
+        {
+            public const string List = Rule + "/Viruses";
         }
 
         /// <summary>

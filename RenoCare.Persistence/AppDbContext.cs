@@ -30,6 +30,10 @@ namespace RenoCare.Persistence
             builder.ApplyConfiguration(new ReportEntityConfiguration());
             builder.ApplyConfiguration(new DialysisUnitEntityConfiguration());
             builder.ApplyConfiguration(new ChatMessageEntityConfiguration());
+            builder.ApplyConfiguration(new SessionTimetableEntityConfiguration());
+            builder.ApplyConfiguration(new ImageEntityConfiguration());
+            builder.ApplyConfiguration(new ReviewEntityConfiguration());
+            builder.ApplyConfiguration(new VirusEntityConfiguration());
         }
 
         public DbSet<AppUser> Users { get; set; }
@@ -43,5 +47,10 @@ namespace RenoCare.Persistence
         public DbSet<DialysisUnit> DialysisUnits { get; set; }
         public DbSet<Report> Reports { get; set; }
         public DbSet<ChatMessage> Messages { get; set; }
+        public DbSet<SessionTimetable> Sessions { get; set; }
+        public DbSet<Amenity> Amenities { get; set; }
+        public DbSet<Image> Images { get; set; }
+        public DbSet<Review> Reviews { get; set; }
+        public DbSet<Virus> Viruses { get; set; }
     }
 }

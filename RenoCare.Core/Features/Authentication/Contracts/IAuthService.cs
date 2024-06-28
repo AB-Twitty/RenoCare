@@ -59,9 +59,9 @@ namespace RenoCare.Core.Features.Authentication.Contracts
         /// <param name="role">user role</param>
         /// <returns>
         /// A task that represents the asynchronous operation,
-        /// the task result contains the OTP token.
+        /// the task result contains the OTP token and the new user.
         /// </returns>
-        public Task<string> CreateAccountWithOTPAsync(string email, string role);
+        public Task<(string, AppUser)> CreateAccountWithOTPAsync(string email, string role);
 
         /// <summary>
         /// Checks if there is a user with a given email.
@@ -114,5 +114,23 @@ namespace RenoCare.Core.Features.Authentication.Contracts
         /// the task result contains a value indicating the succession of the request with any faced errors.
         /// </returns>
         public Task<(bool, IEnumerable<ValidationFailure>)> AddPasswordAsync(string email, string password);
+
+        /// <summary>
+        /// Update the given user
+        /// </summary>
+        /// <param name="user">the updated user</param>
+        /// <returns>
+        /// A task that represents the asynchronous operation.
+        /// </returns>
+        public Task UpdateUserInfoAsync(AppUser user);
+
+        /// <summary>
+        /// Delete a given user
+        /// </summary>
+        /// <param name="user">the user</param>
+        /// <returns>
+        /// A task that represents the asynchronous operation.
+        /// </returns>
+        public Task DeleteUserAsync(AppUser user);
     }
 }

@@ -19,17 +19,18 @@ namespace RenoCare.Persistence.Mapping
             builder.ToTable("Session_Reports");
             builder.HasKey(x => x.Id);
 
-            builder.Property(x => x.CreatedDate).IsRequired().ValueGeneratedOnAdd();
-            builder.Property(x => x.LastModifiedDate).IsRequired().ValueGeneratedOnAddOrUpdate();
+            builder.Property(x => x.CreatedDate).IsRequired();
+            builder.Property(x => x.LastModifiedDate).IsRequired();
 
             builder.Property(x => x.PatientId).IsRequired();
-            builder.HasOne(p => p.Patient).WithOne().HasForeignKey<Report>(p => p.PatientId);
+            builder.HasOne(p => p.Patient).WithMany(m => m.Reports).HasForeignKey(p => p.PatientId);
 
             builder.Property(x => x.DialysisUnitId).IsRequired();
             builder.HasOne(p => p.DialysisUnit).WithOne().HasForeignKey<Report>(p => p.DialysisUnitId);
 
             builder.Property(x => x.MedicationRequestId).IsRequired();
-            builder.HasOne(p => p.MedicationRequest).WithOne().HasForeignKey<Report>(p => p.MedicationRequestId);
+            builder.HasOne(p => p.MedicationRequest).WithOne(m => m.Report)
+                .HasForeignKey<Report>(p => p.MedicationRequestId);
 
             //*****************************Session Details******************************
             builder.Property(x => x.Nephrologist).IsRequired().HasMaxLength(80);
@@ -46,7 +47,7 @@ namespace RenoCare.Persistence.Mapping
                 .HasConversion(v => v.ToString(),
                     v => (DialyzerType)Enum.Parse(typeof(DialyzerType), v));
 
-
+            builder.Property(x => x.GeneralRemarks).IsRequired(false);
             //*****************************Vital Signs******************************
             builder.Property(x => x.PreWeight).IsRequired();
 

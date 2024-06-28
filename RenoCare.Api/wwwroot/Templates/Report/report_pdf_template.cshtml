@@ -1,0 +1,388 @@
+﻿@using RenoCare.Core.Features.Reports.Dtos;
+@model ReportPDF
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@Model.Report.DialysisUnitName | Reports</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
+	
+    <style>
+        
+
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            --main-color: rgba(24, 166, 137, 1);
+            --second-color: #000;
+        }
+
+        .pr-1 {
+            padding-right: 80px;
+        }
+
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            background-color: #fff;
+            height: 29.5cm;
+        }
+
+        .prescription {
+            width: 100%;
+            background: #FFFFFF;
+            padding: 10px 20px 20px 20px;
+        }
+
+            .prescription .header {
+                width: 100%;
+                display: flex;
+                justify-content: space-between;
+                align-items: start;
+            }
+
+                .prescription .header .title {
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: center;
+                    padding-top: 10px;
+                }
+
+                    .prescription .header .title h1 {
+                        width: fit-content;
+                        font-family: 'Inter';
+                        font-style: normal;
+                        font-weight: 800;
+                        color: var(--main-color);
+                    }
+
+                    .prescription .header .title p {
+                        width: fit-content;
+                        margin-left: 15px;
+                        font-family: 'Inter';
+                        font-style: normal;
+                        font-weight: 400;
+                        line-height: 15px;
+                        color: var(--second-color);
+                    }
+
+                .prescription .header .logo {
+                    width: 63px;
+                    height: 88px;
+                }
+
+            .prescription .header-1 {
+                width: -webkit-fill-available;
+                padding: 5px;
+                border: 1px solid var(--second-color);
+                display: flex;
+                justify-content: space-between;
+                margin-bottom: 13px;
+            }
+
+                .prescription .header-1 h3 {
+                    font-family: 'Inter';
+                    font-style: normal;
+                    font-weight: 400;
+                    font-size: 12px;
+                    line-height: 15px;
+                    color: var(--second-color);
+                }
+
+            .prescription .Observations {
+                border: 1px solid var(--second-color);
+            }
+
+                .prescription .Observations .header {
+                    width: auto;
+                    padding: 5px 10px;
+                    background: var(--main-color);
+                    border-bottom: 1px solid var(--second-color);
+                }
+
+                    .prescription .Observations .header h1 {
+                        font-family: 'Inter';
+                        font-style: normal;
+                        font-weight: 600;
+                        font-size: 14px;
+                        line-height: 15px;
+                        color: var(--second-color);
+                    }
+
+                .prescription .Observations .body {
+                    padding: 10px;
+                }
+
+                    .prescription .Observations .body .words {
+                        width: 100%;
+                        display: flex;
+                        justify-content: space-between;
+                        align-items: center;
+                        border-bottom: 1px solid #D8D7D7;
+                        padding-bottom: 10px;
+                    }
+
+                        .prescription .Observations .body .words h3 {
+                            font-family: 'Inter';
+                            font-style: normal;
+                            font-weight: 400;
+                            font-size: 14px;
+                            line-height: 20px;
+                            color: var(--second-color);
+                        }
+
+                    .prescription .Observations .body table {
+                        border-collapse: collapse;
+                        width: 100%;
+                        margin-top: 15px;
+                    }
+
+                    .prescription .Observations .body th, .prescription .Observations .body td {
+                        border: 1px solid #D8D7D7;
+                        text-align: center;
+                        padding: 8px;
+                        font-family: 'Inter';
+                        font-style: normal;
+                        font-weight: 400;
+                        font-size: 14px;
+                        line-height: 15px;
+                        color: var(--second-color);
+                    }
+
+                        .prescription .Observations .body td .line {
+                            width: 50px;
+                            height: 2px;
+                            background-color: var(--second-color);
+                            margin: auto;
+                        }
+
+            .prescription .Outcomes {
+                border: 1px solid var(--second-color);
+                margin-top: 15px;
+            }
+
+                .prescription .Outcomes table {
+                    border-collapse: collapse;
+                    width: 100%;
+                }
+
+                .prescription .Outcomes th {
+                    background: var(--main-color);
+                    border-bottom: 1px solid var(--second-color);
+                    font-family: 'Inter';
+                    font-style: normal;
+                    font-weight: 600;
+                    font-size: 14px;
+                    line-height: 15px;
+                    color: var(--second-color);
+                    text-align: start;
+                    padding: 5px 10px;
+                }
+
+                .prescription .Outcomes td {
+                    font-family: 'Inter';
+                    font-style: normal;
+                    font-weight: 400;
+                    font-size: 14px;
+                    line-height: 15px;
+                    color: var(--second-color);
+                    padding: 5px 10px;
+                }
+
+            .prescription .Conclusion {
+                width: 100%;
+                margin-top: 15px;
+                height: 7.6cm;
+            }
+
+                .prescription .Conclusion h1 {
+                    font-family: 'Inter';
+                    font-style: normal;
+                    font-weight: 600;
+                    font-size: 14px;
+                    line-height: 15px;
+                    color: var(--second-color);
+                    margin-bottom: 6px;
+                }
+
+                .prescription .Conclusion p {
+                    font-family: 'Inter';
+                    font-style: normal;
+                    font-weight: 400;
+                    font-size: 14px;
+                    line-height: 16px;
+                    color: var(--second-color);
+                    padding-left: 15px;
+                }
+
+            .prescription h4 {
+                font-family: 'Inter';
+                font-style: normal;
+                font-weight: 600;
+                font-size: 16px;
+                line-height: 19px;
+                color: var(--second-color);
+                text-align: end;
+                padding-top: 2rem;
+            }
+
+                .prescription h4 span {
+                    font-size: 12px;
+                    Line-height: 14px;
+                }
+        
+    </style>
+
+</head>
+<body>
+    <div class="prescription">
+        <div class="header">
+            <div class="title">
+                <h1>@Model.Report.DialysisUnitName</h1>
+                <p>@Model.DialysisUnit.Address, @Model.DialysisUnit.Country, @Model.DialysisUnit.City, @Model.DialysisUnit.PhoneNumber</p>
+            </div>
+            <img src="logo.png" alt="logo" class="logo">
+        </div>
+        <div class="header-1">
+            <div>
+                <h3>Report no: @Model.Report.Id</h3>
+                <h3>Referred by: Dr. @Model.Report.Nephrologist</h3>
+            </div>
+            <div>
+                <h3>Creation Date: @Model.Report.LastModifiedDate.ToString("dd-MMM-yy")</h3>
+                <h3>Visit Date: @Model.Report.SessionDate.ToString("dd-MMM-yy")</h3>
+            </div>
+            <div>
+                <h3>Duration: @Model.Report.DialysisDuration Hr</h3>
+                <h3>Frequency: @Model.Report.DialysisFrequency/week</h3>
+            </div>
+        </div>
+        <div class="header-1">
+            <div>
+                <h3>Patient Name: @Model.Report.Patient.PatientName</h3>
+                <h3>Hypertension: @Model.Report.Patient.Hypertension</h3>
+                @if (!string.IsNullOrEmpty(Model.Report.Patient.Viruses))
+                {
+                    <h3>Viruses: Model.Report.Patient.Viruses</h3>
+                }
+                
+            </div>
+            <div>
+                <h3>Sex: @Model.Report.Patient.Gender</h3>
+                <h3>Diabetes: @Model.Report.Patient.Diabetes</h3>
+            </div>
+            <div>
+                <h3>Age: @Model.Report.Patient.Age</h3>
+            </div>
+        </div>
+        <div class="Observations">
+            <div class="header">
+                <h1>Observations</h1>
+            </div>
+            <div class="body">
+                <div class="words">
+                    <div>
+                        <h3>Dialyzer: @Model.Report.DialyzerType.ToString()</h3>
+                        <h3>Heart Rate: @Model.Report.HeartRate bpm</h3>
+                    </div>
+                    <div class="pr-1">
+                        <h3>Vascular: @Model.Report.VascularAccessType.ToString()</h3>
+                        <h3>Dry Weight: @Model.Report.DryWeight KG</h3>
+                    </div>
+                </div>
+                <div class="table">
+                    <table>
+                        <tr>
+                            <th></th>
+                            <th>Pre</th>
+                            <th>During</th>
+                            <th>Post</th>
+                        </tr>
+                        <tr>
+                            <td>Blood Pressure <small>- mmHg</small></td>
+                            <td>@Model.Report.PreBloodPressure</td>
+                            <td>@Model.Report.DuringBloodPressure</td>
+                            <td>@Model.Report.PostBloodPressure</td>
+                        </tr>
+                        <tr>
+                            <td>Weight - kg</td>
+                            <td>@Model.Report.PreWeight</td>
+                            <td>------</td>
+                            <td>@Model.Report.PostWeight</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="Outcomes">
+            <table>
+                <tr>
+                    <th>Outcomes</th>
+                    <th>Result</th>
+                    <th>Rate</th>
+                </tr>
+                <tr>
+                    <td>Urea</td>
+                    <td>Pre: @Model.Report.PreUrea mg/dL  Post: @Model.Report.PostUrea mg/dL</td>
+                    <td>URR: @Model.Report.UreaReductionRatio %</td>
+                </tr>
+                <tr>
+                    <td>Total Fluid Removal</td>
+                    <td>@Model.Report.TotalFluidRemoval ml</td>
+                    <td>@Model.Report.FluidRemovalRate ml/Hr</td>
+                </tr>
+                <tr>
+                    <td>Urine</td>
+                    <td>@Model.Report.UrineOutput ml</td>
+                </tr>
+                <tr>
+                    <td>Kt/V</td>
+                    <td>@Model.Report.Kt_V</td>
+                </tr>
+
+            </table>
+        </div>
+        <div class="Outcomes">
+            <table>
+                <tr>
+                    <th>Clinical Examination</th>
+                    <th>Result</th>
+                </tr>
+                <tr>
+                    <td>Creatinine</td>
+                    <td>@Model.Report.Creatinine mg/dL</td>
+                </tr>
+                <tr>
+                    <td>Potassium</td>
+                    <td>@Model.Report.Potassium mEq/L</td>
+                </tr>
+                <tr>
+                    <td>Hemoglobin</td>
+                    <td>@Model.Report.Hemoglobin g/dL</td>
+                </tr>
+                <tr>
+                    <td>Hematocrit</td>
+                    <td>@Model.Report.Hematocrit</td>
+                </tr>
+                <tr>
+                    <td>Albumin</td>
+                    <td>@Model.Report.Albumin g/dL</td>
+                </tr>
+
+            </table>
+        </div>
+        <div class="Conclusion">
+            <h1>General Remarks</h1>
+            <p>@Model.Report.GeneralRemarks</p>
+        </div>
+        <h4>RenoCare | <span>@Model.PdfCreatedOn.ToString("yyyy-MM-dd hh:mm")</span></h4>
+    </div>
+</body>
+</html>

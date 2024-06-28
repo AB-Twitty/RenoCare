@@ -128,6 +128,17 @@
     </div>
 
 </div>
+
+<br/>
+
+<div class="row">
+    <div class="col-md-12">
+        <label class="control-label col-md-12">General Remarks</label>
+        <div class="col-md-12">
+            <textarea asp-for="@Model.Report.GeneralRemarks" oninput="autoResize(this)" class="m-b form-control BaselineSingleControl"></textarea>
+        </div>
+    </div>
+</div>
 <br />
 
 
@@ -152,5 +163,10 @@
         const $tabIcon = $('.nav-tabs a[href="#tab-1"] i');
         $tabIcon.removeClass('label label-danger fa fa-window-close').addClass(@change_to_warning.ToString().ToLower()
                 ? 'label label-danger fa fa-window-close' : 'label label-primary fa fa-check');
+    }
+
+    function autoResize(textarea) {
+        textarea.style.height = 'auto';
+        textarea.style.height = textarea.scrollHeight + 'px';
     }
 </script>

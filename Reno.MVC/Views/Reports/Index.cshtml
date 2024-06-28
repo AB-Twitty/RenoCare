@@ -1,4 +1,6 @@
-﻿@model Reno.MVC.Models.Reports.ReportIndexVM;
+﻿@using Reno.MVC.Services.Base.Contracts;
+@model Reno.MVC.Models.Reports.ReportIndexVM;
+@inject ILocalStorageService _localStorageService;
 
 @section styles{
     <style>
@@ -39,6 +41,16 @@
 }
 
 
+@{
+    string access_token = _localStorageService.GetCurrentToken();
+
+    int.TryParse(User.Claims.Where(x => x.Type == "uid").FirstOrDefault()?.Value, out int unitId);
+
+    ViewData["Title"] = "Report";
+
+    var disable = Model.ViewMode == "View" ? true : false;
+}
+
 <!-- Begin wrapper Content (Page Content) -->
 <div class="wrapper wrapper-content animated fadeInRight shadow">
     <!-- Begin Row-->
@@ -55,6 +67,7 @@
                                 <div class="col-md-4">
                                     <h2>Visit Information</h2>
                                 </div>
+                                @*
                                 @if (User.IsInRole("Admin"))
                                 {
                                     <div class="col-md-8" id="PartailButtons">
@@ -65,6 +78,7 @@
                                         </div>
                                     </div>
                                 }
+                                *@
                             </div>
                         </div>
 
@@ -72,8 +86,7 @@
                     <!-- Begin  ibox Content-->
                     <div class="ibox-content">
                         <div class="form-group">
-                            <input type="hidden" id="PatiantId" value="@ViewContext.RouteData.Values["id"]" />
-
+                            
                             <div class="row mx-0">
                                 <label class="control-label ">Patient Name : </label>
                                 <label class="control-label">@Model.Report.Patient.PatientName</label>
@@ -109,18 +122,17 @@
                                         <label class="control-label ">Previous Visits : </label>
                                     </div>
                                     <div class="col-md-6">
-                                        <select @*name="ReportId" id="ReportId" asp-items="ViewBag.ReportTypeDrop"*@ class="m-b form-control  ViewFollowUpReports">
-                                            <option>Select Previous reports...</option>
-                                            <option>@DateTime.Now.AddYears(-1).AddMonths(-6).ToString("dd-MMM-yyyy")</option>
-                                            <option>@DateTime.Now.AddYears(-2).ToString("dd-MMM-yyyy")</option>
-                                            <option>@DateTime.Now.AddYears(-3).AddMonths(-3).ToString("dd-MMM-yyyy")</option>
-                                            <option>@DateTime.Now.AddYears(-5).ToString("dd-MMM-yyyy")</option>
-                                            <option>@DateTime.Now.AddYears(-6).AddMonths(-1).ToString("dd-MMM-yyyy")</option>
+                                        <select class="m-b form-control  ViewFollowUpReports" id="Prev_reports">
+                                            <option disabled selected>Select Previous reports...</option>
+                                            @foreach(var prev_report in Model.PrevReports)
+                                            {
+                                                <option value="@prev_report.Item2">@prev_report.Item1.ToString("dd-MMM-yyyy")</option>
+                                            }
                                         </select>
                                     </div>
 
                                     <div class="col-md-2">
-                                        <button type="submit" id="SupmitViewReport" class="btn btn-primary btn-block">View Report</button>
+                                        <button type="button" id="SupmitViewReport" class="btn btn-primary btn-block">View Report</button>
                                     </div>
 
                                 </div>
@@ -142,17 +154,13 @@
                             <label class="control-label">&nbsp;&nbsp;&nbsp;&nbsp; Last Update : </label>
                             <label class="control-label">@Model.Report.LastModifiedDate.ToString("dd-MMM-yyyy")</label>
 
-                            @*
-                            <button type="button" class="btn btn-primary btn-xs " style="float: right;" 
-                                    data-toggle="modal" data-target="#AllComments"
-                                    data-id="@Context.Request.Query["id"]">
-                                <i class="fa fa-comment "> Comments </i>
-                            </button>
-                            *@
-
-                            <button type="button" class="btn btn-default" style="float:right;">
-                                <i class="fa fa-download"></i>
-                            </button>
+                            @if (Model.ViewMode == "View" && (User.IsInRole("Admin") || unitId ==  Model.Report.DialysisUnitId) )
+                            {
+                                <button id="report-download" data-id="@Model.Report.Id"
+                                        type="button" class="btn btn-default" style="float:right;">
+                                    <i class="fa fa-download"></i>
+                                </button>
+                            }
 
                         </div>
                     </div>
@@ -161,21 +169,42 @@
                 <!-- Begin  ibox Content-->
                 <div class="ibox-content ">
                     <div class="row">
-                        <form method="post" asp-action="Save" asp-route-patientId="@Model.Report.Patient.Id" id="main-form">
-                        <div class="col-md-12 col-xs-12">
-                            <div class="tabs-container">
-                                <div class="tabs-left">
-                                    <ul class="nav nav-tabs shadow" id="main">
-                                        <partial name="_PartialNavTabsIndex" />
-                                    </ul>
-                                    <div class="tab-content">
-                                        <partial name="_PartialTabsContentIndex" />
+                        @if (Model.ViewMode == "Create")
+                        {
+                            <form method="post" asp-action="Save" asp-route-requestId="@Model.MedReq.Id" id="main-form">
+                                <div class="col-md-12 col-xs-12">
+                                    <div class="tabs-container">
+                                        <div class="tabs-left">
+                                            <ul class="nav nav-tabs shadow" id="main">
+                                                <partial name="_PartialNavTabsIndex" />
+                                            </ul>
+                                            <div class="tab-content">
+                                                <partial name="_PartialTabsContentIndex" />
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </form>
+                        }
+
+                        else if (Model.ViewMode == "View")
+                        {
+                            <div class="col-md-12 col-xs-12" id="report_main">
+                                <div class="tabs-container">
+                                    <div class="tabs-left">
+                                        <ul class="nav nav-tabs shadow" id="main">
+                                            <partial name="_PartialNavTabsIndex" />
+                                        </ul>
+                                        <div class="tab-content">
+                                            <partial name="_PartialTabsContentIndex" />
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
 
-                        </div>
-                        </form>
+                            </div>
+                        }
+
                         @*
                         <partial name="_Comments" />
                         <partial name="_AllComments" />
@@ -193,6 +222,19 @@
 
 <script>
     $('document').ready( () => {
+
+        $('#report_main').find('input, select, textarea').prop('disabled', '@disable');
+
+        $('#SupmitViewReport').click(function () {
+            var selectedValue = $('#Prev_reports').val();
+            if (selectedValue) {
+                var url = '/Reports/' + selectedValue;
+                window.open(url, '_blank');
+            } else {
+                alert('Please select a report.');
+            }
+        });
+
         function restrictToIntegers(event) {
             const key = event.keyCode || event.which;
             // Allow numeric keys (0-9) and numeric keypad keys (NumLock section)
@@ -252,6 +294,36 @@
         $('#main-form input.input-decimal').each((index, element) => {
             element.addEventListener('keydown', (event) => restrictToDecimal(event, element));
         });
+
+
+        $('#report-download').on('click', function () {
+            let reportId = $(this).data('id');
+
+            $.ajax({
+                url: `http://localhost:6982/report/pdf/${reportId}`,
+                type: 'GET',
+                headers: {
+                    "Authorization": `Bearer @access_token`
+                },
+                xhrFields: {
+                    responseType: 'blob'
+                },
+                success: function (data, status, xhr) {
+                    let blob = new Blob([data], { type: 'application/pdf' });
+                    let link = document.createElement('a');
+                    link.href = window.URL.createObjectURL(blob);
+                    link.download = xhr.getResponseHeader('Content-Disposition').split('filename=')[1];
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                },
+                error: function (xhr, status, error) {
+                    console.error('Error downloading the report:', error);
+                }
+            });
+        });
+
+
     });
 
 </script>

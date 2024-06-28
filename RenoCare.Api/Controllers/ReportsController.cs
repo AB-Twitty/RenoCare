@@ -31,6 +31,7 @@ namespace RenoCare.Api.Controllers
         #region Methods
 
         [HttpGet(Router.ReportRouting.GetById)]
+        [Authorize(Roles = "Admin, HealthCare")]
         public async Task<ActionResult<ApiResponse<ReportDto>>> GetReportAsync([FromQuery] int id) =>
             ApiResult(await _mediator.Send(new GetReportQueryRequest { Id = id }));
 
@@ -39,6 +40,15 @@ namespace RenoCare.Api.Controllers
         [Authorize(Roles = "HealthCare")]
         public async Task<ActionResult<ApiResponse<ReportDto>>> CreateReportAsync([FromBody] ReportDto report) =>
             ApiResult(await _mediator.Send(new CreateReportCommandRequest { Report = report }));
+
+        [HttpGet("report/pdf/{id}")]
+        [Authorize(Roles = "Admin, HealthCare, Patient")]
+        public async Task<IActionResult> GetReportAsPdfAsync(int id)
+        {
+            var response = await _mediator.Send(new GetReportAsPdfQueryRequest { ReportId = id });
+
+            return File(response.File, "application/pdf", response.FileName);
+        }
 
         #endregion
     }

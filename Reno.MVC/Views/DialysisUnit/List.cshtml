@@ -1,0 +1,411 @@
+﻿@using Reno.MVC.Services.Base;
+@model AllMedStatusModel
+
+@inject IClient _client; 
+
+@{
+    ViewData["Title"] = "Dialysis Units";
+
+    int medStatusCnt = Model.MedReqStatus?.Count ?? 0;
+    var row_span = medStatusCnt > 0 ? 2 : 1;
+
+    var medReqStatusJson = Newtonsoft.Json.JsonConvert.SerializeObject(Model.MedReqStatus.Select(x => x.Name));
+
+    var amenities = (await _client.GetAmentitiesAsync(null)).Data.OrderBy(x => x.Id);
+    var amenitiesJson = Newtonsoft.Json.JsonConvert.SerializeObject(amenities);
+
+    var viruses = (await _client.GetVirusesAsync(null)).Data.OrderBy(x => x.Id);
+    var viruses_select = new SelectList(viruses, "Id", "Abbreviation");
+}
+
+<link href="~/css/plugins/mdb flags/mdb.min.css" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.8.1/font/bootstrap-icons.min.css">
+
+
+<div class="wrapper wrapper-content animated fadeInRight shadow">
+    <div class="row wrapper  white-bg page-heading  mx-0 ">
+        <div class="col-md-12">
+            <h2 class="col-md-9">Dialysis Units</h2>
+            <div class="col-md-3" style="float:right">
+                <ol class="breadcrumb">
+                    <li>
+                        <a asp-action="index" asp-controller="Home">Home</a>
+                    </li>
+                    <li class="active">
+                        <strong>Dialysis Unit List</strong>
+                    </li>
+                </ol>
+            </div>
+        </div>
+        <div class="col-lg-2">
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox float-e-margins  p-10">
+                
+                <div class="ibox-content" style="padding: 15px 20px 0px 20px;">
+                    <div class="row">
+
+                        <form id="filter_unit">
+                            <div class="ibox float-e-margins">
+
+                                <div class="ibox-title">
+                                    <h5>Filter Section</h5>
+                                    <div class="ibox-tools">
+                                        <a class="collapse-link">
+                                            <i class="fa fa-chevron-up"></i>
+                                        </a>
+                                    </div>
+                                </div>
+
+                                <div class="ibox-content">
+
+                                    <div class="row mb-15">
+                                        <div class="col-md-6">
+                                            <label class="control-label col-md-12">Dialysis Unit Name</label>
+                                            <div class="col-md-12">
+                                                <input type="text" class="m-b form-control" placeholder="Dialysis Unit Name..." />
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="control-label col-md-12">Healthcare Provider Name</label>
+                                            <div class="col-md-12">
+                                                <input type="text" class="m-b form-control" placeholder="Healthcare Provider Name..." />
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row mb-15">
+                                        <div class="col-md-4">
+                                            <label class="control-label col-md-12">Address</label>
+                                            <div class="col-md-12">
+                                                <input type="text" class="m-b form-control" placeholder="Address..." />
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label class="control-label col-md-12">Countries</label>
+                                            <div class="col-md-12">
+                                                <select id="country-select" 
+                                                        placeholder="Countries...">
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label class="control-label col-md-12">Cities</label>
+                                            <div class="col-md-12">
+                                                <select id="city-select"
+                                                        placeholder="Cities...">
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row mb-15">
+                                        <div class="col-md-4">
+                                            <label class="control-label col-md-12">Supported Treatment</label>
+                                            <div class="col-md-12">
+                                                <div class="col-md-4">
+                                                    <input value="null" type="checkbox" class="i-checks BaselineSingleControl" /> HD
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <input value="null" type="checkbox" class="i-checks BaselineSingleControl" /> HDF
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-4">
+                                            <label class="control-label col-md-12">Accepts Patient With</label>
+                                            <div class="col-md-12">
+                                                <select multiple class="multiple-select" asp-items="@viruses_select"
+                                                        placeholder="Accepting Viruses...">
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label class="control-label col-md-12">Amenities</label>
+                                            <div class="col-md-12">
+                                                <select multiple id="amenities-select"
+                                                        placeholder="Amenities...">
+                                                </select>
+                                            </div>
+                                        </div>
+                                        
+
+                                    </div>
+
+                                    <div class="row mb-15">
+                                        <div class="col-lg-12">
+                                            <div class="ibox float-e-margins">
+                                                <div class="ibox-title">
+
+                                                    <div class="col-md-12 text-end">
+                                                        <button class=" btn btn-danger" type="reset" id="ResetFilter">Reset</button>
+                                                        <button class=" btn btn-primary" id="SubmitFilter" type="button">Search</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <hr style="margin: 0;" />
+                                </div>
+                            </div>
+                        </form>
+
+                        <table id="units_table" class="table  table-striped  table-bordered table-hover display">
+                            <thead>
+                                <tr>
+
+                                    <th rowspan="@row_span">Dialysis Unit Name</th>
+                                    <th rowspan="@row_span">Healthcare Provider Name</th>
+                                    <th rowspan="@row_span">Address</th>
+                                    <th rowspan="@row_span">Country</th>
+                                    <th rowspan="@row_span">City</th>
+                                    <th rowspan="@row_span">Contact Number</th>
+                                    <th rowspan="@row_span">Rating</th>
+                                    <th rowspan="@row_span">HD Treatment</th>
+                                    <th rowspan="@row_span">HDF Treatment</th>
+                                    <th colspan="@medStatusCnt">Mediacation Requests</th>
+                                    <th rowspan="@row_span">Accepting Viruses</th>
+                                    <th rowspan="@row_span">Amenities</th>
+                                    
+                                    
+                                </tr>
+
+                                @if (medStatusCnt>0)
+                                {
+                                    <tr>
+                                        @foreach (var med_status in Model.MedReqStatus)
+                                        {
+                                            <th>
+                                                <span style="color:#fff; background-color: @med_status.LabelClass;"
+                                                      class="label">@med_status.Name</span>
+                                            </th>
+                                        }
+                                    </tr>
+                                }
+                                
+                            </thead>
+                        </table>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="~/js/app/countryandcityselect.js"></script>
+
+<script>
+    $('document').ready(function () {
+
+        var cols = [
+            { 
+                data: "name", name: "Name",
+                render: function (data, type, row, meta) {
+                    return `<a href="/DialysisUnit/Details/${row.unitId}">${data}</a>`
+                }
+            },
+            { data: "healthCareProviderName", name: "HealthCareProviderName" },
+            { data: "address", name: "Address" },
+            { 
+                data: "country", name: "Country",
+                render: function (data, type, row, meta) {
+                    let countryCode = data.replace(/\s+/g, '-').toLowerCase();
+                    let flag = `<i class="flag flag-${countryCode}"></i>`;
+                    return `${flag}${data}`;
+                }
+            },
+            { data: "city", name: "City" },
+            { data: "contactNumber", name: "ContactNumber", searchable: false, sortable: false },
+            { data: "rating", name: "Rating", searchable: false },
+            {
+                data: "hdTreatment", name: "IsHdSupported", 
+                render: function (data, type, row, meta) {
+                    return `<span style="font-size:1.2em">${data}</span>`
+                }
+            },
+            { 
+                data: "hdfTreatment", name: "IsHdfSupported",
+                render: function (data, type, row, meta) {
+                    return `<span style="font-size:1.2em">${data}</span>`
+                }
+            },
+        ];
+
+        var medReqStatus = @Html.Raw(medReqStatusJson);
+
+        //medReqStatus = ["Pending", "Completed", "Canceled", etc]
+
+        
+        medReqStatus.forEach(function (status) {
+            cols.push({
+                data: status.toLowerCase(),
+                name: status,
+                searchable: false,
+                orderable: true,
+                render: function (data, type, row, meta) {
+                    var cnt = row.medReqCnts && row.medReqCnts[status] ? row.medReqCnts[status] : 0;
+                    return `<span style="font-size:1.2em">${cnt}</span>`
+                }
+            });
+        });
+        
+
+        cols.push(
+            { data: "acceptingViruses", name: "AcceptingViruses", sortable: false },
+            { data: "amenities", name: "Amenities", sortable: false },
+            
+            //{ data: "creationDate", name: "CreationDate" }
+        );
+
+
+        var table = $('#units_table').DataTable({
+            pageLength: 25,
+            dom: '<"html5buttons"B>lrtip',
+            ordering: true,
+            scrollX: true,
+            ajax: {
+                url: "/Dialysis/Units",
+                type: "POST",
+                datatype: "json"
+            },
+            serverSide: true,
+            filter: true,
+            processing: false,
+            columns: cols,
+            buttons: [
+                {
+                    text: '<i class="fa fa-plus"><i/> Add',
+                    action: function() {
+                        $("#modal-form").modal('show');
+                    }
+
+                },
+                'copy', 'excel', 'csv',
+                {
+                    extend: 'pdf',
+                    orientation: 'landscape',
+                    pageSize: 'LEGAL'
+                },
+                {
+                    extend: 'print',
+                    customize: function (win) {
+                        $(win.document.body).addClass('white-bg');
+                        $(win.document.body).css('font-size', '10px');
+                        $(win.document.body).find('table')
+                            .addClass('compact')
+                            .css('font-size', 'inherit');
+                    }
+                }
+
+            ],
+            "fnInitComplete": function () {
+                addSearchControl();
+            }
+        });
+
+        function addSearchControl() {
+            $("#SubmitFilter").on('click', function () {
+                // Initialize an empty search object
+                var searchObject = {};
+
+                validInputCheck();
+
+                // Iterate over input fields within the form
+                $("#filter_unit input").each(function (index) {
+                    console.log(this, index);
+                    
+                    var inputValue = $(this).val();
+                    if (inputValue !== "") {
+                        console.log(inputValue);
+                        // Map input value to the corresponding column name
+                        var columnIndex = getColumnIndexForInput(index);
+                        console.log(columnIndex);
+                        searchObject[columnIndex] = inputValue;
+                    }
+                });
+
+                // Apply search filters to the DataTable
+                for (var index in searchObject) {
+                    table.column(index).search(searchObject[index]);
+                }
+
+                table.draw();
+            });
+        }
+
+        $("#ResetFilter").on("click", () => {
+            $('input[type="checkbox"]').each(function () {
+                $(this).val('null');
+            });
+            table.columns().search("").draw();
+        })
+
+        // Helper function to map input index to column name
+        function getColumnIndexForInput(index) {
+            switch (index) {
+                case 0: return '0';
+                case 1: return '1';
+                case 2: return '2';
+                case 3: return '3'; //select with search has two inputs
+                case 5: return '4';
+                case 7: return '7';
+                case 8: return '8';
+                case 9: return '14';
+                case 11: return '15';
+
+
+                // Add mappings for other input fields as needed
+                default: return "";
+            }
+        }
+
+        function validInputCheck() {
+            const allUnchecked = $('input[type="checkbox"]').toArray().every(checkbox => !checkbox.checked);
+            if (allUnchecked) {
+                $('input[type="checkbox"]').each(function () {
+                    $(this).val('null');
+                });
+            }
+        }
+
+        $('input[type="checkbox"]').on('change', function () {
+            $(this).val(this.checked ? 'true' : 'false');
+            validInputCheck();
+        });
+
+
+        VirtualSelect.init({
+            ele: '#amenities-select',
+            dropboxWrapper: 'self',
+            optionsCount: 5,
+            selectAllText: 'Select all',
+            optionsSelectedText: 'options selected',
+            allOptionsSelectedText: 'All',
+            showValueAsTags: true,
+            noOfDisplayValues: 5,
+            alwaysShowSelectedOptionsLabel: false,
+            dropboxWidth: "100%",
+            focusSelectedOptionOnOpen: true,
+            showDropboxAsPopup: true,
+            popupDropboxBreakpoint: '576px',
+            popupPosition: 'center',
+            hideValueTooltipOnSelectAll: true,
+            maxWidth: '100%'
+        });
+
+        var amentities = @Html.Raw(amenitiesJson);
+        var amenities_opts = amentities.map(function (amenity) {
+            return { label: `<i class="${amenity.icon}"></i> ${amenity.name}`, value: amenity.id };
+        });
+
+        document.querySelector('#amenities-select').setOptions(amenities_opts);
+    });
+</script>
+
+
+

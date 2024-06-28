@@ -1,0 +1,197 @@
+*{
+    margin: 0;
+    padding: 0;
+}
+:root{
+    --main-color: rgba(24, 166, 137, 1);
+    --second-color: #000;
+}
+.pr-1{
+    padding-right: 80px;
+}
+body{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #F5F6F8;
+    padding: 20px 0;
+}
+.prescription{
+    width: 547px;
+    background: #FFFFFF;
+    padding: 10px 20px 20px 20px;
+}
+.prescription .header{
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: start;
+}
+.prescription .header .title{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding-top: 10px;
+}
+.prescription .header .title h1{
+    width: fit-content;
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 800;
+    font-size: 12px;
+    line-height: 15px;
+    color: var(--main-color);
+}
+.prescription .header .title p{
+    width: fit-content;
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 12px;
+    line-height: 15px;
+    color: var(--second-color);
+}
+.prescription .header .logo{
+    width: 63px;
+    height: 88px;
+}
+.prescription .header-1{
+    width: -webkit-fill-available;
+    padding: 5px;
+    border: 1px solid var(--second-color);
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 13px;
+}
+.prescription .header-1 h3{
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 12px;
+    line-height: 15px;
+    color: var(--second-color);
+}
+.prescription .Observations{
+    border: 1px solid var(--second-color);
+}
+.prescription .Observations .header{
+    width: auto;
+    padding: 5px 10px;
+    background: var(--main-color);
+    border-bottom: 1px solid var(--second-color);
+}
+.prescription .Observations .header h1{
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 15px;
+    color: var(--second-color);
+}
+.prescription .Observations .body{
+    padding: 10px;
+}
+.prescription .Observations .body .words{
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #D8D7D7 ;
+    padding-bottom: 10px;
+}
+.prescription .Observations .body .words h3{
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 20px;
+    color: var(--second-color);
+}
+.prescription .Observations .body table {
+    border-collapse: collapse;
+    width: 100%;
+    margin-top: 15px;
+}
+.prescription .Observations .body th, .prescription .Observations .body td {
+    border: 1px solid #D8D7D7;
+    text-align: center;
+    padding: 8px;
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 15px;
+    color: var(--second-color);
+}
+.prescription .Observations .body td .line{
+    width: 50px;
+    height: 2px;
+    background-color: var(--second-color);
+    margin: auto;
+}
+.prescription .Outcomes{
+    border: 1px solid var(--second-color);
+    margin-top: 15px;
+}
+.prescription .Outcomes table{
+    border-collapse: collapse;
+    width: 100%;
+}
+.prescription .Outcomes th{
+    background: var(--main-color);
+    border-bottom: 1px solid var(--second-color);
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 15px;
+    color: var(--second-color);
+    text-align: start;
+    padding: 5px 10px;
+}
+.prescription .Outcomes td{
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 15px;
+    color: var(--second-color);
+    padding: 5px 10px;
+}
+.prescription .Conclusion{
+    width: 100%;
+    margin-top: 15px;
+}
+.prescription .Conclusion h1{
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 15px;
+    color: var(--second-color);
+    margin-bottom: 6px;
+}
+.prescription .Conclusion p{
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 16px;
+    color: var(--second-color);
+    padding-left: 15px;
+}
+.prescription h4{
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 19px;
+    color: var(--second-color);
+    text-align: end;
+    padding-top: 2rem;
+}
+.prescription h4 span{
+    font-size: 12px;
+    Line-height: 14px;
+}

@@ -1,0 +1,52 @@
+﻿@{
+    var label_class = "label-danger fa fa-window-close";
+}
+
+<!--Healthcare Provider Info Tab Index-->
+<li class="">
+    <a data-toggle="tab" href="#tab-1">
+        <div class="titleNav">
+            <i style="float:left" class="label @label_class">
+                <lable class="control-label" style="font-size: 13px;font-weight:bolder;"></lable>
+            </i>
+            Healthcare Provider Info
+            <span class=" text-danger"> *</span>
+        </div>
+    </a>
+</li>
+
+
+<!--Unit Specifications Tab Index-->
+<li class="">
+    <a data-toggle="tab" href="#tab-2">
+        <div class="titleNav">
+            <i style="float:left" class="label @label_class">
+                <lable class="control-label" style="font-size: 13px;font-weight:bolder;"></lable>
+            </i>
+            Unit Specifications
+            <span class=" text-danger"> *</span>
+        </div>
+    </a>
+</li>
+
+
+<!--Available Sessions Tab Index-->
+<li class="">
+    <a data-toggle="tab" href="#tab-3">
+        <div class="titleNav">
+            <i style="float:left" class="label label-primary fa fa-check">
+                <lable class="control-label" style="font-size: 13px;font-weight:bolder;"></lable>
+            </i>
+            Available Sessions
+        </div>
+    </a>
+</li>
+
+<script>
+    $(document).ready(function () {
+        $('.nav-tabs a[href="' + "#tab-1" + '"]').tab('show');
+    });
+        //label-primary fa fa-check
+        //label-danger fa fa-window-close
+        //label-warning fa fa-warning
+</script>

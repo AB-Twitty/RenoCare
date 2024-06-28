@@ -1,0 +1,100 @@
+﻿@model DialysisUnitIndexModel;
+
+@section styles{
+    <style>
+        .label {
+            padding: 4px 4px;
+        }
+
+        .form-horizontal .control-label {
+            text-align: left;
+        }
+
+        .nav-tabs > li > a {
+            padding: 10px 15px 10px 6px;
+        }
+
+        .group-start {
+            height: 40px;
+            background-color: #E2e2e2;
+        }
+
+        tr {
+            line-height: 3;
+        }
+
+        .titleNav {
+            text-align: center;
+            /*margin: -20px -15px 0px 10px;*/
+        }
+
+        .example123 td {
+            text-align: left;
+        }
+
+        .well {
+            background-color: rgba(0, 0, 0, 0) !important;
+        }
+    </style>
+}
+
+
+<link href="~/css/plugins/mdb flags/mdb.min.css" rel="stylesheet" />
+<link href="~/css/input-group.css" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.8.1/font/bootstrap-icons.min.css">
+
+
+<!-- Begin wrapper Content (Page Content) -->
+<div class="wrapper wrapper-content animated fadeInRight shadow">
+    <!-- Begin Row-->
+    <div class="row mx-0">
+        <!-- Begin Column-->
+        <div class="col-md-12 col-xs-12">
+            <!-- Begin Page ibox-->
+            <div class="ibox float-e-margins" style="margin-bottom: -25px;">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+
+                        <div class="row">
+                            <div class="col-md-12 col-xs-12">
+                                <div class="col-md-4">
+                                    <h2>Dialysis Unit Information</h2>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="ibox float-e-margins">
+                <!--End Page Title -->
+                <!-- Begin  ibox Content-->
+                <div class="ibox-content ">
+                    <div class="row">
+                        <form method="post" asp-action="NewcomeDialysisUnit" id="main-form" enctype="multipart/form-data" >
+                            <div class="col-md-12 col-xs-12">
+                                <div class="tabs-container">
+                                    <div class="tabs-left">
+                                        <ul class="nav nav-tabs shadow" id="main">
+                                            <partial name="_PartialNavTabsIndex" />
+                                        </ul>
+                                        <div class="tab-content">
+                                            <partial name="_PartialTabsContent" />
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </form>
+                        
+                    </div>
+                    <!-- End  ibox Content-->
+                    <!-- End Page ibox-->
+                </div>
+            </div>
+            <!-- End Column-->
+        </div>
+        <!-- End Row-->
+    </div>
+</div>

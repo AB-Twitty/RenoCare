@@ -2,7 +2,7 @@
 @{
     string label = "";
     if (User.IsInRole("HealthCare"))
-        label = User.Claims.FirstOrDefault(x => x.Type == "unit").Value;
+        label = User.Claims.FirstOrDefault(x => x.Type == "unit")?.Value ?? "";
 
     if (string.IsNullOrEmpty(label))
         label = "Reno Care";

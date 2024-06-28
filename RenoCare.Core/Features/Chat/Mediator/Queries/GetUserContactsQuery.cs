@@ -147,7 +147,8 @@ namespace RenoCare.Core.Features.Chat.Mediator.Queries
                     {
                         int cnt = qry.Where(m => m.ReceiverId == curr_user && m.Status == 2).Count();
 
-                        ChatMessage last = await qry.Where(x => x.SenderId == curr_user || x.ReceiverId == curr_user)
+                        ChatMessage last = await qry.Where(x => (x.SenderId == curr_user && x.ReceiverId == contact.UserId)
+                                || (x.ReceiverId == curr_user && x.SenderId == contact.UserId))
                              .OrderByDescending(x => x.SendingTime).FirstOrDefaultAsync();
 
                         return (last, cnt);

@@ -5,7 +5,6 @@ using RenoCare.Core.Base;
 using RenoCare.Core.Extensions;
 using RenoCare.Core.Features.Authentication.Contracts;
 using RenoCare.Core.Features.Authentication.Contracts.Models;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -16,7 +15,7 @@ namespace RenoCare.Core.Features.Authentication.Mediator.Commands
     /// <summary>
     /// Represents a request to set first time password using OTP code.
     /// </summary>
-    public class SetPasswordWithOtpCommandRequest : IRequest<ApiResponse<string>>
+    public class SetPasswordWithOtpCommandRequest : IRequest<ApiResponse<AuthResponse>>
     {
         public OtpPasswordSetRequest PasswordModel { get; set; }
     }
@@ -51,7 +50,7 @@ namespace RenoCare.Core.Features.Authentication.Mediator.Commands
     /// Represents a handler for the request to validate otp to set password.
     /// </summary>
     public class SetPasswordWithOtpCommandRequestHandler : ResponseHandler,
-        IRequestHandler<SetPasswordWithOtpCommandRequest, ApiResponse<string>>
+        IRequestHandler<SetPasswordWithOtpCommandRequest, ApiResponse<AuthResponse>>
     {
         #region Fields
 
@@ -79,26 +78,35 @@ namespace RenoCare.Core.Features.Authentication.Mediator.Commands
         /// A task that represents the asynchronous operation,
         /// the task contains the authentication response.
         /// </returns>
-        public async Task<ApiResponse<string>> Handle(SetPasswordWithOtpCommandRequest request, CancellationToken cancellationToken)
+        public async Task<ApiResponse<AuthResponse>> Handle(SetPasswordWithOtpCommandRequest request, CancellationToken cancellationToken)
         {
             try
             {
                 var result = await _authService.HasPasswordAsync(request.PasswordModel.Email);
                 if (result)
-                    return BadRequest<string>("User already has password.");
+                    return BadRequest<AuthResponse>("User already has password.");
             }
-            catch (Exception ex)
+            catch
             {
-                return BadRequest<string>("This E-mail address is not regestered.");
+                return BadRequest<AuthResponse>("This E-mail address is not regestered.");
             }
 
             if (!await _authService.ValidateOtpAsync(request.PasswordModel.Email, request.PasswordModel.OTP))
-                return BadRequest<string>("Invalid OTP Login Attempt.");
+                return BadRequest<AuthResponse>("Invalid OTP Login Attempt.");
 
             (bool Succeeded, IEnumerable<ValidationFailure> errors) = await _authService.AddPasswordAsync(request.PasswordModel.Email, request.PasswordModel.Password);
 
             if (Succeeded)
-                return Success(Boolean.TrueString);
+            {
+                var response = await _authService.AuthenticateAsync(new AuthRequest
+                {
+                    Email = request.PasswordModel.Email,
+                    Password = request.PasswordModel.Password,
+                    RememberMe = false
+                });
+
+                return Success(response);
+            }
 
             throw new ValidationException(errors.FirstOrDefault()?.ErrorMessage ?? "", errors);
         }

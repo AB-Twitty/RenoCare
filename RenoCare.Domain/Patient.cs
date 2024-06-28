@@ -1,5 +1,7 @@
 ﻿using RenoCare.Domain.Common;
 using RenoCare.Domain.Identity;
+using System;
+using System.Collections.Generic;
 
 namespace RenoCare.Domain
 {
@@ -43,6 +45,10 @@ namespace RenoCare.Domain
         /// </summary>
         public bool IsDeleted { get; set; }
 
+        public DateTime BirthDate { get; set; }
+
+        public Gender Gender { get; set; }
+
 
         /// <summary>
         /// Gets or sets the navigation property for hypertension type.
@@ -63,5 +69,14 @@ namespace RenoCare.Domain
         /// Gets or sets the navigation property user account
         /// </summary>
         public virtual AppUser User { get; set; }
+
+        public virtual ICollection<Virus> Viruses { get; set; }
+        public virtual ICollection<Report> Reports { get; set; }
+    }
+
+    public enum Gender
+    {
+        Male = 1,
+        Female = 2
     }
 }

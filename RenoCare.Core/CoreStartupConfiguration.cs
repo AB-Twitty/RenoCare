@@ -1,4 +1,5 @@
 ﻿using FluentValidation;
+using IronPdf;
 using MediatR;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.Extensions.DependencyInjection;
@@ -41,8 +42,10 @@ namespace RenoCare.Core
 
             services.AddHttpContextAccessor();
 
-            services.AddSignalR();
+            services.AddSignalR().AddMessagePackProtocol();
             //GlobalHost.HubPipeline.RequireAuthentication();
+
+            License.LicenseKey = "IRONSUITE.MOCANEVA2.GMAIL.COM.18342-3040EC1DB1-KGKPW-MPN32LH3MXQH-AAW5EVEMLJ6K-SRGNB2LBUSS3-XVXODVH2QBJF-JJBEOTKBJMB7-YNNDIIC4LHQF-HIQGIH-THV3MD5J2B6NEA-DEPLOYMENT.TRIAL-IIW6NX.TRIAL.EXPIRES.25.JUL.2024";
 
             return services;
         }

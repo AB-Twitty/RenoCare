@@ -1,5 +1,12 @@
-﻿@{
-    ViewData["Title"] = "Patient List";
+﻿@model AllMedStatusModel
+
+@{
+    ViewData["Title"] = "Patients";
+
+    int medStatusCnt = Model.MedReqStatus?.Count ?? 0;
+    var row_span = medStatusCnt > 0 ? 2 : 1;
+
+    var medReqStatusJson = Newtonsoft.Json.JsonConvert.SerializeObject(Model.MedReqStatus.Select(x => x.Name));
 }
 
 
@@ -105,32 +112,33 @@
                             <thead>
                                 <tr>
 
-                                    <th>Patient Name</th>
-                                    <th>Reports Same Unit</th>
-                                    <th>Reports Overral</th>
-                                    <th>Gender</th>
-                                    <th>Age</th>
-                                    <th>Diabetes</th>
-                                    <th>Hypertension</th>
-                                    <th>Smoking</th>
+                                    <th rowspan="@row_span">Patient Name</th>
+                                    <th rowspan="@row_span">Reports Same Unit</th>
+                                    <th rowspan="@row_span">Reports Overral</th>
+                                    <th rowspan="@row_span">Gender</th>
+                                    <th rowspan="@row_span">Age</th>
+                                    <th rowspan="@row_span">Diabetes</th>
+                                    <th rowspan="@row_span">Hypertension</th>
+                                    <th rowspan="@row_span">Viruses</th>
+                                    <th colspan="@medStatusCnt">Mediacation Requests</th>
+                                    <th rowspan="@row_span">Smoking</th>
 
                                 </tr>
+
+                                @if (medStatusCnt > 0)
+                                {
+                                    <tr>
+                                        @foreach (var med_status in Model.MedReqStatus)
+                                        {
+                                            <th>
+                                                <span style="color:#fff; background-color: @med_status.LabelClass;"
+                                                      class="label">@med_status.Name</span>
+                                            </th>
+                                        }
+                                    </tr>
+                                }
                             </thead>
                         </table>
-
-                        <div style="float:left; padding-left:20px;">
-                            <span style="right:auto" class="label label-danger">Draft:</span>
-                            <label class="control-label" style="font-size:13px;font-weight:normal;">Indicates the incompletion of the record, i.e. missing information and entries are still yet to be completed </label>
-                            <br />
-                            <span style="right:auto" class="label label-success">Ready To Review</span>
-                            <label class="control-label" style="font-size:12px;font-weight:normal;">Indicates data entry and record completion and is ready to be reviewed by the “Monitor / QC”. Data here refers to the mandatory data / required</label>
-                            <br />
-                            <span style="right:auto" class="label label-warning">Pending</span>
-                            <label class="control-label" style="font-size:12px;font-weight:normal;">Indicates that the comments / concerns raised by the “Monitor” on the record are pending / awaiting to be addressed / amended by the “PI / Doctor”</label>
-                            <br />
-                            <span style="right:auto" class="label label-primary">Reviewed:</span>
-                            <label class="control-label" style="font-size:12px;font-weight:normal;">Indicates that the “Monitor” has reviewed the record and approved it.</label>
-                        </div>
 
                     </div>
                 </div>
@@ -157,6 +165,122 @@
 </script>
 
 @section Scripts {
-    
-    <script src="~/js/Pages/PatientsIndex.js"></script>
+    <script>
+        $('document').ready(function () {
+
+            var cols = [
+                { data: "patientName", name: "PatientName" },
+                { data: "reportsSameUnit", name: "ReportsSameUnit", visible: @User.IsInRole("HealthCare").ToString().ToLower(), searchable: false },
+                { data: "reportsOverral", name: "ReportsOverral", searchable: false },
+                { data: "gender", name: "Gender", sortable: false },
+                { data: "age", name: "BirthDate", searchable: false },
+                { data: "diabetes", name: "Diabetes" },
+                { data: "hypertension", name: "Hypertension" },
+                { data: "viruses", name: "Viruses", sortable: false },
+            ];
+
+            var medReqStatus = @Html.Raw(medReqStatusJson);
+
+            //medReqStatus = ["Pending", "Completed", "Canceled", etc]
+
+
+            medReqStatus.forEach(function (status) {
+                cols.push({
+                    data: status.toLowerCase(),
+                    name: status,
+                    searchable: false,
+                    orderable: true,
+                    render: function (data, type, row, meta) {
+                        var cnt = row.medReqCnts && row.medReqCnts[status] ? row.medReqCnts[status] : 0;
+                        return `<span style="font-size:1.2em">${cnt}</span>`
+                    }
+                });
+            });
+
+            cols.push(
+                { data: "smoking", name: "Smoking", sortable: false }
+            );
+
+
+            var patientTable = $('#PatientTable').DataTable({
+                pageLength: 25,
+                dom: '<"html5buttons"B>lrtip',
+                ordering: true,
+                scrollX: true,
+                ajax: {
+                    url: "/Patients",
+                    type: "POST",
+                    datatype: "json"
+                },
+                serverSide: true,
+                filter: true,
+                processing: false,
+                columns: cols,
+                buttons: [
+                    'copy', 'excel', 'csv',
+                    {
+                        extend: 'pdf',
+                        orientation: 'landscape',
+                        pageSize: 'LEGAL'
+                    },
+                    {
+                        extend: 'print',
+                        customize: function (win) {
+                            $(win.document.body).addClass('white-bg');
+                            $(win.document.body).css('font-size', '10px');
+                            $(win.document.body).find('table')
+                                .addClass('compact')
+                                .css('font-size', 'inherit');
+                        }
+                    }
+
+                ],
+                "fnInitComplete": function () {
+                    addSearchControl();
+                }
+            });
+
+            function addSearchControl() {
+                $("#SubmitFilter").on('click', function () {
+                    // Initialize an empty search object
+                    var searchObject = {};
+
+                    // Iterate over input fields within the form
+                    $("#FilterPatients input").each(function (index) {
+                        var inputValue = $(this).val();
+                        if (inputValue !== "") {
+                            // Map input value to the corresponding column name
+                            var columnIndex = getColumnIndexForInput(index);
+                            searchObject[columnIndex] = inputValue;
+                        }
+                    });
+
+                    // Apply search filters to the DataTable
+                    for (var index in searchObject) {
+                        console.log(index);
+                        patientTable.column(index).search(searchObject[index]);
+                    }
+
+                    patientTable.draw();
+                });
+            }
+
+
+            $("#ResetFilter").on("click", () => {
+                patientTable.columns().search("").draw();
+            })
+
+            // Helper function to map input index to column name
+            function getColumnIndexForInput(index) {
+                switch (index) {
+                    case 0: return '0';
+                    case 1: return '5';
+                    case 2: return '6';
+                    case 3: return '7';
+                    // Add mappings for other input fields as needed
+                    default: return ""; // Return an empty string for unmapped inputs
+                }
+            }
+        });
+    </script>
 }

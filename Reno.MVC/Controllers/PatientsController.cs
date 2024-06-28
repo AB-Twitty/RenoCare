@@ -2,12 +2,14 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Reno.MVC.Helpers.Contracts;
+using Reno.MVC.Models.DialysisUnit;
 using Reno.MVC.Services.Base;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace Reno.MVC.Controllers
 {
+    [Authorize(Roles = "Admin,HealthCare")]
     public class PatientsController : Controller
     {
         private readonly IClient _client;
@@ -20,7 +22,6 @@ namespace Reno.MVC.Controllers
         }
 
         [HttpGet]
-        [Authorize]
         public async Task<IActionResult> Index([FromQuery] int page = 1)
         {
             ViewBag.DiabetesSelectList = new SelectList((await _client.DiabetesTypesAsync(null)).Data.OrderBy(x => x.Id), "Name", "Name");
@@ -29,11 +30,17 @@ namespace Reno.MVC.Controllers
 
             ViewBag.SmokingSelectList = new SelectList((await _client.SmokingStatusListAsync(null)).Data.OrderBy(x => x.Id), "Name", "Name");
 
-            return View();
+            var medStatuses = (await _client.MedicationRequestStatusListAsync(null)).Data;
+
+            var model = new AllMedStatusModel
+            {
+                MedReqStatus = medStatuses.OrderBy(x => x.Id).ToList(),
+            };
+
+            return View(model);
         }
 
         [HttpPost]
-        [Authorize]
         public async Task<IActionResult> Index()
         {
             var dataTableInfo = _dataTableExtractor.ExtractDataTableInformation(Request);

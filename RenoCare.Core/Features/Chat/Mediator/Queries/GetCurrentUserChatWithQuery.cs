@@ -40,7 +40,8 @@ namespace RenoCare.Core.Features.Chat.Mediator.Queries
                 .Where(c => c.Type == ClaimTypes.NameIdentifier).FirstOrDefault()?.Value;
 
             var result = await _msgRepo.GetAllPagedAsync(qry =>
-                qry.Where(x => x.SenderId == curr_user || x.ReceiverId == curr_user)
+                qry.Where(x => (x.SenderId == curr_user && x.ReceiverId == request.UserId)
+                                || (x.ReceiverId == curr_user && x.SenderId == request.UserId))
                 .OrderByDescending(x => x.SendingTime), request.Page, request.PageSize, 1, false);
 
             foreach (var msg in result.Items)

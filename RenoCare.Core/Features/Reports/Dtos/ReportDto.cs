@@ -7,6 +7,8 @@ namespace RenoCare.Core.Features.Reports.Dtos
     public class ReportDto
     {
         public int Id { get; set; }
+        public int MedReqId { get; set; }
+        public int DialysisUnitId { get; set; }
         public PatientDto Patient { get; set; }
         public DateTime CreatedDate { get; set; }
         public DateTime LastModifiedDate { get; set; }
@@ -20,6 +22,7 @@ namespace RenoCare.Core.Features.Reports.Dtos
         public int DialysisFrequency { get; set; }
         public VascularType VascularAccessType { get; set; }
         public DialyzerType DialyzerType { get; set; }
+        public string GeneralRemarks { get; set; }
 
         #endregion
 

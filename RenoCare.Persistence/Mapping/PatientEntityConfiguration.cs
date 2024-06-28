@@ -22,7 +22,7 @@ namespace RenoCare.Persistence.Mapping
             builder.Property(p => p.UserId).IsRequired();
             builder.HasOne(p => p.User).WithOne().HasForeignKey<Patient>(p => p.UserId);
 
-            builder.Property(p => p.KidneyFailureCause).IsRequired();
+            builder.Property(p => p.KidneyFailureCause).IsRequired(false);
 
             builder.Property(p => p.DiabetesTypeId).IsRequired();
             builder.HasOne(p => p.DiabetesType).WithOne().HasForeignKey<Patient>(p => p.DiabetesTypeId);
@@ -32,6 +32,9 @@ namespace RenoCare.Persistence.Mapping
 
             builder.Property(p => p.SmokingStatusId);
             builder.HasOne(p => p.SmokingStatus).WithOne().HasForeignKey<Patient>(p => p.SmokingStatusId);
+
+            builder.Property(p => p.Gender).IsRequired();
+            builder.Property(p => p.BirthDate).IsRequired();
 
 
             builder.Property(p => p.IsDeleted).IsRequired().HasDefaultValue(false);

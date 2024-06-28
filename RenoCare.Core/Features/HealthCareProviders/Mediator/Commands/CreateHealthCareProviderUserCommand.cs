@@ -34,12 +34,11 @@ namespace RenoCare.Core.Features.HealthCareProviders.Mediator.Commands
 
             RuleFor(p => p.Email)
                 .NotNullWithMessage().NotEmptyWithMessage()
-                .EmailAddress();
-            /*
+                .EmailAddress()
                 .MustAsync(async (email, _) =>
                 {
                     return !await _authService.IsUserWithEmailExistsAsync(email);
-                }).WithMessage("This E-mail Address Already Exists.");*/
+                }).WithMessage("This E-mail Address Already Exists.");
         }
     }
 
@@ -72,7 +71,7 @@ namespace RenoCare.Core.Features.HealthCareProviders.Mediator.Commands
 
         public async Task<ApiResponse<string>> Handle(CreateHealthCareProviderUserCommandRequest request, CancellationToken cancellationToken)
         {
-            var code = await _authService.CreateAccountWithOTPAsync(request.Email, "HealthCare");
+            (var code, var user) = await _authService.CreateAccountWithOTPAsync(request.Email, "HealthCare");
 
             var pathToTemplate = _webHostEnv.WebRootPath + Path.DirectorySeparatorChar.ToString()
                 + "Templates" + Path.DirectorySeparatorChar.ToString() + "Mail" + Path.DirectorySeparatorChar.ToString()
@@ -102,14 +101,17 @@ namespace RenoCare.Core.Features.HealthCareProviders.Mediator.Commands
 
             try
             {
-                if (await _emailSender.SendEmailAsync(email, emailValues))
-                    return Created(Boolean.TrueString);
-                else
-                    return Success(Boolean.FalseString, Transcriptor.Identity.EmailSendingFailure);
+                var isSend = await _emailSender.SendEmailAsync(email, emailValues);
+
+                if (isSend)
+                    return Success(Boolean.TrueString, "Created successfully, an email with an OTP has been sent for further registration.");
+
+                throw new Exception();
             }
             catch
             {
-                return Success(Boolean.FalseString, Transcriptor.Identity.EmailSendingFailure);
+                await _authService.DeleteUserAsync(user);
+                return BadRequest<string>(Transcriptor.Identity.EmailSendingFailure);
             }
 
         }

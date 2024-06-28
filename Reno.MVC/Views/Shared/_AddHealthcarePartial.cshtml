@@ -1,0 +1,78 @@
+﻿@using Reno.MVC.Services.Base.Contracts;
+@inject ILocalStorageService _localStorageService;
+
+@{
+    string access_token = _localStorageService.GetCurrentToken();
+}
+
+<link href="~/css/input-group.css" rel="stylesheet" />
+
+<div id="modal-form" class="modal fade" style="display: none;" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <p style="text-align: center;">Add New Healthcare Provider</p>
+
+                        <div id="healthcare-form">
+                            <div class="form-group">
+                                <label>Email</label>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="fa fa-envelope"></i></span>
+                                    </div>
+                                    <input type="email" placeholder="Enter email" class="form-control">
+                                    
+                                </div>
+                                <span id="healthcare-add-res"></span>
+                            </div>
+
+                            <button id="healthcare-add-btn" style="float:right;" class="btn btn-sm btn-primary float-right m-t-n-xs" type="button">
+                                <i class="fa fa-plus"></i>
+                                <strong>Add</strong>
+                            </button>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    $('document').ready(() => {
+        $('#healthcare-add-btn').on('click', function () {
+            let email = $('#healthcare-form input').val();
+            if (!email) return;
+
+            $.ajax({
+                url: `http://localhost:6982/Api/V1/HealthCare/Create`,
+                method: "POST",
+                headers: {
+                    "Authorization": `Bearer @access_token`
+                },
+                data: { "email": email },
+                success: function (response) {
+                    console.log(response);
+                    $('#healthcare-add-res').html(response.message).removeClass()
+                        .addClass('text-success');
+                },
+                error: function (xhr, status, error) {
+                    //console.log(xhr);
+                    let msg = xhr?.responseJSON?.Message || xhr?.responseJSON?.message;
+                    console.log(xhr?.responseJSON);
+                    if (msg) {
+                        $('#healthcare-add-res').html(msg).addClass('text-danger');
+                    } else {
+                        $('#healthcare-add-res').html('An error occurred: ' + error).addClass('text-danger');
+                    }
+                }
+            });
+        });
+
+    });
+</script>

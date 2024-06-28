@@ -27,6 +27,27 @@ namespace Reno.MVC.Controllers
             _httpContextAccessor = httpContextAccessor;
         }
 
+        private async Task SaveToken(AuthResponse auth, bool rememberMe)
+        {
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var tokenContent = tokenHandler.ReadJwtToken(auth.AccessToken);
+
+            var claims = tokenContent.Claims.ToList();
+
+            var user = new ClaimsPrincipal(new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme));
+
+            await _httpContextAccessor.HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, user,
+                new AuthenticationProperties
+                {
+                    IsPersistent = rememberMe,
+                    ExpiresUtc = rememberMe ? DateTime.UtcNow.AddDays(7) : DateTime.UtcNow.AddHours(1)
+                });
+
+            _localStorageService.SetStorageValue($"{claims.Where(c => c.Type == "sub").FirstOrDefault().Value}_Token",
+                auth.AccessToken);
+        }
+
+
         [HttpGet("Login")]
         public virtual IActionResult LoginAsync(string returnUrl = null)
         {
@@ -60,22 +81,7 @@ namespace Reno.MVC.Controllers
                     return View(login);
                 }
 
-                var tokenHandler = new JwtSecurityTokenHandler();
-                var tokenContent = tokenHandler.ReadJwtToken(result.Data.AccessToken);
-
-                var claims = tokenContent.Claims.ToList();
-
-                var user = new ClaimsPrincipal(new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme));
-
-                await _httpContextAccessor.HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, user,
-                    new AuthenticationProperties
-                    {
-                        IsPersistent = login.RememberMe,
-                        ExpiresUtc = login.RememberMe ? DateTime.UtcNow.AddDays(7) : DateTime.UtcNow.AddHours(1)
-                    });
-
-                _localStorageService.SetStorageValue($"{claims.Where(c => c.Type == "sub").FirstOrDefault().Value}_Token",
-                    result.Data.AccessToken);
+                await SaveToken(result.Data, login.RememberMe);
 
                 return LocalRedirect(returnUrl);
             }
@@ -119,7 +125,9 @@ namespace Reno.MVC.Controllers
 
                 var result = await _client.SetPasswordWithOtpAsync(passwordRequest);
 
-                return RedirectToAction("Login");
+                await SaveToken(result.Data, false);
+
+                return RedirectToAction("NewcomeDialysisUnit", "DialysisUnit", new { email = "dsf" });
             }
             catch (ApiException<ApiResponse<string>> ex)
             {

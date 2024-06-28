@@ -27,12 +27,12 @@ namespace RenoCare.Core.Features.Reports.Validators
 
             RuleFor(x => x.Report.VascularAccessType)
                 .NotNullWithMessage().NotEmptyWithMessage()
-                .Must(value => value != null && Enum.TryParse(typeof(VascularType), value.ToString(), out _))
+                .Must(value => Enum.TryParse(typeof(VascularType), value.ToString(), out _))
                 .WithMessage("Invalid vascular access type.");
 
             RuleFor(x => x.Report.DialyzerType)
                 .NotNullWithMessage().NotEmptyWithMessage()
-                .Must(value => value != null && Enum.TryParse(typeof(DialyzerType), value.ToString(), out _))
+                .Must(value => Enum.TryParse(typeof(DialyzerType), value.ToString(), out _))
                 .WithMessage("Invalid dialyzer type.");
 
 

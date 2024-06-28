@@ -19,6 +19,69 @@ namespace RenoCare.Persistence.Migrations.AppDb
                 .HasAnnotation("ProductVersion", "5.0.17")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+            modelBuilder.Entity("AmenityDialysisUnit", b =>
+                {
+                    b.Property<int>("AmenitiesId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("DialysisUnitsId")
+                        .HasColumnType("int");
+
+                    b.HasKey("AmenitiesId", "DialysisUnitsId");
+
+                    b.HasIndex("DialysisUnitsId");
+
+                    b.ToTable("Amenities_Units_Mapping");
+                });
+
+            modelBuilder.Entity("DialysisUnitVirus", b =>
+                {
+                    b.Property<int>("AcceptingVirusesId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("DialysisUnitsId")
+                        .HasColumnType("int");
+
+                    b.HasKey("AcceptingVirusesId", "DialysisUnitsId");
+
+                    b.HasIndex("DialysisUnitsId");
+
+                    b.ToTable("DialysisUnits_Accepting_Viruses_Mapping");
+                });
+
+            modelBuilder.Entity("PatientVirus", b =>
+                {
+                    b.Property<int>("PatientsId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("VirusesId")
+                        .HasColumnType("int");
+
+                    b.HasKey("PatientsId", "VirusesId");
+
+                    b.HasIndex("VirusesId");
+
+                    b.ToTable("Patients_With_Viruses_Mapping");
+                });
+
+            modelBuilder.Entity("RenoCare.Domain.Amenity", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Icon")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Amenities");
+                });
+
             modelBuilder.Entity("RenoCare.Domain.Chat.ChatMessage", b =>
                 {
                     b.Property<int>("Id")
@@ -142,20 +205,32 @@ namespace RenoCare.Persistence.Migrations.AppDb
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
+                    b.Property<DateTime>("CreationDate")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("text");
+
+                    b.Property<double?>("HdPrice")
+                        .HasColumnType("float");
+
+                    b.Property<double?>("HdfPrice")
+                        .HasColumnType("float");
 
                     b.Property<bool>("IsDeleted")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bit")
                         .HasDefaultValue(false);
 
-                    b.Property<bool>("IsHDFSupported")
+                    b.Property<bool>("IsHdSupported")
                         .HasColumnType("bit");
 
-                    b.Property<bool>("IsHDSupported")
+                    b.Property<bool>("IsHdfSupported")
                         .HasColumnType("bit");
+
+                    b.Property<DateTime>("LastModifiedDate")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -164,8 +239,8 @@ namespace RenoCare.Persistence.Migrations.AppDb
 
                     b.Property<string>("PhoneNumber")
                         .IsRequired()
-                        .HasMaxLength(15)
-                        .HasColumnType("nvarchar(15)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("UserId")
                         .HasColumnType("nvarchar(450)");
@@ -185,10 +260,14 @@ namespace RenoCare.Persistence.Migrations.AppDb
                             Address = "the street where the unit is located",
                             City = "Paris",
                             Country = "France",
+                            CreationDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "this is the description for the dialysis unit",
+                            HdPrice = 310.0,
+                            HdfPrice = 340.0,
                             IsDeleted = false,
-                            IsHDFSupported = true,
-                            IsHDSupported = true,
+                            IsHdSupported = true,
+                            IsHdfSupported = true,
+                            LastModifiedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Dialysis unit name",
                             PhoneNumber = "123456789",
                             UserId = "30aaf317-be57-4870-9768-2af3599936v2"
@@ -309,6 +388,34 @@ namespace RenoCare.Persistence.Migrations.AppDb
                     b.ToTable("AspNetUsers");
                 });
 
+            modelBuilder.Entity("RenoCare.Domain.Image", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("DialysisUnitId")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsThumbnail")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Path")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DialysisUnitId");
+
+                    b.ToTable("Images");
+                });
+
             modelBuilder.Entity("RenoCare.Domain.MedicationRequest", b =>
                 {
                     b.Property<int>("Id")
@@ -343,15 +450,10 @@ namespace RenoCare.Persistence.Migrations.AppDb
 
                     b.HasKey("Id");
 
-                    b.HasIndex("DialysisUnitId")
-                        .IsUnique();
+                    b.HasIndex("DialysisUnitId");
 
                     b.HasIndex("PatientId")
                         .IsUnique();
-
-                    b.HasIndex("ReportId")
-                        .IsUnique()
-                        .HasFilter("[ReportId] IS NOT NULL");
 
                     b.HasIndex("StatusId")
                         .IsUnique();
@@ -470,10 +572,16 @@ namespace RenoCare.Persistence.Migrations.AppDb
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<DateTime>("BirthDate")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("DeletionReason")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("DiabetesTypeId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Gender")
                         .HasColumnType("int");
 
                     b.Property<int>("HypertensionTypeId")
@@ -485,7 +593,6 @@ namespace RenoCare.Persistence.Migrations.AppDb
                         .HasDefaultValue(false);
 
                     b.Property<string>("KidneyFailureCause")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("SmokingStatusId")
@@ -516,7 +623,9 @@ namespace RenoCare.Persistence.Migrations.AppDb
                         new
                         {
                             Id = 1,
+                            BirthDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             DiabetesTypeId = 1,
+                            Gender = 0,
                             HypertensionTypeId = 1,
                             IsDeleted = false,
                             KidneyFailureCause = "Hypertension",
@@ -535,7 +644,6 @@ namespace RenoCare.Persistence.Migrations.AppDb
                         .HasColumnType("float");
 
                     b.Property<DateTime>("CreatedDate")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2");
 
                     b.Property<double>("Creatinine")
@@ -565,6 +673,9 @@ namespace RenoCare.Persistence.Migrations.AppDb
                     b.Property<double>("FluidRemovalRate")
                         .HasColumnType("float");
 
+                    b.Property<string>("GeneralRemarks")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("HeartRate")
                         .HasColumnType("int");
 
@@ -578,7 +689,6 @@ namespace RenoCare.Persistence.Migrations.AppDb
                         .HasColumnType("float");
 
                     b.Property<DateTime>("LastModifiedDate")
-                        .ValueGeneratedOnAddOrUpdate()
                         .HasColumnType("datetime2");
 
                     b.Property<int>("MedicationRequestId")
@@ -638,10 +748,68 @@ namespace RenoCare.Persistence.Migrations.AppDb
                     b.HasIndex("MedicationRequestId")
                         .IsUnique();
 
-                    b.HasIndex("PatientId")
-                        .IsUnique();
+                    b.HasIndex("PatientId");
 
                     b.ToTable("Session_Reports");
+                });
+
+            modelBuilder.Entity("RenoCare.Domain.Review", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Comment")
+                        .HasColumnType("nvarchar(MAX)");
+
+                    b.Property<DateTime>("CreationDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("DialysisUnitId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("PatientId")
+                        .HasColumnType("int");
+
+                    b.Property<double>("Rating")
+                        .HasColumnType("float");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DialysisUnitId");
+
+                    b.HasIndex("PatientId");
+
+                    b.ToTable("Reviews");
+                });
+
+            modelBuilder.Entity("RenoCare.Domain.SessionTimetable", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("Day")
+                        .HasColumnType("int");
+
+                    b.Property<int>("DialysisUnitId")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsDeleted")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
+
+                    b.Property<long>("Time")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DialysisUnitId");
+
+                    b.ToTable("Sessions_Timetables");
                 });
 
             modelBuilder.Entity("RenoCare.Domain.SmokingStatus", b =>
@@ -685,6 +853,98 @@ namespace RenoCare.Persistence.Migrations.AppDb
                         });
                 });
 
+            modelBuilder.Entity("RenoCare.Domain.Virus", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Abbreviation")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Viruses");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Abbreviation = "HIV",
+                            Description = "HIV attacks the body’s immune system, specifically the CD4 cells (T cells), which help the immune system fight off infections. If left untreated, HIV reduces the number of these cells, making the body more vulnerable to infections and certain cancers.",
+                            Name = "Human Immunodeficiency Virus"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Abbreviation = "HBV",
+                            Description = "HBV is a virus that infects the liver, causing inflammation and potentially leading to serious conditions such as liver cirrhosis or liver cancer. It is transmitted through contact with infectious body fluids, such as blood, semen, and vaginal fluids.",
+                            Name = "Hepatitis B Virus"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Abbreviation = "HCV",
+                            Description = "HCV is a liver infection caused by the hepatitis C virus. It can lead to chronic liver disease, including cirrhosis and liver cancer. HCV is primarily spread through contact with blood from an infected person.",
+                            Name = "Hepatitis C Virus"
+                        });
+                });
+
+            modelBuilder.Entity("AmenityDialysisUnit", b =>
+                {
+                    b.HasOne("RenoCare.Domain.Amenity", null)
+                        .WithMany()
+                        .HasForeignKey("AmenitiesId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("RenoCare.Domain.DialysisUnit", null)
+                        .WithMany()
+                        .HasForeignKey("DialysisUnitsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("DialysisUnitVirus", b =>
+                {
+                    b.HasOne("RenoCare.Domain.Virus", null)
+                        .WithMany()
+                        .HasForeignKey("AcceptingVirusesId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("RenoCare.Domain.DialysisUnit", null)
+                        .WithMany()
+                        .HasForeignKey("DialysisUnitsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("PatientVirus", b =>
+                {
+                    b.HasOne("RenoCare.Domain.Patient", null)
+                        .WithMany()
+                        .HasForeignKey("PatientsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("RenoCare.Domain.Virus", null)
+                        .WithMany()
+                        .HasForeignKey("VirusesId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("RenoCare.Domain.Chat.ChatMessage", b =>
                 {
                     b.HasOne("RenoCare.Domain.Identity.AppUser", "Receiver")
@@ -713,11 +973,20 @@ namespace RenoCare.Persistence.Migrations.AppDb
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("RenoCare.Domain.Image", b =>
+                {
+                    b.HasOne("RenoCare.Domain.DialysisUnit", null)
+                        .WithMany("Images")
+                        .HasForeignKey("DialysisUnitId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("RenoCare.Domain.MedicationRequest", b =>
                 {
                     b.HasOne("RenoCare.Domain.DialysisUnit", "DialysisUnit")
-                        .WithOne()
-                        .HasForeignKey("RenoCare.Domain.MedicationRequest", "DialysisUnitId")
+                        .WithMany("MedRequests")
+                        .HasForeignKey("DialysisUnitId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -726,10 +995,6 @@ namespace RenoCare.Persistence.Migrations.AppDb
                         .HasForeignKey("RenoCare.Domain.MedicationRequest", "PatientId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.HasOne("RenoCare.Domain.Report", "Report")
-                        .WithOne()
-                        .HasForeignKey("RenoCare.Domain.MedicationRequest", "ReportId");
 
                     b.HasOne("RenoCare.Domain.MedicationRequestStatus", "Status")
                         .WithOne()
@@ -746,8 +1011,6 @@ namespace RenoCare.Persistence.Migrations.AppDb
                     b.Navigation("DialysisUnit");
 
                     b.Navigation("Patient");
-
-                    b.Navigation("Report");
 
                     b.Navigation("Status");
 
@@ -796,14 +1059,14 @@ namespace RenoCare.Persistence.Migrations.AppDb
                         .IsRequired();
 
                     b.HasOne("RenoCare.Domain.MedicationRequest", "MedicationRequest")
-                        .WithOne()
+                        .WithOne("Report")
                         .HasForeignKey("RenoCare.Domain.Report", "MedicationRequestId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("RenoCare.Domain.Patient", "Patient")
-                        .WithOne()
-                        .HasForeignKey("RenoCare.Domain.Report", "PatientId")
+                        .WithMany("Reports")
+                        .HasForeignKey("PatientId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -812,6 +1075,57 @@ namespace RenoCare.Persistence.Migrations.AppDb
                     b.Navigation("MedicationRequest");
 
                     b.Navigation("Patient");
+                });
+
+            modelBuilder.Entity("RenoCare.Domain.Review", b =>
+                {
+                    b.HasOne("RenoCare.Domain.DialysisUnit", "DialysisUnit")
+                        .WithMany("Reviews")
+                        .HasForeignKey("DialysisUnitId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("RenoCare.Domain.Patient", "Patient")
+                        .WithMany()
+                        .HasForeignKey("PatientId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("DialysisUnit");
+
+                    b.Navigation("Patient");
+                });
+
+            modelBuilder.Entity("RenoCare.Domain.SessionTimetable", b =>
+                {
+                    b.HasOne("RenoCare.Domain.DialysisUnit", "DialysisUnit")
+                        .WithMany("Sessions")
+                        .HasForeignKey("DialysisUnitId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("DialysisUnit");
+                });
+
+            modelBuilder.Entity("RenoCare.Domain.DialysisUnit", b =>
+                {
+                    b.Navigation("Images");
+
+                    b.Navigation("MedRequests");
+
+                    b.Navigation("Reviews");
+
+                    b.Navigation("Sessions");
+                });
+
+            modelBuilder.Entity("RenoCare.Domain.MedicationRequest", b =>
+                {
+                    b.Navigation("Report");
+                });
+
+            modelBuilder.Entity("RenoCare.Domain.Patient", b =>
+                {
+                    b.Navigation("Reports");
                 });
 #pragma warning restore 612, 618
         }
