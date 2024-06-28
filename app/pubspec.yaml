@@ -66,7 +66,7 @@ dependencies:
 
   carousel_slider: ^4.2.1
   group_button: ^5.3.4
-
+  date_picker_timeline: ^1.2.6
   smooth_page_indicator: ^1.1.0
   font_awesome_flutter: ^10.4.0
   readmore: ^2.2.0

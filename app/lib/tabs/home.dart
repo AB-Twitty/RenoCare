@@ -147,7 +147,16 @@ class _HomeState extends State<Home> {
                 ),
                 InkWell(
                   onTap: () {
-                    _scaffoldKey.currentState?.openDrawer();
+                    showModalBottomSheet(
+                      isScrollControlled: true,
+                      shape: const RoundedRectangleBorder(
+                        borderRadius: BorderRadius.vertical(
+                          top: Radius.circular(30),
+                        ),
+                      ),
+                      context: context,
+                      builder: (ctx) => FilterDrawer(),
+                    );
                   },
                   child: Card(
                     color: Colors.grey[100],
