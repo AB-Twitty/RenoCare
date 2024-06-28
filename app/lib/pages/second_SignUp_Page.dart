@@ -1,4 +1,5 @@
 import 'package:app/Shared/components/widgets/DropDownButton.dart';
+import 'package:app/Shared/components/widgets/multiSelect.dart';
 import 'package:app/services/navigation_service.dart';
 import 'package:flutter/material.dart';
 
@@ -12,6 +13,30 @@ class SecondSignUpPage extends StatefulWidget {
 }
 
 class _SecondSignUpPageState extends State<SecondSignUpPage> {
+  List<String> _selectedItems = [];
+
+  void _showMultiSelect() async {
+    // a list of selectable items
+    // these items can be hard-coded or dynamically fetched from a database/API
+    final List<String> items = [
+      'Type 1',
+      'Type 2',
+      'Type 3',
+    ];
+    final List<String>? results = await showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return MultiSelect(items: items);
+      },
+    );
+    // Update UI
+    if (results != null) {
+      setState(() {
+        _selectedItems = results;
+      });
+    }
+  }
+
   List<List<String>> choices = [
     ["Type1", "Type2"],
     ["Type1", "Type2"],
@@ -84,10 +109,57 @@ class _SecondSignUpPageState extends State<SecondSignUpPage> {
                     selectedItem: selectedChoice[1],
                     label: labels[1],
                   ),
-                  DropDownButtonSingUp(
-                    items: choices[2],
-                    selectedItem: selectedChoice[2],
-                    label: labels[2],
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 5.0),
+                    child: Text(
+                      "viruses",
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  ElevatedButton.icon(
+                    icon: Icon(
+                      Icons.arrow_drop_down,
+                      color: Colors.black,
+                    ),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.white,
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 40, vertical: 15),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(15),
+                          side: BorderSide(color: Color(0xffB8E8F7), width: 2)),
+                    ),
+                    onPressed: _showMultiSelect,
+                    label: const Text(
+                      'Select Your virus',
+                      style: TextStyle(
+                        color: Colors.black,
+                      ),
+                    ),
+                  ),
+                  const Divider(
+                    height: 30,
+                  ),
+                  // display selected items
+                  Wrap(
+                    children: _selectedItems
+                        .map((e) => Chip(
+                              backgroundColor: Color(0xff45B3EF),
+                              label: Text(
+                                e,
+                                style: TextStyle(color: Colors.white),
+                              ),
+                            ))
+                        .toList(),
+                  ),
+                  SizedBox(
+                    height: 15,
                   ),
                   DropDownButtonSingUp(
                     items: choices[3],
@@ -126,6 +198,7 @@ class _SecondSignUpPageState extends State<SecondSignUpPage> {
                   Center(
                     child: ElevatedButton(
                         style: ElevatedButton.styleFrom(
+                            backgroundColor: Color(0xff45B3EF),
                             padding: EdgeInsets.symmetric(
                                 horizontal: 40, vertical: 15),
                             shape: RoundedRectangleBorder(
