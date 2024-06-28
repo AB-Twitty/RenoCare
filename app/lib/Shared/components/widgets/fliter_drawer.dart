@@ -246,9 +246,7 @@ final ApiHandler _apiHandler=ApiHandler();
                     print('IDs as a comma-separated string: $idString');
                     _apiHandler.getCenterData(amenitis: idString,widget.page!);
 
-                    Navigator.pop(context,{
 
-                    });
                     _navigationService.goBack();
 
                   },

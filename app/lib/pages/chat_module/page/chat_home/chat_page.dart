@@ -1,4 +1,5 @@
 import 'package:chat_bubbles/chat_bubbles.dart';
+import 'package:dio/dio.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:signalr_core/signalr_core.dart';
@@ -30,6 +31,7 @@ class _ChatPageState extends State<ChatPage> {
   final loginDataManager2=LoginDataManager2();
   String currId="";
   String accessToken ="";
+  final Dio _dio = Dio();
   @override
   void initState() {
     super.initState();
@@ -213,7 +215,7 @@ Future<void>_initialize()async{
               children: [
                 IconButton(
                   onPressed: () {
-                    // _pickFile();
+                     _pickFile();
                   },
                   icon: Icon(Icons.attach_file_outlined),
                   color: Colors.black,
@@ -240,26 +242,42 @@ Future<void>_initialize()async{
     );
   }
 
-  // Future<void> _pickFile() async {
-  //   PlatformFile? file = await filePickerUtil.pickFile();
-  //
-  //   if (file != null) {
-  //     String? downloadUrl = await firebaseUtil.uploadFile(file);
-  //
-  //     if (downloadUrl != null) {
-  //       print('File uploaded: $downloadUrl');
-  //       _sendMessage('', fileUrl: downloadUrl);
-  //       // You can now send a message with the file URL or handle it as needed
-  //     } else {
-  //       print('File upload failed');
-  //     }
-  //   } else {
-  //     // User canceled the picker
-  //     print('File picker canceled');
-  //   }
-  // }
+  Future<void> _pickFile() async {
+    try {
+      FilePickerResult? result = await FilePicker.platform.pickFiles();
 
+      if (result != null) {
+        PlatformFile file = result.files.first;
 
+        FormData formData = FormData.fromMap({
+          'file': await MultipartFile.fromFile(file.path!),
+          'receiverId': widget.active_chat_Id,
+        });
+
+        // Replace with your API endpoint for file upload
+        String uploadUrl = 'https://renocareapi.azurewebsites.net/chat/upload';
+
+        Response response = await _dio.post(
+          uploadUrl,
+          data: formData,
+          options: Options(
+            headers: {
+              "Authorization": "Bearer $accessToken", // Replace $accessToken with your actual access token variable
+            },
+          ),
+        );
+
+        // Handle success
+        print('File uploaded successfully');
+      } else {
+        // User canceled the picker
+        print('File picker canceled');
+      }
+    } catch (e) {
+      // Handle error
+      print('Error uploading file: $e');
+    }
+  }
 
   void _reconnect() async {
     while (_hubConnection.state != HubConnectionState.connected) {
