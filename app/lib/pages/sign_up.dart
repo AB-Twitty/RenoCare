@@ -70,7 +70,6 @@ class _SignUpState extends State<SignUp> {
     _navigation = NavigationService();
     _deviceHeight = MediaQuery.of(context).size.height;
     _deviceWidth = MediaQuery.of(context).size.width;
-
     return GestureDetector(
       onTap: () {
         FocusScopeNode currentFocus = FocusScope.of(context);
@@ -86,7 +85,7 @@ class _SignUpState extends State<SignUp> {
             padding: const EdgeInsets.all(30),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Column(
                   children: <Widget>[
@@ -396,6 +395,27 @@ class _SignUpState extends State<SignUp> {
                                   "===================================================");
                               // _navigation.removeAndNavigateToRoute('/home');
                             }),
+                      ),
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisSize: MainAxisSize.max,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            "Already have an account?",
+                            style: TextStyle(
+                                color: Colors.grey.shade600, fontSize: 14),
+                          ),
+                          TextButton(
+                              style: TextButton.styleFrom(),
+                              onPressed: () {
+                                _navigation.removeAndNavigateToRoute('/login');
+                              },
+                              child: Text(
+                                "sign in",
+                                style: TextStyle(color: Color(0xff45B3EF)),
+                              )),
+                        ],
                       ),
                     ],
                   ),

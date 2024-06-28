@@ -56,6 +56,7 @@ class _DropDownButtonSingUpState extends State<DropDownButtonSingUp> {
             value: widget.selectedItem,
             icon: Icon(
               Icons.arrow_drop_down_circle,
+              color: Color(0xff45B3EF),
             ),
             underline: SizedBox(),
             items: widget.items

@@ -1,4 +1,5 @@
 import 'package:app/Shared/components/widgets/DropDownButton.dart';
+import 'package:app/services/navigation_service.dart';
 import 'package:flutter/material.dart';
 
 class SecondSignUpPage extends StatefulWidget {
@@ -29,9 +30,13 @@ class _SecondSignUpPageState extends State<SecondSignUpPage> {
     "Viruses",
     "Smoking status",
   ];
+  final TextEditingController _textController = TextEditingController();
+  late NavigationService _navigation;
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
+    _navigation = NavigationService();
+
     return GestureDetector(
       onTap: () {
         FocusScopeNode currentFocus = FocusScope.of(context);
@@ -43,44 +48,122 @@ class _SecondSignUpPageState extends State<SecondSignUpPage> {
         body: SafeArea(
           child: Padding(
             padding: const EdgeInsets.all(30.0),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                const Text(
-                  "Sign up",
-                  style: TextStyle(
-                      fontSize: 30,
-                      fontWeight: FontWeight.bold,
-                      color: Color(0xff45B3EF)),
-                ),
-                const SizedBox(
-                  height: 20,
-                ),
-                Text(
-                  "Create your account",
-                  style: TextStyle(
-                    fontSize: 15,
-                    color: Colors.black,
+            child: SingleChildScrollView(
+              physics: BouncingScrollPhysics(),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Text(
+                    "Sign up",
+                    style: TextStyle(
+                        fontSize: 30,
+                        fontWeight: FontWeight.bold,
+                        color: Color(0xff45B3EF)),
                   ),
-                ),
-                SizedBox(
-                  height: 40,
-                ),
-                Expanded(
-                    child: ListView.builder(
-                  scrollDirection: Axis.vertical,
-                  shrinkWrap: true,
-                  itemCount: choices.length,
-                  itemBuilder: ((context, index) {
-                    return DropDownButtonSingUp(
-                      items: choices[index],
-                      selectedItem: selectedChoice[index],
-                      label: labels[index],
-                    );
-                  }),
-                ))
-              ],
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  Text(
+                    "Create your account",
+                    style: TextStyle(
+                      fontSize: 15,
+                      color: Color(0xff45B3EF),
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  SizedBox(
+                    height: 40,
+                  ),
+                  DropDownButtonSingUp(
+                    items: choices[0],
+                    selectedItem: selectedChoice[0],
+                    label: labels[0],
+                  ),
+                  DropDownButtonSingUp(
+                    items: choices[0],
+                    selectedItem: selectedChoice[0],
+                    label: labels[0],
+                  ),
+                  DropDownButtonSingUp(
+                    items: choices[0],
+                    selectedItem: selectedChoice[0],
+                    label: labels[0],
+                  ),
+                  DropDownButtonSingUp(
+                    items: choices[0],
+                    selectedItem: selectedChoice[0],
+                    label: labels[0],
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 5.0),
+                    child: Text(
+                      textAlign: TextAlign.start,
+                      "Kidney failure cause",
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  TextFormField(
+                    controller: _textController,
+                    minLines: 2,
+                    maxLines: 5,
+                    keyboardType: TextInputType.multiline,
+                    decoration: InputDecoration(
+                        hintText: 'Enter your cause',
+                        hintStyle: TextStyle(color: Colors.grey),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        )),
+                  ),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  Center(
+                    child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 40, vertical: 15),
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(20))),
+                        child: Text(
+                          "Sign up",
+                          style: TextStyle(
+                              fontSize: 18, fontWeight: FontWeight.bold),
+                        ),
+                        onPressed: () {}),
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisSize: MainAxisSize.max,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        "Already have an account?",
+                        style: TextStyle(
+                            color: Colors.grey.shade600, fontSize: 14),
+                      ),
+                      TextButton(
+                          style: TextButton.styleFrom(),
+                          onPressed: () {
+                            _navigation.removeAndNavigateToRoute('/login');
+                          },
+                          child: Text(
+                            "sign in",
+                            style: TextStyle(color: Color(0xff45B3EF)),
+                          )),
+                    ],
+                  ),
+                ],
+              ),
             ),
           ),
         ),
