@@ -28,7 +28,7 @@ class _HomeState extends State<Home> {
   String accessToken = "";
   String searchValue = '';
   final ApiHandler _apiService = ApiHandler();
-  int page=1;
+  int page = 1;
   // late Future<List<CenterModel>> futureCenterUnit;
   late Future<CenterModel> futureCenterUnit;
   List<Items> units = [];
@@ -54,26 +54,21 @@ class _HomeState extends State<Home> {
     super.initState();
     // _fetchData();
     controller.addListener(() {
-      if(controller.position.maxScrollExtent==controller.offset)
-        {
-
-          page++;
-          _fetchData(page);
-        }
+      if (controller.position.maxScrollExtent == controller.offset) {
+        page++;
+        _fetchData(page);
+      }
     });
     futureCenterUnit = ApiHandler().getCenterData(page);
   }
 
   Future<void> _fetchData(int page) async {
-    try{
-
-      CenterModel centerModel =await _apiService.getCenterData(page);
+    try {
+      CenterModel centerModel = await _apiService.getCenterData(page);
       setState(() {
-        units.addAll(centerModel.data?.items??[]);
-
+        units.addAll(centerModel.data?.items ?? []);
       });
-    }catch(e)
-    {
+    } catch (e) {
       print("Error Fetching data: $e");
     }
   }
@@ -83,7 +78,9 @@ class _HomeState extends State<Home> {
     _navigation = NavigationService();
     return Scaffold(
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed: () {
+          _navigation.navigateToRoute('/chatHomePage');
+        },
         child: Icon(
           Icons.chat,
         ),
@@ -218,7 +215,7 @@ class _HomeState extends State<Home> {
                 } else if (snapshot.hasError) {
                   return Center(child: Text('Error: ${snapshot.error}'));
                 } else if (snapshot.hasData) {
-                  units = snapshot.data!.data?.items??[];
+                  units = snapshot.data!.data?.items ?? [];
                   return ListView.builder(
                     controller: controller,
                     itemCount: units.length + 1,

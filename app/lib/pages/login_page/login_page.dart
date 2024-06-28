@@ -67,7 +67,6 @@ class _LoginPageState extends State<LoginPage> {
                         horizontal: 30, vertical: 25),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
-                      mainAxisSize: MainAxisSize.max,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Image.asset(
@@ -75,22 +74,11 @@ class _LoginPageState extends State<LoginPage> {
                           height: 250,
                         ),
                         const SizedBox(
-                          height: 10,
-                        ),
-                        Text(
-                          'Welcome to our medical app',
-                          style: GoogleFonts.courgette(
-                            fontSize: 18,
-                            color: Color.fromRGBO(60, 152, 203, 1),
-                          ),
-                        ),
-                        const SizedBox(
-                          height: 20,
+                          height: 30,
                         ),
                         Form(
                           key: _formKey,
                           child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.stretch,
                             children: [
                               TextFormField(
                                 controller: cubit.emailController,
@@ -249,42 +237,48 @@ class _LoginPageState extends State<LoginPage> {
                                   return null;
                                 },
                               ),
-                              const SizedBox(height: 30),
+                              const SizedBox(
+                                height: 30,
+                              ),
                               state is LoginLoadingState
                                   ? Center(
                                       child: CircularProgressIndicator(),
                                     )
-                                  : ElevatedButton(
-                                      style: ElevatedButton.styleFrom(
-                                        shape: RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(20)),
-                                        padding: EdgeInsets.all(15.0),
-                                        backgroundColor: Color(0xff019AED),
-                                        textStyle: TextStyle(
-                                          fontSize: 20,
-                                          color: Colors.black,
+                                  : SizedBox(
+                                      width: 250,
+                                      child: ElevatedButton(
+                                        style: ElevatedButton.styleFrom(
+                                          shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(20)),
+                                          padding: EdgeInsets.symmetric(
+                                            horizontal: 40,
+                                            vertical: 17,
+                                          ),
+                                          backgroundColor: Color(0xff019AED),
+                                          textStyle: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 20,
+                                          ),
                                         ),
-                                      ),
-                                      onPressed: () async {
-                                        if (_formKey.currentState?.validate() ??
-                                            false) {
-                                          print(cubit.emailController.text);
-                                          cubit.login(
-                                              cubit.emailController.text,
-                                              cubit.passwordController.text,
-                                              true);
-                                        }
-                                      },
-                                      child: const Text(
-                                        'Login',
-                                        style: TextStyle(
-                                          color: Colors.black,
+                                        onPressed: () async {
+                                          if (_formKey.currentState
+                                                  ?.validate() ??
+                                              false) {
+                                            print(cubit.emailController.text);
+                                            cubit.login(
+                                                cubit.emailController.text,
+                                                cubit.passwordController.text,
+                                                true);
+                                          }
+                                        },
+                                        child: const Text(
+                                          'Login',
                                         ),
                                       ),
                                     ),
                               SizedBox(
-                                height: 20,
+                                height: 25,
                               ),
                               Row(
                                 children: [
