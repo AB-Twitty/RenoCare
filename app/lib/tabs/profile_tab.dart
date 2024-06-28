@@ -11,6 +11,11 @@ class ProfileTab extends StatelessWidget {
     Size size = MediaQuery.of(context).size;
     _navigation = NavigationService();
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+
+      ),
         extendBodyBehindAppBar: true,
         backgroundColor: Colors.white,
         // appBar: AppBar(

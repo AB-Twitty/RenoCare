@@ -10,19 +10,21 @@ class ApiHandler {
   final Dio _dio = Dio();
 
 
-  Future<CenterModel> getCenterData(int page) async {
+  Future<CenterModel> getCenterData(int page,{String? amenitis}) async {
 
     const int pageSize = 20;
     final LoginDataManager2 loginDataManager2=LoginDataManager2();
     final accessToken = await loginDataManager2.getAccessToken();
     print("===============access token from handerl $accessToken===========");
 
+    print(amenitis);
     try {
       final response = await _dio.get(
         '$baseUrl$GetCenterDataEndPoint',
         queryParameters: {
           'page':page,
-          'pageSize':pageSize
+          'pageSize':pageSize,
+          'amenities':amenitis
         },
         options: Options(
           headers:{

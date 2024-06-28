@@ -1,16 +1,74 @@
+import 'package:app/Shared/Network/getDataFromBackend/api_handler_for_centers.dart';
+import 'package:app/models/filter_part_models/amenity.dart';
+import 'package:app/models/filter_part_models/viruses.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_xlider/flutter_xlider.dart';
 import 'package:group_button/group_button.dart';
 
+import '../../../services/navigation_service.dart';
+import '../../Network/filterApi/get_amenity.dart';
 import 'filter/divider.dart';
 import 'filter/groupButton.dart';
 
 class FilterDrawer extends StatefulWidget {
+  int? page;
   @override
   State<FilterDrawer> createState() => _FilterDrawerState();
+
+  FilterDrawer(this.page);
 }
 
 class _FilterDrawerState extends State<FilterDrawer> {
+
+  String _selectedTreatmentType = "All types";
+  List<String> _selectedPatients = [];
+  List<Amenity> _selectedAmenityIds = [];
+  List<Amenity> amenities = [];
+  List<String> viruses = [];
+  String ID="";
+  String _selectedPriceRange = "";
+  List<String> _selectedShifts = [];
+  List<String> selectedVirusIds = [];
+  final ApiHandlerGetFilterParts _apiHandlerGetAmenity=ApiHandlerGetFilterParts();
+ final NavigationService _navigationService=NavigationService();
+final ApiHandler _apiHandler=ApiHandler();
+  double _minPrice=0;
+  double _maxPrice=500;
+
+  Future<void> _getAmenities()async{
+
+    try{
+      List<Amenity> loadedAmenities=await _apiHandlerGetAmenity.GetAmenity();
+      setState(() {
+        amenities = loadedAmenities;
+      });
+    }catch(e)
+    {
+      print(e);
+    }
+  }
+
+  Future<void>_getViruses()async{
+    try{
+      List<Viruses> loadedViruses=await _apiHandlerGetAmenity.GetViruses();
+      setState(() {
+        viruses = loadedViruses.map((i)=>i.abbreviation).toList();
+        Map<String, int> virusMap = {for (var v in loadedViruses) v.abbreviation: v.id};
+      });
+    }catch(e)
+    {
+      print(e);
+    }
+  }
+  @override
+  void initState() {
+    super.initState();
+    // call
+    _getAmenities();
+    _getViruses();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -42,16 +100,22 @@ class _FilterDrawerState extends State<FilterDrawer> {
                     ),
                   ),
                   TextButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        _selectedTreatmentType = "All types";
+                        _selectedPatients.clear();
+                        _selectedAmenityIds.clear();
+                        _selectedPriceRange = "";
+                        _selectedShifts.clear();
+                      },
                       child: const Text(
                         'Clear',
                         style: TextStyle(fontSize: 20),
                       ))
                 ],
               ),
-              const RepeatedDivider(text: 'Treatment type'),
+              RepeatedDivider(text: 'Treatment type'),
               Center(
-                child: const GroupButton(
+                child:  GroupButton(
                   options: GroupButtonOptions(
                       mainGroupAlignment: MainGroupAlignment.center,
                       crossGroupAlignment: CrossGroupAlignment.center,
@@ -62,19 +126,28 @@ class _FilterDrawerState extends State<FilterDrawer> {
                       unselectedBorderColor: Colors.black54,
                       selectedColor: Color.fromRGBO(60, 152, 203, 1)),
                   buttons: ["All types", "HD", "HDF"],
+                  onSelected: (value, index, isSelected) {
+                    setState(() {
+                      _selectedTreatmentType=["All types", "HD", "HDF"][index];
+                    });
+
+                  },
+                  isRadio: true,
+
                 ),
               ),
               const SizedBox(
                 height: 10,
               ),
-              const RepeatedDivider(text: 'Accepts patients with'),
+               RepeatedDivider(text: 'Accepts patients with'),
               RepeatedGroupButton(
-                content: const ["HIV", "Heaptitis B", "Hepatitis C"],
+                content: viruses,
+
               ),
               const SizedBox(
                 height: 10,
               ),
-              const RepeatedDivider(text: 'Amenities'),
+              RepeatedDivider(text: 'Amenities'),
               GroupButton(
                 isRadio: false,
                 options: GroupButtonOptions(
@@ -91,36 +164,59 @@ class _FilterDrawerState extends State<FilterDrawer> {
                     color: Colors.grey[600],
                   ),
                 ),
-                buttons: const [
-                  "Refreshments",
-                  "WIFI",
-                  "TV screens",
-                  "Free parking"
-                ],
+                buttons: amenities.map((e) => e.name).toList(),
+                onSelected: (value, index, isSelected) {
+                  //print(value);
+                  setState(() {
+                    if(isSelected)
+                      {
+                        _selectedAmenityIds.add(amenities[index]!);
+
+
+                      }else {
+                      _selectedAmenityIds.remove(amenities[index]!);
+                    }
+
+
+
+                  });
+                },
               ),
               const SizedBox(
                 height: 10,
               ),
               const RepeatedDivider(text: 'Price Range'),
-              RepeatedGroupButton(
-                content: const [
-                  "0 - 100 \$",
-                  "100 - 200 \$",
-                  "200 - 300 \$",
-                  "+300 \$"
-                ],
+              FlutterSlider(
+                values: [_minPrice, _maxPrice],
+                rangeSlider: true,
+                max: 500,
+                min: 0,
+                step:  FlutterSliderStep(step: 1),
+                onDragging: (handlerIndex, lowerValue, upperValue) {
+                  setState(() {
+                    _minPrice = lowerValue;
+                    _maxPrice = upperValue;
+                  });
+                },
+                // tooltip: FlutterSliderTooltip(
+                //   alwaysShowTooltip: true,
+                //   format: (value) {
+                //     return '\$${value}';
+                //   },
+                // ),
               ),
+              Text('Price Range: \$${_minPrice.round()} - \$${_maxPrice.round()}'),
               const SizedBox(
                 height: 10,
               ),
               const RepeatedDivider(text: 'Shifts'),
               RepeatedGroupButton(
-                content: const [
+                content:  [
                   "Morning",
                   "Afternoon",
                   "Evening",
-                  "night",
                 ],
+
               ),
               const SizedBox(
                 height: 10,
@@ -136,7 +232,27 @@ class _FilterDrawerState extends State<FilterDrawer> {
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    // for(int i=0;i<_selectedAmenityIds.length;i++)
+                    //   {
+                    //
+                    //     print(_selectedAmenityIds[i].id);
+                    //   }
+
+                    final List<int> ids = _selectedAmenityIds.map((amenity) => amenity.id).toList();
+                    final String idString = ids.join(',');
+                    print(_selectedAmenityIds.length);
+
+                    print('IDs as a comma-separated string: $idString');
+                    _apiHandler.getCenterData(amenitis: idString,widget.page!);
+
+                    Navigator.pop(context,{
+                      'amenityIds': idString,
+
+                    });
+                    _navigationService.goBack();
+
+                  },
                   child: Text(
                     'Apply',
                     textAlign: TextAlign.center,

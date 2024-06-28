@@ -63,6 +63,7 @@ dependencies:
   flutter_downloader: ^1.11.7
   permission_handler: ^8.2.0
   path_provider: ^2.0.2
+  provider: ^6.1.2
 
   carousel_slider: ^4.2.1
   group_button: ^5.3.4
@@ -72,6 +73,8 @@ dependencies:
   readmore: ^2.2.0
   table_calendar: ^3.0.9
   flutter_rating_bar: ^4.0.1
+
+  flutter_xlider: ^3.5.0
 dev_dependencies:
   flutter_test:
     sdk: flutter
