@@ -32,12 +32,16 @@ class _ChatPageState extends State<ChatPage> {
   String currId="";
   String accessToken ="";
   final Dio _dio = Dio();
+  final ScrollController _scrollController = ScrollController();
+  int _currentPage = 1;
+  bool hasNextPage = true;
   @override
   void initState() {
     super.initState();
 
     // _initSignalrConnection();
     _initialize();
+    _fetchPreviousMessages();
     //add all events and their handler
     //on receiving a message event
     // _hubConnection.on("ReceiveMessage", _handleReceivedMessage);
@@ -45,16 +49,18 @@ class _ChatPageState extends State<ChatPage> {
     // _hubConnection.on("MarkedAsReceived", _markMessageAsReceived);
     // //on message marked as seen (gets only the msg_id)
     // _hubConnection.on("MarkedAsRead", _markMessageAsRead);
+    _scrollController.addListener(() {
+      if (_scrollController.position.atEdge && _scrollController.position.pixels == 0) {
+        if (hasNextPage) {
+          _fetchPreviousMessages(pageIndex: ++_currentPage);
+        }
+      }
+    });
   }
-
-
-
-
-
-
   @override
   void dispose() {
     _hubConnection.stop();
+    _scrollController.dispose();
     //loginDataManager2.clearLoginData();
     super.dispose();
   }
@@ -202,6 +208,7 @@ Future<void>_initialize()async{
         children: [
           Expanded(
             child: ListView.builder(
+              controller: _scrollController,
               itemCount: messages.length,
               itemBuilder: (context, index) {
                 final message = messages[index];
@@ -278,7 +285,50 @@ Future<void>_initialize()async{
       print('Error uploading file: $e');
     }
   }
+//===============================================================d
+  //      Get Previous messages
+//===============================================================
+  Future<void> _fetchPreviousMessages({int pageIndex = 1, int pageSize = 20}) async {
+    final String activeChatId = widget.active_chat_Id;
+    final String accessToken = await loginDataManager2.getAccessToken() ?? "";
 
+    try {
+      final response = await _dio.get(
+        'https://renocareapi.azurewebsites.net/chat/messages/$activeChatId',
+        queryParameters: {
+          'page': pageIndex,
+          'pageSize': pageSize,
+        },
+        options: Options(
+          headers: {
+            "Authorization": "Bearer $accessToken",
+          },
+        ),
+      );
+
+      if (response.statusCode == 200) {
+        final data = response.data;
+
+        final List<Message> fetchedMessages = (data['items'] as List)
+            .map((item) => Message.fromJson(item))
+            .toList();
+
+        setState(() {
+          messages.insertAll(0, fetchedMessages);
+          hasNextPage = data['hasNextPage'];
+        });
+
+        print('Messages fetched successfully');
+      } else {
+        print('Error fetching messages: ${response.statusMessage}');
+      }
+    } catch (e) {
+      print('An error occurred while fetching messages: $e');
+    }
+  }
+  //========================================================
+  //========================================================
+  //========================================================
   void _reconnect() async {
     while (_hubConnection.state != HubConnectionState.connected) {
       try {
