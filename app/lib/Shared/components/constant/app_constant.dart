@@ -4,3 +4,5 @@ String GetCenterDataEndPoint="/Dialysis-Units/List-For-Patients";
 
 String GetAmenityEndPoint="/Amentities";
 String GetVirusesEndPoint="/Viruses";
+
+// https://renocareapi.azurewebsites.net/chat/contacts

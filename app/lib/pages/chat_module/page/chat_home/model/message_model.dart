@@ -1,7 +1,7 @@
 class Message {
   final String senderId;
   final String receiverId;
-  final String Id;
+  final int Id;
   final String message;
   final DateTime sendingTime;
 
@@ -27,7 +27,7 @@ class Message {
   factory Message.fromJson(Map<String, dynamic> json) {
     return Message(
       senderId: json['senderId'],
-      Id: json['id'].toString(),
+      Id: json['id'],
       receiverId: json['receiverId'],
       message: json['message'],
       sendingTime: DateTime.parse(json['sendingTime']),
@@ -55,7 +55,7 @@ class Message {
   Message copyWith({
     String? senderId,
     String? receiverId,
-    String? Id,
+    int? Id,
     String? message,
     DateTime? sendingTime,
     int? status,

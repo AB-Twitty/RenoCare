@@ -24,9 +24,9 @@ class MessageBubble extends StatelessWidget {
         crossAxisAlignment: isMe ? CrossAxisAlignment.end : CrossAxisAlignment.start,
         children: [
           BubbleSpecialThree(
-            delivered: false,
-            seen: true,
-            sent: true,
+            delivered: message.status==2,
+            seen: message.status==3,
+            sent: message.status==1,
             text: message.message,
             isSender: isMe,
             color: isMe ? Colors.blue : Colors.grey[300]!,
@@ -41,7 +41,8 @@ class MessageBubble extends StatelessWidget {
           Text(
             message.sendingTime.toLocal().toString(),
             style: TextStyle(
-              color: isMe ? Colors.white70 : Colors.black54,
+              color:   Colors.black54,
+
               fontSize: 10,
             ),
           ),
