@@ -309,6 +309,7 @@ class _ChatPageState extends State<ChatPage> {
     final String activeChatId = widget.active_chat_Id;
     final String accessToken = await loginDataManager2.getAccessToken() ?? "";
 
+    _scrollController.offset;
     try {
       final response = await _dio.get(
         'https://renocareapi.azurewebsites.net/chat/messages/$activeChatId',

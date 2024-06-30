@@ -2,6 +2,7 @@ import 'package:app/services/signalR_service.dart';
 import 'package:app/services/token_service.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:signalr_core/signalr_core.dart';
 
 import 'chat_page.dart';
@@ -21,7 +22,8 @@ class _ChatHomePageState extends State<ChatHomePage> {
 
   String accessToken = "";
 
-  final Dio _dio=Dio();
+  final Dio _dio = Dio();
+
   @override
   void initState() {
     // TODO: implement initState
@@ -29,53 +31,45 @@ class _ChatHomePageState extends State<ChatHomePage> {
     _getContacts();
     initSignalR();
   }
+
   final List<Chat> chats = [];
 
-  Future<void> _getContacts() async{
+  Future<void> _getContacts() async {
     accessToken = await loginManager.getAccessToken() ?? "";
 
-    try{
-
+    try {
       final response = await _dio.get(
         "https://renocareapi.azurewebsites.net/chat/contacts",
         options: Options(
-          headers:{
-            'Authorization' :'Bearer $accessToken',
+          headers: {
+            'Authorization': 'Bearer $accessToken',
           },
         ),
-
       );
 
-      if(response.statusCode==200)
-        {
-            final List<dynamic> data= response.data['data'];
-            List<Chat> fetchedChats=data.map((json)=>Chat.fromJson(json)).toList();
+      if (response.statusCode == 200) {
+        final List<dynamic> data = response.data['data'];
+        List<Chat> fetchedChats =
+            data.map((json) => Chat.fromJson(json)).toList();
 
-            print(fetchedChats[0].name);
-            print(fetchedChats[0].lastMessage);
+        print(fetchedChats[0].name);
+        print(fetchedChats[0].lastMessage);
 
-            setState(() {
-              chats.addAll(fetchedChats);
-            });
-
-        }
-      else{
+        setState(() {
+          chats.addAll(fetchedChats);
+        });
+      } else {
         print("Faild to fetch contacts ${response.statusCode}");
       }
-    }catch(e)
-    {
+    } catch (e) {
       print(e);
     }
-
-
   }
 
+  Future<void> initSignalR() async {
+    SignalRUtil signalRUtil = SignalRUtil();
 
-  Future<void> initSignalR()async{
-
-    SignalRUtil signalRUtil=SignalRUtil();
-
-    _hubConnection=await signalRUtil.startConnection();
+    _hubConnection = await signalRUtil.startConnection();
 
     _hubConnection.on("ReceiveMessage", _handleReceivedMessage);
   }
@@ -90,41 +84,50 @@ class _ChatHomePageState extends State<ChatHomePage> {
     final Message msg = Message.fromJson(arguments[0] as Map<String, dynamic>);
     String curr_user_id = currUserId;
 
-
     setState(() {
-      final Index =
-      chats.indexWhere((chat) => chat.id == msg.senderId || chat.id == msg.receiverId);
+      final Index = chats.indexWhere(
+          (chat) => chat.id == msg.senderId || chat.id == msg.receiverId);
       if (Index != -1) {
         chats[Index].lastMessage = msg.message;
+        chats[Index].lastMessageTime = msg.sendingTime;
+        if (msg.senderId != currUserId) {
+          chats[Index].unreadMsgCount++;
+        }
 
         // last date
         // counter of unread messages
         //
-      }else{
-        String name = arguments[1]as String ;
-        Chat chat=Chat(id: msg.senderId, name: name, lastMessage: msg.message);
+      } else {
+        String name = arguments[1] as String;
+        Chat chat = Chat(
+            id: msg.senderId,
+            name: name,
+            lastMessage: msg.message,
+            unreadMsgCount: 1);
         chats.add(chat);
       }
-
     });
     await _hubConnection.invoke("MarkReceived", args: <Object>[msg.Id]);
   }
 
+  String _formatDate(DateTime dateTime) {
+    return DateFormat('yyyy-MM-dd HH:mm').format(dateTime);
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text('Chats'),
         actions: [
-          IconButton(onPressed: ()async{
-
-            final loadedData = await loginManager.loadLoginData();
-            print('User ID: ${loadedData['id']}');
-            print('First Name: ${loadedData['firstName']}');
-            print('Last Name: ${loadedData['lastName']}');
-            print('Access Token: ${loadedData['accessToken']}');
-
-          }, icon:Icon(Icons.add) )
+          IconButton(
+              onPressed: () async {
+                final loadedData = await loginManager.loadLoginData();
+                print('User ID: ${loadedData['id']}');
+                print('First Name: ${loadedData['firstName']}');
+                print('Last Name: ${loadedData['lastName']}');
+                print('Access Token: ${loadedData['accessToken']}');
+              },
+              icon: Icon(Icons.add))
         ],
       ),
       body: ListView.builder(
@@ -132,15 +135,40 @@ class _ChatHomePageState extends State<ChatHomePage> {
         itemBuilder: (context, index) {
           final chat = chats[index];
           return ListTile(
-
-            leading: Image.asset("assets/images/profile2.jpeg",height: 30,),
+            leading: Image.asset(
+              "assets/images/profile2.jpeg",
+              height: 30,
+            ),
             title: Text(chat.name),
-            subtitle: Text(chat.lastMessage),
+            subtitle: Column(
+              children: [
+                Text(chat.lastMessage),
+                if (chat.lastMessageTime != null)
+                  Text(
+                    _formatDate(chat.lastMessageTime!),
+                    style: TextStyle(fontSize: 12, color: Colors.grey),
+                  ),
+              ],
+            ),
+            trailing: chat.unreadMsgCount > 0
+                ? CircleAvatar(
+                    radius: 10,
+                    backgroundColor: Colors.red,
+                    child: Text(
+                      chat.unreadMsgCount.toString(),
+                      style: TextStyle(color: Colors.white, fontSize: 12),
+                    ),
+                  )
+                : null,
             onTap: () {
+              setState(() {
+                chat.unreadMsgCount = 0;
+              });
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => ChatPage(active_chat_Id: chat.id, chatName: chat.name),
+                  builder: (context) =>
+                      ChatPage(active_chat_Id: chat.id, chatName: chat.name),
                 ),
               );
             },
@@ -150,7 +178,6 @@ class _ChatHomePageState extends State<ChatHomePage> {
     );
   }
 }
-
 
 //
 //
