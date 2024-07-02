@@ -1,3 +1,4 @@
+import 'package:app/pages/chat_module/page/chat_home/chat_home_page.dart';
 import 'package:app/tabs/appointment.dart';
 import 'package:app/tabs/home.dart';
 import 'package:app/tabs/profile_tab.dart';
@@ -29,14 +30,25 @@ class _TabsState extends State<TabsScreen> {
     if (selectedPage == 2) {
       activeScreen = ProfileTab();
     }
+    if (selectedPage == 3) {
+      activeScreen = ChatHomePage();
+    }
     // TODO: implement build
     return Scaffold(
       body: activeScreen,
       bottomNavigationBar: BottomNavigationBar(
         onTap: _SelectPage,
         currentIndex: selectedPage,
+  unselectedItemColor: Colors.grey,
+        showSelectedLabels: false,
+        showUnselectedLabels: true,
+        selectedItemColor: Colors.black,
+
         selectedIconTheme:
-        IconThemeData(color: Color.fromRGBO(60, 152, 203, 1)),
+        IconThemeData(
+            color: Color.fromRGBO(60, 152, 203, 1),
+
+        ),
         items: [
           BottomNavigationBarItem(
             icon: Icon(Icons.calendar_month),
@@ -49,6 +61,11 @@ class _TabsState extends State<TabsScreen> {
           BottomNavigationBarItem(
             icon: Icon(Icons.person),
             label: 'Profile',
+          ),
+
+          BottomNavigationBarItem(
+            icon: Icon(Icons.chat),
+            label: 'Chat',
           ),
         ],
       ),

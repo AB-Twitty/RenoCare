@@ -243,7 +243,8 @@ class _FilterDrawerState extends State<FilterDrawer> {
               child: ElevatedButton(
                 onPressed: () {
                   widget.onApplyFilters(selectedFilters);
-                },
+                  Navigator.pop(context);
+                  },
                 child: const Text(
                   'Apply',
                   textAlign: TextAlign.center,

@@ -32,7 +32,7 @@ class MessageBubble extends StatelessWidget {
             text: message.message,
             isSender: isMe,
 
-            color: isMe ? Colors.green : Colors.grey[300]!,
+            color: isMe ? Color(0xff025144) : Colors.grey[300]!,
             tail: true,
             textStyle: TextStyle(
               color: isMe ? Colors.white : Colors.black,

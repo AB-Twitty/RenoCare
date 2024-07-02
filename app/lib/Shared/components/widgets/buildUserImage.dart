@@ -47,7 +47,7 @@ Stack buildUserImage(Size size,context) {
               shape: BoxShape.circle),
           child: CircleAvatar(
             backgroundColor: Colors.transparent,
-            backgroundImage:AssetImage("assets/images/profile.png")  ),
+            backgroundImage:AssetImage("assets/images/profile2.jpeg")  ),
         ),
       ),
     ],

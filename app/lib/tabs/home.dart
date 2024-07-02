@@ -35,19 +35,6 @@ class _HomeState extends State<Home> {
   false; // State variable to manage the visibility of the search bar
 
   final controller = ScrollController();
-
-  final List<String> _suggestions = [
-    'Afghanistan',
-    'Albania',
-    'Algeria',
-    'Australia',
-    'Brazil',
-    'Germany',
-    'Madagascar',
-    'Mozambique',
-    'Portugal',
-    'Zambia'
-  ];
   Map<String, dynamic> appliedFilters = {};
   @override
   void initState() {
@@ -95,13 +82,13 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     _navigation = NavigationService();
     return Scaffold(
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          _navigation.navigateToRoute('/chatHomePage');
-        },
-        child: Icon(Icons.chat),
-        backgroundColor: Color(0xff3C98CB),
-      ),
+      // floatingActionButton: FloatingActionButton(
+      //   onPressed: () {
+      //     _navigation.navigateToRoute('/chatHomePage');
+      //   },
+      //   child: Icon(Icons.chat),
+      //   backgroundColor: Color(0xff3C98CB),
+      // ),
       key: _scaffoldKey,
       // EasySearchBar(
       //   backgroundColor: Colors.transparent,

@@ -3,6 +3,7 @@ import 'package:app/services/signalR_service.dart';
 import 'package:app/services/token_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../services/navigation_service.dart';
 
@@ -16,10 +17,14 @@ class ProfileTab extends StatelessWidget {
     _navigation = NavigationService();
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         actions: [
-          IconButton(onPressed: (){
+          IconButton(onPressed: ()async{
             signalRUtil.stopConnection();
             loginDataManager2.clearLoginData();
+            // delete tokens
+            SharedPreferences prefs = await SharedPreferences.getInstance();
+            await prefs.remove('token');
             _navigation.removeAndNavigateToRoute('/login');
           }, icon: Icon(Icons.logout,color: Colors.red,))
         ],
