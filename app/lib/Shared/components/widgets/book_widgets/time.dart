@@ -36,7 +36,7 @@ class _TimePartState extends State<TimePart> {
                 widget.timetext[index],
                 style: TextStyle(
                   color:
-                  selectedCardIndex == index ? Colors.white : selectedcolor,
+                  selectedCardIndex == index ? Colors.white : Colors.black,
                 ),
               ),
             ),

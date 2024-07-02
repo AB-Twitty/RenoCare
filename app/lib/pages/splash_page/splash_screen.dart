@@ -1,4 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+
+import '../../services/notification_service.dart';
+
+
+final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin=FlutterLocalNotificationsPlugin();
 
 class SplashScreen extends StatefulWidget {
   final VoidCallback onInitializationComplete;
@@ -15,7 +21,7 @@ class SplashScreen extends StatefulWidget {
 class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     super.initState();
-
+    NotificationService.initialize(flutterLocalNotificationsPlugin);
     Future.delayed(Duration(seconds: 3)).then((_) {
       widget.onInitializationComplete();
     });

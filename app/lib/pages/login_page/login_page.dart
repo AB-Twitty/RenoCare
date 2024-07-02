@@ -1,11 +1,13 @@
 import 'package:app/Shared/Network/authentication_service.dart';
 import 'package:app/pages/login_page/login_cubit.dart';
+import 'package:app/services/signalR_service.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 
 import '../../services/navigation_service.dart';
 
@@ -30,6 +32,8 @@ class _LoginPageState extends State<LoginPage> {
   var _formKey = GlobalKey<FormState>();
   var emailController = TextEditingController();
   var passwordController = TextEditingController();
+
+  SignalRUtil signalRUtil=SignalRUtil();
   @override
   Widget build(BuildContext context) {
     deviceHeight = MediaQuery.of(context).size.height;
@@ -38,10 +42,15 @@ class _LoginPageState extends State<LoginPage> {
     return BlocProvider(
       create: (context) => LoginCubit(),
       child: BlocConsumer<LoginCubit, LoginState>(
-        listener: (context, state) {
+        listener: (context, state)async {
           if (state is LoginSuccessState) {
             _navigation.removeAndNavigateToRoute2('/bottomnav');
+            // start
+
+
+
           } else if (state is LoginErrorState) {
+            print(state.error);
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
                   content:
@@ -242,7 +251,7 @@ class _LoginPageState extends State<LoginPage> {
                               ),
                               state is LoginLoadingState
                                   ? Center(
-                                      child: CircularProgressIndicator(),
+                                      child: LoadingAnimationWidget.threeArchedCircle(color: Colors.blue, size: 30),
                                     )
                                   : SizedBox(
                                       width: 250,

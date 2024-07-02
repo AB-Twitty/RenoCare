@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class AmenitiesPart extends StatelessWidget {
-  const AmenitiesPart({super.key});
+  final List<String> Amenities;
+  const AmenitiesPart({super.key, required this.Amenities});
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
@@ -19,63 +20,94 @@ class AmenitiesPart extends StatelessWidget {
         height: 16,
       ),
       Wrap(
-        spacing: 35,
-        runSpacing: 16,
         children: [
-          Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              FaIcon(
-                FontAwesomeIcons.glassWater,
-                color: selectedcolor,
+          ...Amenities.map((amenity) => Padding(
+            padding: const EdgeInsets.only(bottom: 10),
+            child: Card(
+              color: Colors.grey[200],
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(20),
               ),
-              SizedBox(
-                width: 5,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(
+                    horizontal: 20, vertical: 10),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    FaIcon(
+                      FontAwesomeIcons.glassWater,
+                      color: selectedcolor,
+                    ),
+                    SizedBox(
+                      width: 10,
+                    ),
+                    Text(amenity),
+                  ],
+                ),
               ),
-              Text('Refreshments'),
-            ],
-          ),
-          Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Icon(
-                Icons.wifi,
-                color: selectedcolor,
-              ),
-              SizedBox(
-                width: 5,
-              ),
-              Text('Wifi'),
-            ],
-          ),
-          Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Icon(
-                Icons.tv,
-                color: selectedcolor,
-              ),
-              SizedBox(
-                width: 5,
-              ),
-              Text('TV Screens'),
-            ],
-          ),
-          Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Icon(
-                Icons.local_parking,
-                color: selectedcolor,
-              ),
-              SizedBox(
-                width: 5,
-              ),
-              Text('Parking'),
-            ],
-          ),
+            ),
+          )),
         ],
-      ),
+      )
+
+      // Wrap(
+      //   spacing: 35,
+      //   runSpacing: 16,
+      //   children: [
+      //     Row(
+      //       mainAxisSize: MainAxisSize.min,
+      //       children: [
+      //         FaIcon(
+      //           FontAwesomeIcons.glassWater,
+      //           color: selectedcolor,
+      //         ),
+      //         SizedBox(
+      //           width: 5,
+      //         ),
+      //         Text('Refreshments'),
+      //       ],
+      //     ),
+      //     Row(
+      //       mainAxisSize: MainAxisSize.min,
+      //       children: [
+      //         Icon(
+      //           Icons.email,
+      //           color: selectedcolor,
+      //         ),
+      //         SizedBox(
+      //           width: 5,
+      //         ),
+      //         Text('Wifi'),
+      //       ],
+      //     ),
+      //     Row(
+      //       mainAxisSize: MainAxisSize.min,
+      //       children: [
+      //         Icon(
+      //           Icons.tv,
+      //           color: selectedcolor,
+      //         ),
+      //         SizedBox(
+      //           width: 5,
+      //         ),
+      //         Text('TV Screens'),
+      //       ],
+      //     ),
+      //     Row(
+      //       mainAxisSize: MainAxisSize.min,
+      //       children: [
+      //         Icon(
+      //           Icons.local_parking,
+      //           color: selectedcolor,
+      //         ),
+      //         SizedBox(
+      //           width: 5,
+      //         ),
+      //         Text('Parking'),
+      //       ],
+      //     ),
+      //   ],
+      // ),
     ]);
   }
 }

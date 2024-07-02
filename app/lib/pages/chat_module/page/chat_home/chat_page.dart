@@ -4,7 +4,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:signalr_core/signalr_core.dart';
 
-import '../../../../Shared/components/widgets/message_bubble.dart';
+import 'widget/message_bubble.dart';
 import '../../../../services/firebase_service.dart';
 import '../../../../services/media_service.dart';
 import '../../../../services/signalR_service.dart';
@@ -29,13 +29,14 @@ class _ChatPageState extends State<ChatPage> {
   late final HubConnection _hubConnection;
   final loginDataManager2 = LoginDataManager2();
   String currId = "";
+  String RecId = "";
   String accessToken = "";
   final Dio _dio = Dio();
   final ScrollController _scrollController = ScrollController();
   int _currentPage = 1;
   bool hasNextPage = true;
   bool getEnd=false;
-
+  bool isMe=false;
   @override
   void initState() {
     super.initState();
@@ -159,7 +160,7 @@ class _ChatPageState extends State<ChatPage> {
         messages[messageIndex] =
             messages[messageIndex].copyWith(status: 3); // 3 means seen
       }
-      print("======================message Seen$messageIndex");
+
     });
   }
 
@@ -190,6 +191,7 @@ class _ChatPageState extends State<ChatPage> {
       // Add the message as I am the receiver
       setState(() {
         messages.add(msg);
+
       });
 
       // As a receiver, invoke an event as received and seen, because this is the active chat
@@ -213,6 +215,12 @@ class _ChatPageState extends State<ChatPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.chatName),
+        automaticallyImplyLeading: false,
+        leading:  IconButton(onPressed: (){
+          Navigator.pop(context,widget.active_chat_Id);
+
+        }, icon: Icon(Icons.arrow_back)),
+
       ),
       body: Column(
         children: [
@@ -222,8 +230,7 @@ class _ChatPageState extends State<ChatPage> {
               itemCount: messages.length,
               itemBuilder: (context, index) {
                 final message = messages[index];
-                final isMe = message.senderId == currId;
-
+                isMe = message.senderId == currId;
                 return MessageBubble(
                   message: message,
                   isMe: isMe,
@@ -304,8 +311,7 @@ class _ChatPageState extends State<ChatPage> {
 //===============================================================d
   //      Get Previous messages
 //===============================================================
-  Future<void> _fetchPreviousMessages(
-      {int pageIndex = 1, int pageSize = 10}) async {
+  Future<void> _fetchPreviousMessages({int pageIndex = 1, int pageSize = 10}) async {
     final String activeChatId = widget.active_chat_Id;
     final String accessToken = await loginDataManager2.getAccessToken() ?? "";
 

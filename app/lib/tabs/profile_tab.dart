@@ -1,17 +1,28 @@
 import 'package:app/Shared/components/widgets/buildUserImage.dart';
+import 'package:app/services/signalR_service.dart';
+import 'package:app/services/token_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../services/navigation_service.dart';
 
 class ProfileTab extends StatelessWidget {
+  LoginDataManager2 loginDataManager2=LoginDataManager2();
   late NavigationService _navigation;
+  SignalRUtil signalRUtil=SignalRUtil();
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     _navigation = NavigationService();
     return Scaffold(
       appBar: AppBar(
+        actions: [
+          IconButton(onPressed: (){
+            signalRUtil.stopConnection();
+            loginDataManager2.clearLoginData();
+            _navigation.removeAndNavigateToRoute('/login');
+          }, icon: Icon(Icons.logout,color: Colors.red,))
+        ],
         backgroundColor: Colors.transparent,
         elevation: 0,
 

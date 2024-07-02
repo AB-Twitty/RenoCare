@@ -5,10 +5,10 @@ class UserModel{
   String? phone;
   String? token;
   UserModel({
-   required this.name,
-   required this.email,
-   required this.phone,
-   required this.token
+    required this.name,
+    required this.email,
+    required this.phone,
+    required this.token
   });
   // factory usermodel.fromjson(jsondata) {
   //   return usermodel(

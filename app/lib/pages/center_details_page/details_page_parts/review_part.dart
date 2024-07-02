@@ -2,7 +2,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'dart:math';
-
 import 'package:intl/intl.dart';
 
 class ReviewPart extends StatelessWidget {
@@ -11,19 +10,22 @@ class ReviewPart extends StatelessWidget {
     required this.numOfStars,
     required this.name,
     required this.review,
-    required this.isend,
-    required this.istsart,
+    required this.creationDate, // Add this line
+    required this.isEnd,
+    required this.isStart,
   });
   final double numOfStars;
   final String name;
   final String review;
-  final bool isend;
-  final bool istsart;
+  final String creationDate; // Add this line
+  final bool isEnd;
+  final bool isStart;
+
   @override
   Widget build(BuildContext context) {
-    final Color selectedcolor = Color.fromRGBO(60, 152, 203, 1);
-    final formatter = DateFormat.yMd();
-    // TODO: implement build
+    final Color selectedColor = Color.fromRGBO(60, 152, 203, 1);
+    final formatter = DateFormat.yMd().add_jm();
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -33,7 +35,7 @@ class ReviewPart extends StatelessWidget {
               padding: EdgeInsets.all(11),
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: selectedcolor,
+                color: selectedColor,
               ),
               child: Icon(
                 Icons.person_outline,
@@ -62,34 +64,35 @@ class ReviewPart extends StatelessWidget {
                       for (int i = 0; i < numOfStars.floor(); i++)
                         Icon(
                           Icons.star,
-                          color: selectedcolor,
+                          color: selectedColor,
                         ),
                       for (int i = 0; i < 5 - numOfStars.floor(); i++)
                         Icon(
                           Icons.star_border,
-                          color: selectedcolor,
+                          color: selectedColor,
                         )
                     ] else ...[
                       for (int i = 0; i < numOfStars.floor(); i++)
                         Icon(
                           Icons.star,
-                          color: selectedcolor,
+                          color: selectedColor,
                         ),
                       Icon(
                         Icons.star_half,
-                        color: selectedcolor,
+                        color: selectedColor,
                       ),
                       for (int i = 0; i < 5 - numOfStars.floor() - 1; i++)
                         Icon(
                           Icons.star_border,
-                          color: selectedcolor,
+                          color: selectedColor,
                         ),
                     ],
                     SizedBox(
                       width: 5,
                     ),
                     Text(
-                      formatter.format(DateTime.now()),
+                      formatter.format(
+                          DateTime.parse(creationDate)), // Change this line
                     )
                   ],
                 ),
@@ -106,7 +109,7 @@ class ReviewPart extends StatelessWidget {
             height: 1.5,
           ),
         ),
-        if (!isend) ...[
+        if (!isEnd) ...[
           SizedBox(
             height: 10,
           ),

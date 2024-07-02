@@ -1,42 +1,27 @@
 import 'package:flutter/material.dart';
 
-class DropDownButtonSingUp extends StatefulWidget {
-  DropDownButtonSingUp({
+class DropDownButtonFilter extends StatefulWidget {
+  DropDownButtonFilter({
     super.key,
     required this.items,
     required this.selectedItem,
-    required this.label,
   });
-  List<String> items;
+  final List<String> items;
   String selectedItem;
-  String label;
   @override
   State<StatefulWidget> createState() {
     // TODO: implement createState
-    return _DropDownButtonSingUpState();
+    return _DropDownButtonFilterState();
   }
 }
 
-class _DropDownButtonSingUpState extends State<DropDownButtonSingUp> {
+class _DropDownButtonFilterState extends State<DropDownButtonFilter> {
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 5.0),
-          child: Text(
-            widget.label,
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 16,
-            ),
-          ),
-        ),
-        SizedBox(
-          height: 10,
-        ),
         Container(
           padding: EdgeInsets.only(
             left: 20,
@@ -44,7 +29,7 @@ class _DropDownButtonSingUpState extends State<DropDownButtonSingUp> {
           ),
           decoration: BoxDecoration(
             border: Border.all(
-              color: Color(0xffB8E8F7),
+              color: Color.fromRGBO(60, 152, 203, 1),
               width: 2,
             ),
             borderRadius: BorderRadius.circular(15),
@@ -56,7 +41,7 @@ class _DropDownButtonSingUpState extends State<DropDownButtonSingUp> {
             value: widget.selectedItem,
             icon: Icon(
               Icons.arrow_drop_down_circle,
-              color: Color(0xff45B3EF),
+              color: Color.fromRGBO(60, 152, 203, 1),
             ),
             underline: SizedBox(),
             items: widget.items

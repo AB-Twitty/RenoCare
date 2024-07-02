@@ -107,47 +107,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 
 
-class LoginDataManager {
-  // Singleton instance
-  static final LoginDataManager _instance = LoginDataManager._internal();
-  factory LoginDataManager() => _instance;
-  LoginDataManager._internal();
-
-  // Save login data to shared preferences
-  Future<void> saveLoginData(Map<String, dynamic> responseData,DateTime expiry) async {
-    final prefs = await SharedPreferences.getInstance();
-    prefs.setString('id', responseData['data']['id']);
-    prefs.setString('firstName', responseData['data']['firstName']);
-    prefs.setString('lastName', responseData['data']['lastName']);
-    prefs.setString('accessToken', responseData['data']['accessToken']);
-    print("==============time===========");
-    prefs.setString("sessionExpiryKey", expiry.toIso8601String());
-    print(expiry);
-  }
-
-  // Load login data from shared preferences
-  Future<Map<String, String>> loadLoginData() async {
-    final prefs = await SharedPreferences.getInstance();
-    final id = prefs.getString('id') ?? '';
-    final firstName = prefs.getString('firstName') ?? '';
-    final lastName = prefs.getString('lastName') ?? '';
-    final accessToken = prefs.getString('accessToken') ?? '';
-    final sessionExpiry = prefs.getString('sessionExpiryKey') ?? '';
-
-    return {
-      'id': id,
-      'firstName': firstName,
-      'lastName': lastName,
-      'accessToken': accessToken,
-      'sessionExpiryKey': sessionExpiry,
-
-    };
-  }
-  Future<String?> getAccessToken()async{
-    final pref=await SharedPreferences.getInstance();
-    return pref.getString('accessToken');
-  }
-}
 
 class LoginDataManager2 {
   // Singleton instance

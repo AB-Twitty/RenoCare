@@ -3,11 +3,21 @@ import 'package:flutter/material.dart';
 import 'package:group_button/group_button.dart';
 
 class RepeatedGroupButton extends StatelessWidget {
-  RepeatedGroupButton({super.key, required this.content});
-  List<String> content;
+  final List<String> content;
+  final bool isRadio;
+  final Function(List<String>) onSelected;
+  final GroupButtonController controller;
+
+  RepeatedGroupButton({
+    Key? key,
+    required this.content,
+    required this.isRadio,
+    required this.onSelected,
+    required this.controller,
+  }) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     return GroupButton(
       options: GroupButtonOptions(
         mainGroupAlignment: MainGroupAlignment.start,
@@ -24,6 +34,13 @@ class RepeatedGroupButton extends StatelessWidget {
         ),
       ),
       buttons: content,
+      isRadio: isRadio,
+      onSelected: (String value, int index, bool isSelected) {
+        List<String> selectedItems =
+        controller.selectedIndexes.map((i) => content[i]).toList();
+        onSelected(selectedItems);
+      },
+      controller: controller,
     );
   }
 }

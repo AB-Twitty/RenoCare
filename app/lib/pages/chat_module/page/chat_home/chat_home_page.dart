@@ -1,13 +1,16 @@
+import 'package:app/services/notification_service.dart';
 import 'package:app/services/signalR_service.dart';
 import 'package:app/services/token_service.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart'
+    as not;
 import 'package:intl/intl.dart';
-import 'package:signalr_core/signalr_core.dart';
+import 'package:signalr_core/signalr_core.dart' as signalR;
 
 import 'chat_page.dart';
-import 'model/chat_model.dart';
 import 'model/message_model.dart';
+import 'model/chat_response.dart';
 
 class ChatHomePage extends StatefulWidget {
   @override
@@ -15,24 +18,26 @@ class ChatHomePage extends StatefulWidget {
 }
 
 class _ChatHomePageState extends State<ChatHomePage> {
-  final loginManager = LoginDataManager();
-  final loginDataManager2 = LoginDataManager2();
+  final loginManager = LoginDataManager2();
+  final not.FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+      not.FlutterLocalNotificationsPlugin();
 
-  late final HubConnection _hubConnection;
+  late final signalR.HubConnection _hubConnection;
 
   String accessToken = "";
 
+  String prv_active_id = "";
   final Dio _dio = Dio();
+  List<Contact> contacts = [];
+  String currUserId = "";
+  late Future<void> _contactsFuture;
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
-    _getContacts();
+    _contactsFuture = _getContacts();
     initSignalR();
   }
-
-  final List<Chat> chats = [];
 
   Future<void> _getContacts() async {
     accessToken = await loginManager.getAccessToken() ?? "";
@@ -48,18 +53,16 @@ class _ChatHomePageState extends State<ChatHomePage> {
       );
 
       if (response.statusCode == 200) {
-        final List<dynamic> data = response.data['data'];
-        List<Chat> fetchedChats =
-            data.map((json) => Chat.fromJson(json)).toList();
-
-        print(fetchedChats[0].name);
-        print(fetchedChats[0].lastMessage);
-
-        setState(() {
-          chats.addAll(fetchedChats);
-        });
+        final chatResponse = ChatResponse.fromJson(response.data);
+        if (chatResponse.succeded) {
+          setState(() {
+            contacts = chatResponse.data;
+          });
+        } else {
+          print("Failed to fetch contacts: ${chatResponse.message}");
+        }
       } else {
-        print("Faild to fetch contacts ${response.statusCode}");
+        print("Failed to fetch contacts: ${response.statusCode}");
       }
     } catch (e) {
       print(e);
@@ -72,39 +75,90 @@ class _ChatHomePageState extends State<ChatHomePage> {
     _hubConnection = await signalRUtil.startConnection();
 
     _hubConnection.on("ReceiveMessage", _handleReceivedMessage);
+    _hubConnection.on("MarkedAsReceived", _markMessageAsReceived);
+    _hubConnection.on("MarkedAsRead", _markMessageAsRead);
+  }
+
+  String _statusText(int status) {
+    switch (status) {
+      case 1:
+        return 'Sent';
+      case 2:
+        return 'Delivered';
+      case 3:
+        return 'Seen';
+      default:
+        return '';
+    }
+  }
+
+  void _markMessageAsReceived(List<Object?>? arguments) {
+    if (arguments == null || arguments.isEmpty) return;
+
+    final messageJson = arguments[0] as Map<String, dynamic>;
+    final receivedMessage = Message.fromJson(messageJson);
+    setState(() {
+      final index = contacts.indexWhere((chat) =>(
+          currUserId==chat.lastMsg.senderId)&& chat.userId == receivedMessage.receiverId);
+      if (index != -1) {
+        if (currUserId == contacts[index].lastMsg.senderId)
+          contacts[index].lastMsg.status = 2; // 2 means delivered
+      }
+      print(
+          "============================The Index Derliverd: $index====================");
+    });
+  }
+
+  void _markMessageAsRead(List<Object?>? arguments) {
+    if (arguments == null || arguments.isEmpty) return;
+
+    final messageId = arguments[0] as int;
+    setState(() {
+      final index = contacts.indexWhere((chat) =>
+          (chat.lastMsg.Id == messageId) &&
+          (currUserId == chat.lastMsg.senderId));
+      if (index != -1) {
+        contacts[index].lastMsg.status = 3; // 3 means seen
+      }
+      print(
+          "============================The IndexSeen: $index====================");
+    });
   }
 
   void _handleReceivedMessage(List<Object?>? arguments) async {
     if (arguments == null || arguments.isEmpty) return;
 
-    final String currUserId = await loginDataManager2.getId() ?? "";
-    print(
-        "===========================A message received==========================");
-    print("==============================SEnder ID $currUserId");
+    currUserId = await loginManager.getId() ?? "";
     final Message msg = Message.fromJson(arguments[0] as Map<String, dynamic>);
-    String curr_user_id = currUserId;
+
+    final String senderId = msg.senderId;
+    final String receiverId = msg.receiverId;
 
     setState(() {
-      final Index = chats.indexWhere(
-          (chat) => chat.id == msg.senderId || chat.id == msg.receiverId);
-      if (Index != -1) {
-        chats[Index].lastMessage = msg.message;
-        chats[Index].lastMessageTime = msg.sendingTime;
-        if (msg.senderId != currUserId) {
-          chats[Index].unreadMsgCount++;
-        }
+      final index = contacts.indexWhere((contact) =>
+          contact.userId == (senderId != currUserId ? senderId : receiverId));
 
-        // last date
-        // counter of unread messages
-        //
+      if (index != -1) {
+        final contact = contacts[index];
+        contact.lastMsg = msg;
+        if (senderId != currUserId) {
+          contact.unreadMsgCount++;
+          NotificationService.showMessageNotification(
+              title: contact.name,
+              body: msg.message,
+              fln: flutterLocalNotificationsPlugin);
+          contact.lastMsg.status=0;
+        }
       } else {
         String name = arguments[1] as String;
-        Chat chat = Chat(
-            id: msg.senderId,
-            name: name,
-            lastMessage: msg.message,
-            unreadMsgCount: 1);
-        chats.add(chat);
+        Contact contact = Contact(
+          name: name,
+          userId: senderId,
+          contactId: 0,
+          lastMsg: msg,
+          unreadMsgCount: senderId != currUserId ? 1 : 0,
+        );
+        contacts.add(contact);
       }
     });
     await _hubConnection.invoke("MarkReceived", args: <Object>[msg.Id]);
@@ -113,63 +167,74 @@ class _ChatHomePageState extends State<ChatHomePage> {
   String _formatDate(DateTime dateTime) {
     return DateFormat('yyyy-MM-dd HH:mm').format(dateTime);
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text('Chats'),
-        actions: [
-          IconButton(
-              onPressed: () async {
-                final loadedData = await loginManager.loadLoginData();
-                print('User ID: ${loadedData['id']}');
-                print('First Name: ${loadedData['firstName']}');
-                print('Last Name: ${loadedData['lastName']}');
-                print('Access Token: ${loadedData['accessToken']}');
-              },
-              icon: Icon(Icons.add))
-        ],
       ),
-      body: ListView.builder(
-        itemCount: chats.length,
-        itemBuilder: (context, index) {
-          final chat = chats[index];
-          return ListTile(
-            leading: Image.asset(
-              "assets/images/profile2.jpeg",
-              height: 30,
-            ),
-            title: Text(chat.name),
-            subtitle: Column(
-              children: [
-                Text(chat.lastMessage),
-                if (chat.lastMessageTime != null)
-                  Text(
-                    _formatDate(chat.lastMessageTime!),
-                    style: TextStyle(fontSize: 12, color: Colors.grey),
-                  ),
-              ],
-            ),
-            trailing: chat.unreadMsgCount > 0
-                ? CircleAvatar(
-                    radius: 10,
-                    backgroundColor: Colors.red,
-                    child: Text(
-                      chat.unreadMsgCount.toString(),
-                      style: TextStyle(color: Colors.white, fontSize: 12),
-                    ),
-                  )
-                : null,
-            onTap: () {
-              setState(() {
-                chat.unreadMsgCount = 0;
-              });
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) =>
-                      ChatPage(active_chat_Id: chat.id, chatName: chat.name),
+      body: FutureBuilder<void>(
+        future: _contactsFuture,
+        builder: (context, snapshot) {
+          if (snapshot.hasError) {
+            return Center(child: Text('Error fetching contacts'));
+          } else if (contacts.isEmpty) {
+            return Center(child: Text('No contacts available'));
+          }
+          return ListView.builder(
+            itemCount: contacts.length,
+            itemBuilder: (context, index) {
+              final contact = contacts[index];
+              return ListTile(
+                leading: Image.asset(
+                  "assets/images/profile2.jpeg",
+                  height: 30,
                 ),
+                title: Text(contact.name),
+                subtitle: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(contact.lastMsg.message),
+                    if (contact.lastMsg.sendingTime != null)
+                      Text(
+                        _formatDate(contact.lastMsg.sendingTime),
+                        style: TextStyle(fontSize: 12, color: Colors.grey),
+                      ),
+                    Text(
+                      _statusText(contact.lastMsg.status!),
+                      style: TextStyle(fontSize: 12, color: Colors.grey),
+                    ),
+                  ],
+                ),
+                trailing: contact.unreadMsgCount > 0
+                    ? CircleAvatar(
+                        radius: 10,
+                        backgroundColor: Colors.red,
+                        child: Text(
+                          contact.unreadMsgCount.toString(),
+                          style: TextStyle(color: Colors.white, fontSize: 12),
+                        ),
+                      )
+                    : null,
+                onTap: () async {
+                  setState(() {
+                    contact.unreadMsgCount = 0;
+                  });
+                  await Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => ChatPage(
+                        active_chat_Id: contact.userId,
+                        chatName: contact.name,
+                      ),
+                    ),
+                  ).then((value) {
+                    prv_active_id = value;
+                    fun();
+                  });
+                  setState(() {}); // Refresh the chat list on return
+                },
               );
             },
           );
@@ -177,27 +242,13 @@ class _ChatHomePageState extends State<ChatHomePage> {
       ),
     );
   }
-}
 
-//
-//
-// ListView.builder(
-// itemCount: chats.length,
-// itemBuilder: (context, index) {
-// final chat = chats[index];
-// return ListTile(
-//
-// leading: Image.asset("assets/images/profile.png",height: 30,),
-// title: Text(chat.name),
-// subtitle: Text(chat.lastMessage),
-// onTap: () {
-// Navigator.push(
-// context,
-// MaterialPageRoute(
-// builder: (context) => ChatPage(active_chat_Id: chat.id, chatName: chat.name),
-// ),
-// );
-// },
-// );
-// },
-// )
+  void fun() {
+    final index =
+        contacts.indexWhere((contact) => contact.userId == prv_active_id);
+
+    if (index != -1) {
+      contacts[index].unreadMsgCount = 0;
+    }
+  }
+}

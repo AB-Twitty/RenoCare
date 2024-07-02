@@ -32,7 +32,7 @@ class _CommentScreenState extends State<CommentScreen> {
         child: SingleChildScrollView(
           child: Container(
             padding:
-                const EdgeInsets.symmetric(horizontal: 20.0, vertical: 30.0),
+            const EdgeInsets.symmetric(horizontal: 20.0, vertical: 30.0),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [

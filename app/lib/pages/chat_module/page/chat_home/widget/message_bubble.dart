@@ -8,11 +8,12 @@ import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:chat_bubbles/chat_bubbles.dart';
 
-import '../../../pages/chat_module/page/chat_home/model/message_model.dart';
+import '../model/message_model.dart';
 
 class MessageBubble extends StatelessWidget {
   final Message message;
   final bool isMe;
+
 
   MessageBubble({required this.message, required this.isMe});
 
@@ -24,12 +25,14 @@ class MessageBubble extends StatelessWidget {
         crossAxisAlignment: isMe ? CrossAxisAlignment.end : CrossAxisAlignment.start,
         children: [
           BubbleSpecialThree(
+
             delivered: message.status==2 && isMe,
             seen: message.status==3&& isMe,
             sent: message.status==1&& isMe,
             text: message.message,
             isSender: isMe,
-            color: isMe ? Colors.blue : Colors.grey[300]!,
+
+            color: isMe ? Colors.green : Colors.grey[300]!,
             tail: true,
             textStyle: TextStyle(
               color: isMe ? Colors.white : Colors.black,
@@ -39,7 +42,7 @@ class MessageBubble extends StatelessWidget {
           if (message.isFile == true) _buildFileMessage(context),
           SizedBox(height: 5),
           Text(
-            message.sendingTime.toLocal().toString(),
+            message.sendingTime.toString(),
             style: TextStyle(
               color:   Colors.black54,
 

@@ -5,7 +5,7 @@ class Message {
   final String message;
   final DateTime sendingTime;
 
-  final int? status;
+  int? status;
 
   //final bool isMe;
 

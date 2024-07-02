@@ -5,6 +5,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:meta/meta.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../Shared/Network/authentication_service.dart';
 import '../../services/navigation_service.dart';
@@ -27,23 +28,6 @@ class LoginCubit extends Cubit<LoginState> {
   final loginManager = LoginDataManager2();
   final SessionService _sessionService=SessionService();
 
-
-  // void Login(String email,String pass,bool rememberMe)async
-  // {
-  //   emit(LoginLoadingState());
-  //
-  //   try{
-  //    await auth.login(email, pass);
-  //     emit(LoginSuccessState());
-  //   }catch(e)
-  //   {
-  //     emit(LoginErrorState(e.toString()));
-  //   }
-  //
-  //
-  //
-  // }
-
   Future<void> login(String email, String password, bool rememberMe) async {
   // await loginManager.clearLoginData();
     emit(LoginLoadingState());
@@ -54,6 +38,10 @@ class LoginCubit extends Cubit<LoginState> {
       // Use the full response data as needed
       if(response.statusCode==200)
       {
+        final jsonData = response.data;
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        await prefs.setString('token', jsonData['data']['accessToken']);
+
         final sessionExpiration = DateTime.now().add(Duration(seconds: 10));
         //loginManager.saveLoginData(response.data, sessionExpiration);
 

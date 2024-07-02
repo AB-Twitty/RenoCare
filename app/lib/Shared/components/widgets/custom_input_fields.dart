@@ -6,8 +6,9 @@ class CustomTextFormField extends StatelessWidget {
   final String hintText;
   final bool obscureText;
 
-  CustomTextFormField(
-      {required this.onSaved,
+  const CustomTextFormField(
+      {super.key,
+        required this.onSaved,
         required this.regEX,
         required this.hintText,
         required this.obscureText});
@@ -17,7 +18,7 @@ class CustomTextFormField extends StatelessWidget {
     return TextFormField(
       onSaved: (newValue) => onSaved(newValue!),
       cursorColor: Colors.white,
-      style: TextStyle(
+      style: const TextStyle(
         color: Colors.black,
       ),
       obscureText: obscureText,
@@ -25,14 +26,14 @@ class CustomTextFormField extends StatelessWidget {
         return RegExp(regEX).hasMatch(value!) ? null : 'Enter Valid value';
       },
       decoration: InputDecoration(
-          fillColor: Color(0xffB8E8F7),
+          fillColor: const Color(0xffB8E8F7),
           filled: true,
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(10.0),
             borderSide: BorderSide.none,
           ),
           hintText: hintText,
-          hintStyle: TextStyle(color: Colors.white54)),
+          hintStyle: const TextStyle(color: Colors.white54)),
     );
   }
 }
@@ -98,7 +99,8 @@ class CustomTextFormField1 extends StatefulWidget {
   final IconData icon;
   final String textReg;
   final String textnull;
-  CustomTextFormField1({
+  const CustomTextFormField1({
+    super.key,
     required this.onSaved,
     required this.regEX,
     required this.hintText,
@@ -139,30 +141,30 @@ class _CustomTextFormField1State extends State<CustomTextFormField1> {
         }
       },
       decoration: InputDecoration(
-        errorStyle: TextStyle(
+        errorStyle: const TextStyle(
           color: Colors.red,
         ),
-        errorBorder: OutlineInputBorder(
+        errorBorder: const OutlineInputBorder(
           borderRadius: BorderRadius.all(Radius.circular(20)),
           borderSide: BorderSide(
             color: Colors.red,
           ),
         ),
-        focusedErrorBorder: OutlineInputBorder(
+        focusedErrorBorder: const OutlineInputBorder(
           borderRadius: BorderRadius.all(Radius.circular(20)),
           borderSide: BorderSide(
             color: Colors.red,
           ),
         ),
         floatingLabelStyle: TextStyle(color: labelColor),
-        focusedBorder: OutlineInputBorder(
+        focusedBorder: const OutlineInputBorder(
           borderRadius: BorderRadius.all(Radius.circular(20)),
           borderSide: BorderSide(
             color: Color(0xffB8E8F7),
             width: 3,
           ),
         ),
-        enabledBorder: OutlineInputBorder(
+        enabledBorder: const OutlineInputBorder(
           borderRadius: BorderRadius.all(Radius.circular(20)),
           borderSide: BorderSide(
             color: Color(0xffB8E8F7),

@@ -1,18 +1,16 @@
 import 'package:app/Shared/Network/getDataFromBackend/api_handler_for_centers.dart';
+import 'package:app/Shared/components/widgets/bottom_sheet.dart';
+import 'package:app/pages/center_details_page/center_details/details.dart';
 import 'package:app/pages/map_page.dart';
-import 'package:draggable_fab/draggable_fab.dart';
-import 'package:easy_search_bar/easy_search_bar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
-// import 'package:google_fonts/google_fonts.dart';
+import 'package:dio/dio.dart';
+import 'package:app/Shared/components/widgets/center_card.dart';
+import 'package:app/services/navigation_service.dart';
+import 'package:app/Shared/components/widgets/fliter_drawer.dart';
+import 'package:google_fonts/google_fonts.dart';
 import '../models/home_page_center_card/CenterModel.dart';
-import '../models/home_page_center_card/center_card.dart';
-import '../services/navigation_service.dart';
-import '../Shared/components/widgets/bottom_sheet.dart';
-import '../Shared/components/widgets/center_card.dart';
-import '../Shared/components/widgets/fliter_drawer.dart';
-import '../services/token_service.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
@@ -24,59 +22,74 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   late NavigationService _navigation;
-  final loginDataManager2 = LoginDataManager2();
   String accessToken = "";
   String searchValue = '';
   final ApiHandler _apiService = ApiHandler();
-  int page=1;
-  // late Future<List<CenterModel>> futureCenterUnit;
+  int page = 1;
   late Future<CenterModel> futureCenterUnit;
   List<Items> units = [];
+  Map<String, dynamic> filters = {};
+  String? _selectedSortOption;
+  String searchQuery = ''; // Variable to store the search query
+  bool isSearchBarVisible =
+  false; // State variable to manage the visibility of the search bar
 
   final controller = ScrollController();
 
   final List<String> _suggestions = [
-    'Afeganistan',
+    'Afghanistan',
     'Albania',
     'Algeria',
     'Australia',
     'Brazil',
-    'German',
+    'Germany',
     'Madagascar',
     'Mozambique',
     'Portugal',
     'Zambia'
   ];
-
+  Map<String, dynamic> appliedFilters = {};
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
-    // _fetchData();
     controller.addListener(() {
-      if(controller.position.maxScrollExtent==controller.offset)
-        {
-
-          page++;
-          _fetchData(page);
-        }
+      if (controller.position.maxScrollExtent == controller.offset) {
+        page++;
+        _fetchData(page, filters);
+      }
     });
-    futureCenterUnit = ApiHandler().getCenterData(page);
+    futureCenterUnit = _fetchData(page, filters);
   }
 
-  Future<void> _fetchData(int page) async {
-    try{
+  Future<CenterModel> _fetchData(int page, Map<String, dynamic> filters) async {
+    try {
+      // Add search query to filters if it exists
+      if (searchQuery.isNotEmpty) {
+        filters['search'] = searchQuery;
+      }
 
-      CenterModel centerModel =await _apiService.getCenterData(page);
+      CenterModel centerModel = await _apiService.getCenterData(page, filters);
       setState(() {
-        units.addAll(centerModel.data?.items??[]);
-
+        units.addAll(centerModel.data?.items ?? []);
       });
-    }catch(e)
-    {
+      return centerModel;
+    } catch (e) {
       print("Error Fetching data: $e");
+      throw Exception("Error Fetching data: $e");
     }
   }
+
+  void _applySortOption(String sortBy) {
+    setState(() {
+      _selectedSortOption = sortBy;
+      filters['sortBy'] = sortBy;
+      units.clear();
+      page = 1;
+      futureCenterUnit = _fetchData(page, filters);
+    });
+  }
+
+  TextEditingController searchController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -86,37 +99,60 @@ class _HomeState extends State<Home> {
         onPressed: () {
           _navigation.navigateToRoute('/chatHomePage');
         },
-        child: Icon(
-          Icons.chat,
-        ),
+        child: Icon(Icons.chat),
         backgroundColor: Color(0xff3C98CB),
       ),
-
       key: _scaffoldKey,
-
-      drawer: FilterDrawer(page),
-      appBar: EasySearchBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0.0,
-        title: Text(
-          'Search',
-          style: TextStyle(
-            fontSize: 14,
+      // EasySearchBar(
+      //   backgroundColor: Colors.transparent,
+      //   elevation: 0.0,
+      //   title: Text(
+      //     'Search',
+      //     style: TextStyle(fontSize: 14),
+      //   ),
+      //   onSearch: (value) {
+      //     setState(() {
+      //       searchQuery = value; // تحديث استعلام البحث
+      //       units.clear(); // مسح البيانات الحالية
+      //       page = 1; // إعادة تعيين الصفحة
+      //       futureCenterUnit = _fetchData(
+      //           page, filters); // استدعاء البيانات مع التصفية الجديدة
+      //     });
+      //   },
+      //   suggestions: _suggestions,
+      // ),
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(kToolbarHeight),
+        child: isSearchBarVisible
+            ? _buildSearchBar()
+            : AppBar(
+          backgroundColor: Color.fromARGB(255, 255, 255, 255),
+          title: Text(
+            "RenoCare",
+            style: GoogleFonts.lato(color: Colors.black),
           ),
+          elevation: 0,
+          actions: [
+            IconButton(
+              padding: EdgeInsets.only(right: 20.0),
+              onPressed: () {
+                setState(() {
+                  isSearchBarVisible = true; // Show search bar
+                });
+              },
+              icon: Icon(
+                Icons.search,
+                color: Colors.black,
+              ),
+            )
+          ],
         ),
-        onSearch: (value) {
-          setState(() {
-            searchValue = value;
-          });
-        },
-        suggestions: _suggestions,
       ),
-
-      // drawer: FilterDrawer(),
       body: Column(
         children: [
           Padding(
-            padding: const EdgeInsets.all(8.0),
+            padding:
+            const EdgeInsets.symmetric(horizontal: 10.0, vertical: 20.0),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -141,9 +177,7 @@ class _HomeState extends State<Home> {
                             Icons.sort,
                             color: Color(0xff3C98CB),
                           ),
-                          SizedBox(
-                            width: 5,
-                          ),
+                          SizedBox(width: 5),
                           Text("Sort", style: TextStyle(fontSize: 12))
                         ],
                       ),
@@ -152,7 +186,27 @@ class _HomeState extends State<Home> {
                 ),
                 InkWell(
                   onTap: () {
-                    _scaffoldKey.currentState?.openDrawer();
+                    showModalBottomSheet(
+                      isScrollControlled: true,
+                      shape: const RoundedRectangleBorder(
+                        borderRadius: BorderRadius.vertical(
+                          top: Radius.circular(30),
+                        ),
+                      ),
+                      context: context,
+                      builder: (ctx) => FilterDrawer(
+                        onApplyFilters: (selectedFilters) {
+                          setState(() {
+                            appliedFilters = Map.from(selectedFilters);
+                            filters = selectedFilters;
+                            units.clear();
+                            page = 1;
+                            futureCenterUnit = _fetchData(page, filters);
+                          });
+                        },
+                        initialFilters: appliedFilters,
+                      ),
+                    );
                   },
                   child: Card(
                     color: Colors.grey[100],
@@ -170,9 +224,7 @@ class _HomeState extends State<Home> {
                             Icons.filter_alt,
                             color: Color(0xff3C98CB),
                           ),
-                          SizedBox(
-                            width: 5,
-                          ),
+                          SizedBox(width: 5),
                           Text("Filter", style: TextStyle(fontSize: 12))
                         ],
                       ),
@@ -199,9 +251,7 @@ class _HomeState extends State<Home> {
                             Icons.map,
                             color: Color(0xff3C98CB),
                           ),
-                          SizedBox(
-                            width: 5,
-                          ),
+                          SizedBox(width: 5),
                           Text("Maps", style: TextStyle(fontSize: 12))
                         ],
                       ),
@@ -211,57 +261,168 @@ class _HomeState extends State<Home> {
               ],
             ),
           ),
-          Expanded(
-            child: FutureBuilder<CenterModel>(
-              future: futureCenterUnit,
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return Center(child: CircularProgressIndicator());
-                } else if (snapshot.hasError) {
-                  return Center(child: Text('Error: ${snapshot.error}'));
-                } else if (snapshot.hasData) {
-                  units = snapshot.data!.data?.items??[];
-                  return ListView.builder(
-                    controller: controller,
-                    itemCount: units.length + 1,
-                    itemBuilder: (context, index) {
-                      if (index < units.length) {
-                        final unit = units[index];
-                        return CenterCard(centerModel: unit);
-                      } else {
-                        return Padding(
-                          padding: EdgeInsets.symmetric(vertical: 32),
-                          child: Center(
-                            child: CircularProgressIndicator(),
-                          ),
-                        );
-                      }
-
-                      print(index);
-                      return CenterCard(
-                        centerModel: units[index],
-                      );
-                    },
+          FutureBuilder<CenterModel>(
+            future: futureCenterUnit,
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return Center(child: CircularProgressIndicator());
+              } else if (snapshot.hasError) {
+                return Center(child: Text('Error: ${snapshot.error}'));
+              } else if (!snapshot.hasData ||
+                  snapshot.data!.data!.items!.isEmpty) {
+                return Center(child: Text('No data available'));
+              } else {
+                units = snapshot.data!.data!.items!;
+                if (units.length == 1) {
+                  return Flexible(
+                    child: SingleChildScrollView(
+                      physics: ScrollPhysics(),
+                      child: CenterCard(
+                        centerModel: units[0],
+                        onTap: () {
+                          if (units[0].id != null) {
+                            _navigation.navigateToPage(
+                              DetailsScreen(unitId: units[0].id!),
+                            );
+                          } else {
+                            print('Unit ID is null');
+                          }
+                        },
+                      ),
+                    ),
                   );
                 } else {
-                  return Center(child: Text('No data available'));
+                  return Expanded(
+                    child: ListView.builder(
+                      controller: controller,
+                      itemCount: units.length +
+                          (snapshot.connectionState == ConnectionState.waiting
+                              ? 1
+                              : 0),
+                      itemBuilder: (context, index) {
+                        if (index < units.length) {
+                          final unit = units[index];
+                          return CenterCard(
+                            centerModel: unit,
+                            onTap: () {
+                              if (unit.id != null) {
+                                _navigation.navigateToPage(
+                                  DetailsScreen(unitId: unit.id!),
+                                );
+                              } else {
+                                print('Unit ID is null');
+                              }
+                            },
+                          );
+                        } else {
+                          return Padding(
+                            padding: EdgeInsets.symmetric(vertical: 32),
+                            child: Center(
+                              child: CircularProgressIndicator(),
+                            ),
+                          );
+                        }
+                      },
+                    ),
+                  );
                 }
-              },
-            ),
+              }
+            },
           ),
         ],
       ),
     );
   }
 
+  Widget _buildSearchBar() {
+    return SafeArea(
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Container(
+          color: Colors.white,
+          child: Row(
+            children: [
+              IconButton(
+                icon: Icon(Icons.arrow_back),
+                onPressed: () {
+                  setState(() {
+                    searchQuery = ''; // Clear search query
+                    filters.clear(); // Clear filters
+                    units.clear(); // Clear current data
+                    page = 1; // Reset page number
+                    futureCenterUnit =
+                        _fetchData(page, filters); // Fetch initial data
+                    isSearchBarVisible =
+                    false; // Hide search bar // Hide search bar
+                  });
+                },
+              ),
+              Expanded(
+                child: TextField(
+                  controller: searchController,
+                  onChanged: (value) {
+                    setState(() {
+                      searchQuery = value; // Update search query
+                      units.clear(); // Clear current data
+                      page = 1; // Reset page number
+                      futureCenterUnit = _fetchData(
+                          page, filters); // Fetch data with new filter
+                    });
+                  },
+                  decoration: InputDecoration(
+                    hintText: "Search...",
+                    hintStyle: TextStyle(fontSize: 16),
+                    // border: InputBorder.none,
+                    focusColor: Color(0xff3C98CB),
+                    suffixIcon: searchQuery.isNotEmpty
+                        ? IconButton(
+                      icon: Icon(
+                        Icons.clear,
+                        color: Colors.black,
+                      ),
+                      onPressed: () {
+                        setState(() {
+                          searchController.clear();
+                          searchQuery = ''; // Clear search query
+                          units.clear();
+                          filters.clear(); // Clear current data
+                          page = 1; // Reset page number
+                          futureCenterUnit = _fetchData(
+                              page, filters); // Fetch initial data
+                        });
+                      },
+                    )
+                        : null,
+                  ),
+                ),
+              ),
+              IconButton(
+                icon: Icon(Icons.search),
+                onPressed: () {
+                  setState(() {
+                    units.clear(); // Clear current data
+                    page = 1; // Reset page number
+                    futureCenterUnit =
+                        _fetchData(page, filters); // Fetch data with new filter
+                  });
+                },
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
   displayBottomSheet(BuildContext context) {
-    return showBottomSheet(
+    return showModalBottomSheet(
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(
+          top: Radius.circular(30),
+        ),
+      ),
       context: context,
-      builder: (context) => SortBottomSheet(),
-      shape: OutlineInputBorder(
-          borderSide: BorderSide(color: Colors.black26),
-          borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(16), topRight: Radius.circular(16))),
+      builder: (context) => SortBottomSheet(onSortSelected: _applySortOption),
     );
   }
 }

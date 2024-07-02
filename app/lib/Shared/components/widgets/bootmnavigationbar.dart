@@ -36,7 +36,7 @@ class _TabsState extends State<TabsScreen> {
         onTap: _SelectPage,
         currentIndex: selectedPage,
         selectedIconTheme:
-            IconThemeData(color: Color.fromRGBO(60, 152, 203, 1)),
+        IconThemeData(color: Color.fromRGBO(60, 152, 203, 1)),
         items: [
           BottomNavigationBarItem(
             icon: Icon(Icons.calendar_month),

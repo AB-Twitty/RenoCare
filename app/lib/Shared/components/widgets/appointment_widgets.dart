@@ -1,18 +1,19 @@
 import 'package:app/Shared/components/widgets/commentScreen.dart';
+import 'package:app/models/center_model/center_model.dart';
+import 'package:app/tabs/appointment.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-import '../../../models/center_model/center_model.dart';
+class AppointmentCard extends StatelessWidget {
+  final AppointmentModel appointment;
+  const AppointmentCard(this.appointment, {super.key});
 
-class cardLists extends StatelessWidget {
-  cardLists(this.Hospitals, {super.key});
-  hospitalsClass Hospitals;
   @override
   Widget build(BuildContext context) {
     final formatter = DateFormat.yMMMEd();
-    bool activeselect = Hospitals.category == Category.upcoming ||
-        Hospitals.category == Category.completed;
-    bool activeButton = Hospitals.category == Category.upcoming;
+    bool activeselect = appointment.category == Category.upcoming ||
+        appointment.category == Category.completed;
+    bool activeButton = appointment.category == Category.upcoming;
     return Padding(
       padding: const EdgeInsets.all(4.0),
       child: Card(
@@ -37,15 +38,15 @@ class cardLists extends StatelessWidget {
                           children: [
                             Expanded(
                               child: Text(
-                                Hospitals.name,
+                                appointment.dialysisUnitName,
                                 style: TextStyle(
                                   fontSize: 16.0,
                                 ),
                                 overflow: TextOverflow.ellipsis,
                               ),
                             ),
-                            if (Hospitals.category == Category.upcoming ||
-                                Hospitals.category == Category.completed) ...{
+                            if (appointment.category == Category.upcoming ||
+                                appointment.category == Category.completed) ...{
                               Icon(
                                 color: Color.fromARGB(255, 109, 153, 222),
                                 size: 30.0,
@@ -67,7 +68,7 @@ class cardLists extends StatelessWidget {
                             SizedBox(width: 4.0),
                             Expanded(
                               child: Text(
-                                Hospitals.address,
+                                appointment.formattedAddress,
                                 style: TextStyle(fontSize: 10),
                                 overflow: TextOverflow.ellipsis,
                               ),
@@ -79,14 +80,16 @@ class cardLists extends StatelessWidget {
                           child: Padding(
                             padding: const EdgeInsets.all(7.0),
                             child: Text(
-                              Hospitals.category.name,
+                              appointment.category.name,
                               textAlign: TextAlign.end,
                               style: TextStyle(
-                                  color: Hospitals.category == Category.upcoming
+                                  color:
+                                  appointment.category == Category.upcoming
                                       ? Color.fromARGB(255, 199, 183, 38)
-                                      : Hospitals.category == Category.cancelled
-                                          ? Colors.red
-                                          : Colors.green),
+                                      : appointment.category ==
+                                      Category.cancelled
+                                      ? Colors.red
+                                      : Colors.green),
                             ),
                           ),
                         )
@@ -104,10 +107,10 @@ class cardLists extends StatelessWidget {
                   SizedBox(
                     width: 5,
                   ),
-                  Text('10:00 am'),
+                  Text(appointment.time),
                   Spacer(),
                   Icon(Icons.calendar_month),
-                  Text(formatter.format(DateTime.now())),
+                  Text(appointment.date),
                 ],
               ),
               SizedBox(
@@ -115,44 +118,44 @@ class cardLists extends StatelessWidget {
               ),
               activeselect
                   ? Row(
-                      children: [
-                        OutlinedButton(
-                            style: OutlinedButton.styleFrom(
-                                side: BorderSide(
-                                    color: Color.fromARGB(255, 109, 153, 222)),
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(20))),
-                            onPressed: () {
-                              showModalBottomSheet(
-                                  isScrollControlled: true,
-                                  shape: const RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.vertical(
-                                      top: Radius.circular(20),
-                                    ),
-                                  ),
-                                  context: context,
-                                  builder: (context) => CommentScreen());
-                            },
-                            child: Text(
-                              activeButton ? 'Cancel' : 'Enter Review',
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: Color.fromARGB(255, 109, 153, 222),
+                children: [
+                  OutlinedButton(
+                      style: OutlinedButton.styleFrom(
+                          side: BorderSide(
+                              color: Color.fromARGB(255, 109, 153, 222)),
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20))),
+                      onPressed: () {
+                        showModalBottomSheet(
+                            isScrollControlled: true,
+                            shape: const RoundedRectangleBorder(
+                              borderRadius: BorderRadius.vertical(
+                                top: Radius.circular(20),
                               ),
-                            )),
-                        Spacer(),
-                        ElevatedButton(
-                            style: OutlinedButton.styleFrom(
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(20))),
-                            onPressed: () {},
-                            child: Text(
-                                activeButton ? 'Reshedule' : 'View Report')),
-                      ],
-                    )
+                            ),
+                            context: context,
+                            builder: (context) => CommentScreen());
+                      },
+                      child: Text(
+                        activeButton ? 'Cancel' : 'Enter Review',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: Color.fromARGB(255, 109, 153, 222),
+                        ),
+                      )),
+                  Spacer(),
+                  ElevatedButton(
+                      style: OutlinedButton.styleFrom(
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20))),
+                      onPressed: () {},
+                      child: Text(
+                          activeButton ? 'Reschedule' : 'View Report')),
+                ],
+              )
                   : SizedBox(
-                      height: 15,
-                    ),
+                height: 15,
+              ),
             ],
           ),
         ),
