@@ -7,12 +7,23 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../services/navigation_service.dart';
 
-class ProfileTab extends StatelessWidget {
+class ProfileTab extends StatefulWidget {
+  @override
+  State<ProfileTab> createState() => _ProfileTabState();
+}
+
+class _ProfileTabState extends State<ProfileTab> {
   LoginDataManager2 loginDataManager2=LoginDataManager2();
+
   late NavigationService _navigation;
+
   SignalRUtil signalRUtil=SignalRUtil();
+
+
+
   @override
   Widget build(BuildContext context) {
+
     Size size = MediaQuery.of(context).size;
     _navigation = NavigationService();
     return Scaffold(
@@ -20,7 +31,7 @@ class ProfileTab extends StatelessWidget {
         automaticallyImplyLeading: false,
         actions: [
           IconButton(onPressed: ()async{
-            signalRUtil.stopConnection();
+              signalRUtil.stopConnection();
             loginDataManager2.clearLoginData();
             // delete tokens
             SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -49,15 +60,15 @@ class ProfileTab extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             buildUserImage(size, context),
-            ElevatedButton(
-                onPressed: () {},
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Color(0xffB8E8F7),
-                ),
-                child: Text(
-                  "Edit Profile",
-                  style: TextStyle(fontSize: 12, color: Colors.black),
-                )),
+            // ElevatedButton(
+            //     onPressed: () {},
+            //     style: ElevatedButton.styleFrom(
+            //       backgroundColor: Color(0xffB8E8F7),
+            //     ),
+            //     child: Text(
+            //       "Edit Profile",
+            //       style: TextStyle(fontSize: 12, color: Colors.black),
+            //     )),
 
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
@@ -78,7 +89,7 @@ class ProfileTab extends StatelessWidget {
                 children: [
                   Text("Name"),
                   Text(
-                    "Mohamed",
+                    "mohamed gamal",
                     style: TextStyle(color: Colors.grey, fontSize: 12),
                   )
                 ],

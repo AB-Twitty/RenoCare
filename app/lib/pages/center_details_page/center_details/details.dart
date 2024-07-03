@@ -4,6 +4,7 @@ import 'package:app/pages/center_details_page/details_page_parts/about_us.dart';
 import 'package:app/pages/center_details_page/details_page_parts/amenities.dart';
 import 'package:app/pages/center_details_page/details_page_parts/map_part.dart';
 import 'package:app/pages/center_details_page/details_page_parts/review_part.dart';
+import 'package:app/pages/chat_module/page/chat_home/chat_page.dart';
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
 import 'package:carousel_slider/carousel_controller.dart';
@@ -21,6 +22,8 @@ class DetailsScreen extends StatefulWidget {
 }
 
 class _DetailsScreenState extends State<DetailsScreen> {
+  String? uId;
+  String? name;
   late Future<DetailModel> futureDetail;
   var myCurrentIndex = 0;
   CarouselController carouselController = CarouselController();
@@ -87,8 +90,10 @@ class _DetailsScreenState extends State<DetailsScreen> {
     }
   }
 
+
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       appBar: AppBar(
         title: Text('Details Page'),
@@ -122,7 +127,23 @@ class _DetailsScreenState extends State<DetailsScreen> {
         ),
       ),
       floatingActionButton: FloatingActionButton.small(
-        onPressed: () {},
+        onPressed: () {
+          // go to chat
+
+          print("===============================================");
+          print("Name : $name");
+          print("Udi : $uId");
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => ChatPage(
+                active_chat_Id: uId!,
+                chatName: name!,
+              ),
+            ),
+          );
+
+        },
         backgroundColor: Color.fromRGBO(60, 152, 203, 1),
         child: Icon(Icons.message),
       ),
@@ -135,6 +156,8 @@ class _DetailsScreenState extends State<DetailsScreen> {
             return Center(child: Text('Error: ${snapshot.error}'));
           } else if (snapshot.hasData) {
             final detail = snapshot.data!;
+            name=detail.name;
+            uId=detail.uId;
             return SingleChildScrollView(
               child: Padding(
                 padding: const EdgeInsets.all(20.0),
@@ -425,6 +448,7 @@ class DetailModel {
   final double? hdfPrice;
   final Map<String, List<String>> groupedSessions;
   final List<Review> reviews; // Add this line
+  final String uId;
   DetailModel({
     required this.id,
     required this.rating,
@@ -445,10 +469,13 @@ class DetailModel {
     required this.groupedSessions,
     required this.reviews, // Add this line
     this.hdfPrice,
+    required this.uId,
   });
 
   factory DetailModel.fromJson(Map<String, dynamic> json) {
     return DetailModel(
+
+      uId: json['userId'],
       id: json['id'] ?? 0,
       rating: (json['rating'] ?? 0).toDouble(),
       reviewCnt: json['reviewCnt'] ?? 0,

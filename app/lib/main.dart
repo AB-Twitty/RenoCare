@@ -1,4 +1,5 @@
 import 'package:app/Shared/components/widgets/bootmnavigationbar.dart';
+import 'package:app/models/notification_model.dart';
 import 'package:app/pages/book_page/book_page.dart';
 import 'package:app/pages/center_details_page/center_details/details.dart';
 import 'package:app/pages/chat_module/page/chat_home/chat_home_page.dart';
@@ -12,6 +13,7 @@ import 'package:app/services/navigation_service.dart';
 import 'package:app/services/notification_service.dart';
 import 'package:app/services/session_maneger.dart';
 import 'package:app/services/signalR_service.dart';
+import 'package:app/services/token_service.dart';
 import 'package:app/tabs/appointment.dart';
 
 import 'package:app/tabs/home.dart';
@@ -27,6 +29,8 @@ import 'firebase_options.dart';
 
 
 void main() async {
+
+
   Bloc.observer = MyBlocObserver();
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
@@ -49,19 +53,14 @@ void main() async {
 }
 
 class MyApp extends StatelessWidget {
-    final not.FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-        not.FlutterLocalNotificationsPlugin();
+
   final SignalRUtil signalRUtil=SignalRUtil();
 
-  Future<void> SignalR_init()async{
 
-    var myHub= await signalRUtil.startConnection();
-    myHub.on("ReceiveMessage", _handleReceivedMessage);
-  }
   @override
   Widget build(BuildContext context) {
 
-    SignalR_init();
+
     return MaterialApp(
       theme: ThemeData(
         useMaterial3: false,
@@ -88,17 +87,5 @@ class MyApp extends StatelessWidget {
 
 
 
-}
-
-void _handleReceivedMessage(List<Object?>? arguments) {
-  if (arguments == null || arguments.isEmpty) return;
-
-  final Message msg = Message.fromJson(arguments[0] as Map<String, dynamic>);
-
-
-    NotificationService.showMessageNotification(
-                 title: arguments[1]as String ,
-                 body: msg.message,
-                 fln: flutterLocalNotificationsPlugin);
 }
 

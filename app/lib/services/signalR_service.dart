@@ -6,7 +6,7 @@ import 'package:app/services/token_service.dart';
 import 'package:signalr_core/signalr_core.dart';
 
 class SignalRUtil {
-   HubConnection? _hubConnection;
+ static  HubConnection? _hubConnection;
   final loginDataManager2=LoginDataManager2();
 
 
@@ -30,6 +30,7 @@ class SignalRUtil {
 
       if(_hubConnection!=null){
         print("=========================================Already Initialized ====================");
+        _reconnect();
         return _hubConnection!;
       }
       print("=========================================Initializind ====================");
@@ -54,13 +55,13 @@ class SignalRUtil {
     return _hubConnection!;
   }
 
-  void stopConnection() {
+  Future<void> stopConnection() async{
     if(_hubConnection==null)
       {
         print("Stopping but Null");
         return;
       }
-    _hubConnection!.stop();
+    await _hubConnection!.stop();
   }
 
   void _reconnect() async {

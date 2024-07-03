@@ -1,3 +1,4 @@
+import 'package:app/pages/chat_module/page/chat_home/widget/mesasge_bubble2.dart';
 import 'package:chat_bubbles/chat_bubbles.dart';
 import 'package:dio/dio.dart';
 import 'package:file_picker/file_picker.dart';
@@ -215,7 +216,13 @@ class _ChatPageState extends State<ChatPage> {
     return Scaffold(
 
       appBar: AppBar(
-        title: Text(widget.chatName),
+
+        iconTheme: IconThemeData(
+          color: Colors.black
+        ),
+        backgroundColor: Colors.grey[200],
+        centerTitle: true,
+        title: Text(widget.chatName,style: TextStyle(color: Colors.black),),
         automaticallyImplyLeading: false,
         leading:  IconButton(onPressed: (){
           Navigator.pop(context,widget.active_chat_Id);
@@ -223,48 +230,61 @@ class _ChatPageState extends State<ChatPage> {
         }, icon: Icon(Icons.arrow_back)),
 
       ),
-      body: Column(
+      body: Stack(
+
         children: [
-          Expanded(
-            child: ListView.builder(
-              controller: _scrollController,
-              itemCount: messages.length,
-              itemBuilder: (context, index) {
-                final message = messages[index];
-                isMe = message.senderId == currId;
-                return MessageBubble(
-                  message: message,
-                  isMe: isMe,
-                );
-              },
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Row(
-              children: [
-                IconButton(
-                  onPressed: () {
-                    _pickFile();
+
+          Positioned.fill(child: Image.asset("assets/images/background.jpeg",fit: BoxFit.cover,)),
+          Column(
+            children: [
+              Expanded(
+                child: ListView.builder(
+                  controller: _scrollController,
+                  itemCount: messages.length,
+                  itemBuilder: (context, index) {
+                    final message = messages[index];
+                    isMe = message.senderId == currId;
+                    return MessageBubble2(
+                      message: message,
+                      isMe: isMe,
+                    );
                   },
-                  icon: Icon(Icons.attach_file_outlined),
-                  color: Colors.black,
                 ),
-                Expanded(
-                  child: TextField(
-                    controller: _controller,
-                    decoration: InputDecoration(hintText: 'Enter a message'),
-                    onSubmitted: _sendMessage,
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.all(Radius.circular(16))
+                  ),
+                  child: Row(
+                    children: [
+                      IconButton(
+                        onPressed: () {
+                          _pickFile();
+                        },
+                        icon: Icon(Icons.attach_file_outlined),
+                        color: Colors.black,
+                      ),
+                      Expanded(
+                        child: TextField(
+                          controller: _controller,
+                          decoration: InputDecoration(hintText: 'Enter a message'),
+                          onSubmitted: _sendMessage,
+                        ),
+                      ),
+
+                      //SizedBox(width: 12,),
+                      IconButton(
+                        icon: Icon(Icons.send,color: Color(0xff3C98CB),),
+                        onPressed: () => _sendMessage(_controller.text),
+                      ),
+                    ],
                   ),
                 ),
-
-                //SizedBox(width: 12,),
-                IconButton(
-                  icon: Icon(Icons.send),
-                  onPressed: () => _sendMessage(_controller.text),
-                ),
-              ],
-            ),
+              ),
+            ],
           ),
         ],
       ),

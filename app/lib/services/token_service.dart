@@ -115,6 +115,7 @@ class LoginDataManager2 {
   LoginDataManager2._internal();
 
   static const _idKey = 'id';
+
   static const _firstNameKey = 'firstName';
   static const _lastNameKey = 'lastName';
   static const _accessTokenKey = 'accessToken';
@@ -138,6 +139,8 @@ class LoginDataManager2 {
     final lastName = prefs.getString(_lastNameKey) ?? '';
     final accessToken = prefs.getString(_accessTokenKey) ?? '';
     final sessionExpiry = prefs.getString(_sessionExpiryKey) ?? '';
+
+
 
     return {
       'id': id,

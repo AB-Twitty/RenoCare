@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart'
     as not;
 import 'package:intl/intl.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:signalr_core/signalr_core.dart' as signalR;
 
 import 'chat_page.dart';
@@ -56,8 +57,28 @@ class _ChatHomePageState extends State<ChatHomePage> {
         final chatResponse = ChatResponse.fromJson(response.data);
         if (chatResponse.succeded) {
           setState(() {
+
             contacts = chatResponse.data;
+            for(int i=0;i<contacts.length;i++)
+              {
+                if(contacts[i].lastMsg.senderId!=currUserId)// i am sender
+                  {
+                    contacts[i].lastMsg.status=0;
+                }
+              }
+
+
           });
+
+          for(int i=0;i<contacts.length;i++)
+            {
+              print("===================================================");
+              print("Name: ${contacts[i].name}");
+
+              print("Name: ${contacts[i].lastMsg.message}");
+              print("Name: ${contacts[i].unreadMsgCount}");
+              print("Name: ${contacts[i].lastMsg.status}");
+            }
         } else {
           print("Failed to fetch contacts: ${chatResponse.message}");
         }
@@ -171,13 +192,20 @@ class _ChatHomePageState extends State<ChatHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.grey[200],
       appBar: AppBar(
         title: Text('Chats'),
       ),
       body: FutureBuilder<void>(
         future: _contactsFuture,
         builder: (context, snapshot) {
-          if (snapshot.hasError) {
+          if (snapshot.connectionState==ConnectionState.waiting)
+            {
+              return Center(
+                child: LoadingAnimationWidget.threeArchedCircle(color: Colors.blue, size:50),
+              );
+            }
+         else if (snapshot.hasError) {
             return Center(child: Text('Error fetching contacts'));
           } else if (contacts.isEmpty) {
             return Center(child: Text('No contacts available'));
@@ -186,55 +214,63 @@ class _ChatHomePageState extends State<ChatHomePage> {
             itemCount: contacts.length,
             itemBuilder: (context, index) {
               final contact = contacts[index];
-              return ListTile(
-                leading: Image.asset(
-                  "assets/images/profile2.jpeg",
-                  height: 30,
+              return Container(
+                margin: EdgeInsets.symmetric(vertical: 12,horizontal: 8),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(16)
                 ),
-                title: Text(contact.name),
-                subtitle: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(contact.lastMsg.message),
-                    if (contact.lastMsg.sendingTime != null)
+                child: ListTile(
+                  leading: Image.asset(
+                    "assets/images/profile2.jpeg",
+                    height: 30,
+                  ),
+                  title: Text(contact.name),
+                  subtitle: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(contact.lastMsg.message),
+
+
+                        Text(
+                          _formatDate(contact.lastMsg.sendingTime),
+                          style: TextStyle(fontSize: 12, color: Colors.grey),
+                        ),
                       Text(
-                        _formatDate(contact.lastMsg.sendingTime),
+                        _statusText(contact.lastMsg.status!),
                         style: TextStyle(fontSize: 12, color: Colors.grey),
                       ),
-                    Text(
-                      _statusText(contact.lastMsg.status!),
-                      style: TextStyle(fontSize: 12, color: Colors.grey),
-                    ),
-                  ],
-                ),
-                trailing: contact.unreadMsgCount > 0
-                    ? CircleAvatar(
-                        radius: 10,
-                        backgroundColor: Colors.red,
-                        child: Text(
-                          contact.unreadMsgCount.toString(),
-                          style: TextStyle(color: Colors.white, fontSize: 12),
+                    ],
+                  ),
+                  trailing: contact.unreadMsgCount > 0
+                      ? CircleAvatar(
+                          radius: 10,
+                          backgroundColor: Colors.blueAccent,
+                          child: Text(
+                            contact.unreadMsgCount.toString(),
+                            style: TextStyle(color: Colors.white, fontSize: 12),
+                          ),
+                        )
+                      : null,
+                  onTap: () async {
+                    setState(() {
+                      contact.unreadMsgCount = 0;
+                    });
+                    await Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => ChatPage(
+                          active_chat_Id: contact.userId,
+                          chatName: contact.name,
                         ),
-                      )
-                    : null,
-                onTap: () async {
-                  setState(() {
-                    contact.unreadMsgCount = 0;
-                  });
-                  await Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => ChatPage(
-                        active_chat_Id: contact.userId,
-                        chatName: contact.name,
                       ),
-                    ),
-                  ).then((value) {
-                    prv_active_id = value;
-                    fun();
-                  });
-                  setState(() {}); // Refresh the chat list on return
-                },
+                    ).then((value) {
+                      prv_active_id = value;
+                      fun();
+                    });
+                    setState(() {}); // Refresh the chat list on return
+                  },
+                ),
               );
             },
           );

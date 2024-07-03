@@ -40,7 +40,7 @@ class _TabsState extends State<TabsScreen> {
         onTap: _SelectPage,
         currentIndex: selectedPage,
   unselectedItemColor: Colors.grey,
-        showSelectedLabels: false,
+        showSelectedLabels: true,
         showUnselectedLabels: true,
         selectedItemColor: Colors.black,
 

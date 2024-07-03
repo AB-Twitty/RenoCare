@@ -1,3 +1,4 @@
+import 'package:app/models/notification_model.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 class NotificationService {
@@ -12,8 +13,8 @@ class NotificationService {
     await flutterLocalNotificationsPlugin.initialize(initializationsSettings);
   }
 
-  static Future showMessageNotification(
-      {var id = 0,
+  static Future showMessageNotification({
+        var id = 0,
       required String title,
       required String body,
       var payload,
@@ -32,8 +33,47 @@ class NotificationService {
 
 
     var not=NotificationDetails(android: androidNotificationDetails);
+    await fln.show(
 
-    await fln.show(0, title, body, not);
+
+        0,
+        title,
+        body,
+        not,
+
+    );
+
+  }
+
+
+  static Future showAppointmentNotification({
+    var id = 0,
+    required String title,
+    required String body,
+    required Map<String, dynamic> data,
+    var payload,
+    required FlutterLocalNotificationsPlugin fln}) async{
+
+
+    AndroidNotificationDetails androidNotificationDetails =
+    new AndroidNotificationDetails(
+      'you_can_name_it_whatever',
+      'channel_name',
+
+      playSound: true,
+      importance: Importance.max,
+      priority: Priority.high,
+    );
+
+
+    var not=NotificationDetails(android: androidNotificationDetails);
+    await fln.show(
+      0,
+      title,
+      body,
+      not,
+      payload: data.toString(),
+    );
 
   }
 }
