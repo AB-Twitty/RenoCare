@@ -39,15 +39,19 @@ class MessageBubble2 extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          "File: $message",
+                          "${message.message}",
                           style: TextStyle(
-                            color: isMe ? Colors.white : Colors.black54,
+                            color: Colors.black,
                             fontSize: 15.0,
                           ),
                         ),
+                        SizedBox(
+                          height: 10,
+                        ),
                         ElevatedButton(
                           onPressed: () {
-                            // Handle file download
+                            _downloadFile(
+                                context, message.fileLink, message.message);
                           },
                           child: Text('Download'),
                         ),
