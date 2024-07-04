@@ -86,7 +86,7 @@ namespace RenoCare.Persistence
 		/// A task represents the asynchronous operation, 
 		/// The task result contains the return value of the query.
 		/// </returns>
-		public async Task<T> ApplyQueryAsync<T>(Func<IQueryable<TEntity>, Task<T>> func, bool includeDeleted = false)
+		public async Task<T> ApplyQueryAsync<T>(Func<IQueryable<TEntity>, Task<T>> func, bool includeDeleted = true)
         {
             async Task<T> getAsync()
             {

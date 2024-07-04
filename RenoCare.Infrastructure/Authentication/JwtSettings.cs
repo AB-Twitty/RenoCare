@@ -20,6 +20,6 @@
         /// <summary>
         /// Represents a value indicating the duration in minutes for the life time of the token.
         /// </summary>
-        public static int ExpiredAfterMinutes = 60;
+        public static int ExpiredAfterMinutes = 10080;
     }
 }

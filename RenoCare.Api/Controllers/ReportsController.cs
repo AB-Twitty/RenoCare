@@ -5,6 +5,7 @@ using RenoCare.Core.Base;
 using RenoCare.Core.Features.Reports.Dtos;
 using RenoCare.Core.Features.Reports.Mediator.Commands;
 using RenoCare.Core.Features.Reports.Mediator.Queries;
+using RenoCare.Core.Helpers;
 using RenoCare.Domain.MetaData;
 using System.Threading.Tasks;
 
@@ -49,6 +50,16 @@ namespace RenoCare.Api.Controllers
 
             return File(response.File, "application/pdf", response.FileName);
         }
+
+        [HttpPost(Router.ReportRouting.List)]
+        [Authorize(Roles = "Admin, HealthCare")]
+        public async Task<ActionResult<ApiResponse<IPagedList<ReportDto>>>> GetReportsListAsync([FromBody] GetReportsListQueryRequest req,
+            [FromQuery] int page = 1)
+        {
+            req.PageIndex = page;
+            return ApiResult(await _mediator.Send(req));
+        }
+
 
         #endregion
     }

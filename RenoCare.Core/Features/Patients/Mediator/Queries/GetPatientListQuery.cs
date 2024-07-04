@@ -114,22 +114,24 @@ namespace RenoCare.Core.Features.Patients.Mediator.Queries
 
                     var totalCount = qry.Count();
 
+                    qry = qry.FilterQuery(request);
+
                     var sorting_by_medStatus = statuses_names.Contains(request.SortColumn);
 
                     if (!sorting_by_medStatus && !string.IsNullOrEmpty(request.SortColumn) && !string.IsNullOrEmpty(request.SortDirection))
                         qry = qry.OrderBy($"{request.SortColumn} {request.SortDirection}");
 
-                    var paged_list = await qry.ToPagedListAsync(request.PageIndex, request.PageSize, totalCount);
+                    var paged_list = await qry.ToPagedListAsync(request.PageIndex, request.PageSize, totalCount, 1, qry.Count());
 
                     foreach (var patient in paged_list.Items)
                     {
                         patient.MedReqCnts = await _medReqRepo.ApplyQueryAsync(async q =>
                         {
-                            var medReqs = await q
+                            var medReqs = await q.Include(x => x.Status)
                                 .Where(m => m.PatientId == patient.Id)
                                 .ToListAsync();
 
-                            return medReqs
+                            return medReqs.Where(x => x.Status != null)
                                 .GroupBy(m => m.Status.Name)
                                 .Where(g => statuses_names.Contains(g.Key))
                                 .ToDictionary(g => g.Key, g => g.Count());
@@ -170,22 +172,24 @@ namespace RenoCare.Core.Features.Patients.Mediator.Queries
 
                     var totalCount = qry.Count();
 
+                    qry = qry.FilterQuery(request);
+
                     var sorting_by_medStatus = statuses_names.Contains(request.SortColumn);
 
                     if (!sorting_by_medStatus && !string.IsNullOrEmpty(request.SortColumn) && !string.IsNullOrEmpty(request.SortDirection))
                         qry = qry.OrderBy($"{request.SortColumn} {request.SortDirection}");
 
-                    var paged_list = await qry.ToPagedListAsync(request.PageIndex, request.PageSize, totalCount);
+                    var paged_list = await qry.ToPagedListAsync(request.PageIndex, request.PageSize, totalCount, 1, qry.Count());
 
                     foreach (var patient in paged_list.Items)
                     {
                         patient.MedReqCnts = await _medReqRepo.ApplyQueryAsync(async q =>
                         {
-                            var medReqs = await q
+                            var medReqs = await q.Include(x => x.Status)
                                 .Where(m => m.PatientId == patient.Id)
                                 .ToListAsync();
 
-                            return medReqs
+                            return medReqs.Where(x => x.Status != null)
                                 .GroupBy(m => m.Status.Name)
                                 .Where(g => statuses_names.Contains(g.Key))
                                 .ToDictionary(g => g.Key, g => g.Count());

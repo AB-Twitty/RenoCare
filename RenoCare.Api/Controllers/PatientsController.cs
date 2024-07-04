@@ -2,7 +2,9 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using RenoCare.Core.Base;
+using RenoCare.Core.Features.Authentication.Contracts.Models;
 using RenoCare.Core.Features.Patients.DTOs;
+using RenoCare.Core.Features.Patients.Mediator.Commands;
 using RenoCare.Core.Features.Patients.Mediator.Queries;
 using RenoCare.Core.Helpers;
 using RenoCare.Domain.MetaData;
@@ -42,6 +44,10 @@ namespace RenoCare.Api.Controllers
         [HttpGet(Router.PatientRouting.Medical)]
         public async Task<ActionResult<ApiResponse<PatientDto>>> GetPatientMedicalInfoAsync([FromRoute] int id) =>
             ApiResult(await _mediator.Send(new GetPatientMedicalInfoQueryRequest { Id = id }));
+
+        [HttpPost(Router.PatientRouting.Newcome)]
+        public async Task<ActionResult<ApiResponse<AuthResponse>>> RegisterNewcomePatient([FromBody] RegisterNewcomePatientCommandRequest req) =>
+            ApiResult(await _mediator.Send(req));
 
         #endregion
 

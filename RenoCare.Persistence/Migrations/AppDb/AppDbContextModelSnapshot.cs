@@ -104,7 +104,7 @@ namespace RenoCare.Persistence.Migrations.AppDb
 
                     b.Property<string>("Message")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("nvarchar(MAX)");
 
                     b.Property<string>("ReceiverId")
                         .IsRequired()
@@ -426,10 +426,6 @@ namespace RenoCare.Persistence.Migrations.AppDb
                     b.Property<DateTime>("AppointmentDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("AppointmentHour")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<int>("DialysisUnitId")
                         .HasColumnType("int");
 
@@ -442,7 +438,13 @@ namespace RenoCare.Persistence.Migrations.AppDb
                     b.Property<int?>("ReportId")
                         .HasColumnType("int");
 
+                    b.Property<int>("SessionId")
+                        .HasColumnType("int");
+
                     b.Property<int>("StatusId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Treatment")
                         .HasColumnType("int");
 
                     b.Property<int>("TypeId")
@@ -454,6 +456,8 @@ namespace RenoCare.Persistence.Migrations.AppDb
 
                     b.HasIndex("PatientId")
                         .IsUnique();
+
+                    b.HasIndex("SessionId");
 
                     b.HasIndex("StatusId")
                         .IsUnique();
@@ -996,6 +1000,12 @@ namespace RenoCare.Persistence.Migrations.AppDb
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("RenoCare.Domain.SessionTimetable", "Session")
+                        .WithMany("MedReqs")
+                        .HasForeignKey("SessionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("RenoCare.Domain.MedicationRequestStatus", "Status")
                         .WithOne()
                         .HasForeignKey("RenoCare.Domain.MedicationRequest", "StatusId")
@@ -1011,6 +1021,8 @@ namespace RenoCare.Persistence.Migrations.AppDb
                     b.Navigation("DialysisUnit");
 
                     b.Navigation("Patient");
+
+                    b.Navigation("Session");
 
                     b.Navigation("Status");
 
@@ -1126,6 +1138,11 @@ namespace RenoCare.Persistence.Migrations.AppDb
             modelBuilder.Entity("RenoCare.Domain.Patient", b =>
                 {
                     b.Navigation("Reports");
+                });
+
+            modelBuilder.Entity("RenoCare.Domain.SessionTimetable", b =>
+                {
+                    b.Navigation("MedReqs");
                 });
 #pragma warning restore 612, 618
         }

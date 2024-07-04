@@ -24,9 +24,9 @@ namespace RenoCare.Domain
         public DateTime AppointmentDate { get; set; }
 
         /// <summary>
-        /// Gets or sets the time of the appointment
+        /// Gets or sets the time session of the appointment
         /// </summary>
-        public string AppointmentHour { get; set; }
+        public int SessionId { get; set; }
 
         /// <summary>
         /// Gets or sets extra information provided by the patient about his condition
@@ -47,6 +47,8 @@ namespace RenoCare.Domain
         /// Gets or sets a value indicating the report of treatment session
         /// </summary>
         public int? ReportId { get; set; }
+
+        public TreatmentType Treatment { get; set; }
 
 
         /// <summary>
@@ -73,5 +75,13 @@ namespace RenoCare.Domain
         /// Gets or sets the navigation property for the requested dialysis unit.
         /// </summary>
         public virtual DialysisUnit DialysisUnit { get; set; }
+
+        public virtual SessionTimetable Session { get; set; }
+    }
+
+    public enum TreatmentType
+    {
+        HD = 1,
+        HDF = 2
     }
 }

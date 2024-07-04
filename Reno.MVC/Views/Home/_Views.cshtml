@@ -1,0 +1,229 @@
+﻿@using Reno.MVC.Services.Base;
+@model DashboardModel
+
+<!--Dialysis Unit-->
+<div class="ibox-content">
+    @if (User.IsInRole("Admin"))
+    {
+        <!--Dialysis Unit-->
+        <div class="section-header-dashoard">
+            <div class="title">
+                <h2>
+                    <i class="fa fa-hospital-o"></i>
+                    Dialysis Unit
+                </h2>
+            </div>
+
+            <div class="row">
+
+                <!--Card 1 Total-->
+                <div class="col-lg-3">
+                    <div class="ibox shadow">
+                        <div class="ibox-title">
+                            <div class="ibox-tools">
+                                <span class="label label-info float-right">Monthly</span>
+                            </div>
+
+                            <h5>
+                                Total
+                            </h5>
+                        </div>
+                        <div class="ibox-content section-data">
+                            <h1 class="no-margins">
+                                @Model.DialysisUnit["Total"].First
+                            </h1>
+                            @if (Model.DialysisUnit["Total"].Second < 0)
+                            {
+                                <div class="stat-percent font-bold text-danger">
+                                    @Model.DialysisUnit["Total"].Second%
+                                    <i class="fa fa-level-down"></i>
+                                </div>
+                                <small>New</small>
+                            }
+                            else
+                            {
+                                <div class="stat-percent font-bold text-navy">
+                                    @Model.DialysisUnit["Total"].Second%
+                                    <i class="fa fa-level-up"></i>
+                                </div>
+                                <small>New</small>
+                            }
+
+                        </div>
+                    </div>
+                </div>
+
+                <!--Card 2 Active-->
+                <div class="col-lg-3">
+                    <div class="ibox shadow">
+                        <div class="ibox-title">
+                            <div class="ibox-tools">
+                                <span class="label label-info float-right">Monthly</span>
+                            </div>
+
+                            <h5>
+                                <i class="fa fa-check-square-o text-navy"></i>
+                                Active
+                            </h5>
+                        </div>
+                        <div class="ibox-content section-data">
+                            <h1 class="no-margins">
+                                @Model.DialysisUnit["Active"].First
+                            </h1>
+                            @if (Model.DialysisUnit["Active"].Second < 0)
+                            {
+                                <div class="stat-percent font-bold text-danger">
+                                    @Model.DialysisUnit["Active"].Second%
+                                    <i class="fa fa-level-down"></i>
+                                </div>
+                                <small>New</small>
+                            }
+                            else
+                            {
+                                <div class="stat-percent font-bold text-navy">
+                                    @Model.DialysisUnit["Active"].Second%
+                                    <i class="fa fa-level-up"></i>
+                                </div>
+                                <small>New</small>
+                            }
+
+                        </div>
+                    </div>
+                </div>
+
+                <!--Card 3 Non Active-->
+                <div class="col-lg-3">
+                    <div class="ibox shadow">
+                        <div class="ibox-title">
+                            <div class="ibox-tools">
+                                <span class="label label-info float-right">Monthly</span>
+                            </div>
+
+                            <h5>
+                                <i class="fa fa-window-close-o text-danger"></i>
+                                Non-Active
+                            </h5>
+                        </div>
+                        <div class="ibox-content section-data">
+                            <h1 class="no-margins">
+                                @Model.DialysisUnit["Non-Active"].First
+                            </h1>
+                            @if (Model.DialysisUnit["Non-Active"].Second < 0)
+                            {
+                                <div class="stat-percent font-bold text-danger">
+                                    @Model.DialysisUnit["Non-Active"].Second%
+                                    <i class="fa fa-level-down"></i>
+                                </div>
+                                <small>New</small>
+                            }
+                            else
+                            {
+                                <div class="stat-percent font-bold text-navy">
+                                    @Model.DialysisUnit["Non-Active"].Second%
+                                    <i class="fa fa-level-up"></i>
+                                </div>
+                                <small>New</small>
+                            }
+
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    }
+
+
+</div>
+
+
+<!--Patient-->
+<div class="ibox-content">
+    <!--Dialysis Unit-->
+    <div class="section-header-dashoard">
+        <div class="title">
+            <h2>
+                <i class="fa fa-address-card-o"></i>
+                Patient
+            </h2>
+        </div>
+
+        <div class="row">
+
+            <!--Card 1 Total-->
+            <div class="col-lg-3">
+                <div class="ibox shadow">
+                    <div class="ibox-title">
+                        <div class="ibox-tools">
+                            <span class="label label-info float-right">Monthly</span>
+                        </div>
+
+                        <h5>
+                            Total
+                        </h5>
+                    </div>
+                    <div class="ibox-content section-data">
+                        <h1 class="no-margins">
+                            @Model.Patient["Total"].First
+                        </h1>
+                        @if (Model.Patient["Total"].Second < 0)
+                        {
+                            <div class="stat-percent font-bold text-danger">
+                                @Model.Patient["Total"].Second%
+                                <i class="fa fa-level-down"></i>
+                            </div>
+                            <small>New</small>
+                        }
+                        else
+                        {
+                            <div class="stat-percent font-bold text-navy">
+                                @Model.Patient["Total"].Second%
+                                <i class="fa fa-level-up"></i>
+                            </div>
+                            <small>New</small>
+                        }
+
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+</div>
+
+
+<!--Med Req-->
+<div class="ibox-content">
+    <!--Dialysis Unit-->
+    <div class="section-header-dashoard med-req">
+        <div class="title">
+            <h2>
+                <i class="fa fa-medkit"></i>
+                Medication Request
+            </h2>
+        </div>
+
+        <div class="row">
+
+            @foreach (var req in Model.MedReq)
+            {
+                <div class="col-lg-3">
+                    <div class="ibox shadow">
+                        <div class="ibox-title" style="background-color: @req.Value.Second;">
+                            <h5>
+                                @req.Key
+                            </h5>
+                        </div>
+                        <div class="ibox-content section-data">
+                            <h1 class="no-margins">
+                                @req.Value.First
+                            </h1>
+                        </div>
+                    </div>
+                </div>
+            }
+
+        </div>
+    </div>
+</div>

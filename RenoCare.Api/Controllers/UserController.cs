@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using RenoCare.Core.Base;
 using RenoCare.Core.Features.Authentication.Contracts.Models;
@@ -9,47 +10,47 @@ using System.Threading.Tasks;
 
 namespace RenoCare.Api.Controllers
 {
-	[ApiController]
-	public class UserController : BaseController
-	{
-		#region Fields
+    [ApiController]
+    public class UserController : BaseController
+    {
+        #region Fields
 
-		private readonly IMediator _mediator;
+        private readonly IMediator _mediator;
 
-		#endregion
+        #endregion
 
-		#region Ctor
+        #region Ctor
 
-		public UserController(IMediator mediator)
-		{
-			_mediator = mediator;
-		}
+        public UserController(IMediator mediator)
+        {
+            _mediator = mediator;
+        }
 
-		#endregion
+        #endregion
 
-		#region Actions
+        #region Actions
 
-		[HttpPost(Router.AccountRouting.Login)]
-		public async Task<ActionResult<ApiResponse<AuthResponse>>> LoginAsync(AuthRequest request) =>
-			ApiResult(await _mediator.Send(new LoginCommandRequest(request)));
+        [HttpPost(Router.AccountRouting.Login)]
+        public async Task<ActionResult<ApiResponse<AuthResponse>>> LoginAsync(AuthRequest request) =>
+            ApiResult(await _mediator.Send(new LoginCommandRequest(request)));
 
-		[HttpGet(Router.AccountRouting.SendEmailConfirmation)]
-		public async Task<ActionResult<ApiResponse<string>>> SendEmailConfirmationAsync(string userId) =>
-			ApiResult(await _mediator.Send(new SendEmailConfirmationCommandRequest { UserId = userId }));
+        [HttpGet(Router.AccountRouting.SendEmailConfirmation)]
+        public async Task<ActionResult<ApiResponse<string>>> SendEmailConfirmationAsync(string userId) =>
+            ApiResult(await _mediator.Send(new SendEmailConfirmationCommandRequest { UserId = userId }));
 
-		[HttpGet(Router.AccountRouting.ConfirmEmail)]
-		public async Task<ActionResult<ApiResponse<string>>> ConfirmEmailAsync(string userId, string code) =>
-			ApiResult(await _mediator.Send(new ConfirmEmailCommandRequest { UserId = userId, EncodedToken = code }));
+        [HttpGet(Router.AccountRouting.ConfirmEmail)]
+        public async Task<ActionResult<ApiResponse<string>>> ConfirmEmailAsync(string userId, string code) =>
+            ApiResult(await _mediator.Send(new ConfirmEmailCommandRequest { UserId = userId, EncodedToken = code }));
 
-		[HttpPost(Router.HealthCareProviderRouting.CreateHealthCareUser)]
-		//[Authorize(Roles = "Admin")]
-		public async Task<ActionResult<ApiResponse<string>>> AddHealthCareProviderUserAsync([FromForm] string email) =>
-			ApiResult(await _mediator.Send(new CreateHealthCareProviderUserCommandRequest { Email = email }));
+        [HttpPost(Router.HealthCareProviderRouting.CreateHealthCareUser)]
+        [Authorize(Roles = "Admin")]
+        public async Task<ActionResult<ApiResponse<string>>> AddHealthCareProviderUserAsync([FromForm] string email) =>
+            ApiResult(await _mediator.Send(new CreateHealthCareProviderUserCommandRequest { Email = email }));
 
-		[HttpPost(Router.AccountRouting.SetPasswordWithOtp)]
-		public async Task<ActionResult<ApiResponse<AuthResponse>>> SetPasswordWithOtpAsync(OtpPasswordSetRequest passRequest) =>
-			ApiResult(await _mediator.Send(new SetPasswordWithOtpCommandRequest { PasswordModel = passRequest }));
+        [HttpPost(Router.AccountRouting.SetPasswordWithOtp)]
+        public async Task<ActionResult<ApiResponse<AuthResponse>>> SetPasswordWithOtpAsync(OtpPasswordSetRequest passRequest) =>
+            ApiResult(await _mediator.Send(new SetPasswordWithOtpCommandRequest { PasswordModel = passRequest }));
 
-		#endregion
-	}
+        #endregion
+    }
 }

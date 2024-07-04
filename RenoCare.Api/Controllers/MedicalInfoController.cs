@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace RenoCare.Api.Controllers
 {
-    public class PatientsMedicalInfoController : BaseController
+    public class MedicalInfoController : BaseController
     {
         #region Fields
 
@@ -21,7 +21,7 @@ namespace RenoCare.Api.Controllers
 
         #region Ctor
 
-        public PatientsMedicalInfoController(IMediator mediator)
+        public MedicalInfoController(IMediator mediator)
         {
             _mediator = mediator;
         }

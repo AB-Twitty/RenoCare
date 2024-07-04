@@ -13,6 +13,8 @@ namespace RenoCare.Core.Features.Reports.Dtos
         public DateTime CreatedDate { get; set; }
         public DateTime LastModifiedDate { get; set; }
         public DateTime SessionDate { get; set; }
+        public DateTime SessionTime { get; set; }
+        public string FormattedTime => SessionTime.ToString("hh:mm tt");
 
         #region Session Details
 

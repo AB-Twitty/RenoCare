@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using RenoCare.Core.Base;
 using RenoCare.Core.Conatracts.Persistence;
 using RenoCare.Core.Extensions;
@@ -7,6 +8,7 @@ using RenoCare.Core.Features.MedicationRequests.DTOs;
 using RenoCare.Core.Helpers;
 using RenoCare.Core.Helpers.Contracts;
 using RenoCare.Domain;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Dynamic.Core;
@@ -80,7 +82,20 @@ namespace RenoCare.Core.Features.MedicationRequests.Mediator.Queries
                     query = query.Where(x => x.DialysisUnitId == int.Parse(unitId.ToString()));
                 }
 
+                query = query.Include(x => x.Session);
 
+                var sortByTime = request.SortColumn == "Time";
+
+                if (sortByTime)
+                {
+                    switch (request.SortDirection)
+                    {
+                        case "DESC":
+                            query = query.OrderByDescending(x => x.Session.Time); break;
+                        default:
+                            query = query.OrderBy(x => x.Session.Time); break;
+                    }
+                }
 
                 var qry = query
                     .Select(x => new MedicationRequestListItemDto
@@ -90,22 +105,23 @@ namespace RenoCare.Core.Features.MedicationRequests.Mediator.Queries
                         DialysisUnitName = x.DialysisUnit.Name,
                         DialysisUnitId = x.DialysisUnitId,
                         Date = x.AppointmentDate,
-                        Time = x.AppointmentHour,
+                        Time = new DateTime(x.Session.Time.Ticks).ToString("hh:mm tt"),
                         Status = x.Status.Name,
                         Type = x.Type.Name,
                         ReportId = x.ReportId,
                         PatientId = x.PatientId,
-                        PatientProblem = x.PatientProblem
+                        PatientProblem = x.PatientProblem,
+                        Treatment = x.Treatment.ToString(),
                     });
 
                 var totalCount = qry.Count();
 
                 qry = qry.FilterQuery(request);
 
-                if (!string.IsNullOrEmpty(request.SortColumn) && !string.IsNullOrEmpty(request.SortDirection))
+                if (!sortByTime && !string.IsNullOrEmpty(request.SortColumn) && !string.IsNullOrEmpty(request.SortDirection))
                     qry = qry.OrderBy($"{request.SortColumn} {request.SortDirection}");
 
-                return await qry.ToPagedListAsync(request.PageIndex, request.PageSize, totalCount);
+                return await qry.ToPagedListAsync(request.PageIndex, request.PageSize, totalCount, 1, qry.Count());
             });
 
             return Success(list);

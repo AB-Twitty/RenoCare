@@ -1,7 +1,9 @@
 ﻿using FluentValidation.Results;
 using Microsoft.AspNetCore.Identity;
+using RenoCare.Core.Conatracts.Persistence;
 using RenoCare.Core.Features.Authentication.Contracts;
 using RenoCare.Core.Features.Authentication.Contracts.Models;
+using RenoCare.Domain;
 using RenoCare.Domain.Identity;
 using RenoCare.Domain.MetaData;
 using RenoCare.Infrastructure.Authentication.Contracts;
@@ -19,18 +21,25 @@ namespace RenoCare.Infrastructure.Authentication
         #region Fields
 
         private readonly UserManager<AppUser> _userManager;
+        private readonly RoleManager<IdentityRole> _roleManager;
         private readonly SignInManager<AppUser> _signInManager;
         private readonly ITokenProvider _tokenProvider;
+        private readonly IRepository<MedicationRequest> _medReqRepo;
+        private readonly IRepository<Report> _reportRepo;
 
         #endregion
 
         #region Ctor
         public AuthService(UserManager<AppUser> userManager,
-            SignInManager<AppUser> signInManager, ITokenProvider tokenProvider)
+            SignInManager<AppUser> signInManager, ITokenProvider tokenProvider,
+            RoleManager<IdentityRole> roleManager, IRepository<MedicationRequest> medReqRepo, IRepository<Report> reportRepo)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _tokenProvider = tokenProvider;
+            _roleManager = roleManager;
+            _medReqRepo = medReqRepo;
+            _reportRepo = reportRepo;
         }
 
         #endregion
@@ -250,6 +259,37 @@ namespace RenoCare.Infrastructure.Authentication
         }
 
         /// <summary>
+        /// Creates a new user and add it to a given role
+        /// </summary>
+        /// <param name="user">the new user</param>
+        /// <param name="password">the user's password</param>
+        /// <param name="role">the user's role</param>
+        /// <returns>
+        /// A task that represents the asynchronous operation,
+        /// the task result contains a value indicating the succession of the request with any faced errors.
+        /// </returns>
+        public async Task<(bool, IEnumerable<ValidationFailure>)> AddNewUserAsync(AppUser user, string password, string role)
+        {
+            if (await IsUserWithEmailExistsAsync(user.Email))
+                throw new Exception();
+
+            var result = await _userManager.CreateAsync(user, password);
+
+            if (!result.Succeeded)
+            {
+                var errors = new List<ValidationFailure>();
+                foreach (var error in result.Errors)
+                    errors.Add(new ValidationFailure("Password", error.Description));
+
+                return (result.Succeeded, errors);
+            }
+
+            result = await _userManager.AddToRoleAsync(user, role);
+
+            return (result.Succeeded, new List<ValidationFailure>());
+        }
+
+        /// <summary>
         /// Update the given user
         /// </summary>
         /// <param name="user">the updated user</param>
@@ -271,6 +311,32 @@ namespace RenoCare.Infrastructure.Authentication
         public async Task DeleteUserAsync(AppUser user)
         {
             await _userManager.DeleteAsync(user);
+        }
+
+        /// <summary>
+        /// Checks if a user is in a given role or not
+        /// </summary>
+        /// <param name="user">the user</param>
+        /// <param name="role">the role to check</param>
+        /// <returns>
+        /// A value indicating whether the user is in a given role or not
+        /// </returns>
+        public async Task<bool> IsUserInRole(AppUser user, string role)
+        {
+            return await _userManager.IsInRoleAsync(user, role);
+        }
+
+        /// <summary>
+        /// Counte the number of user in a gven role
+        /// </summary>
+        /// <param name="role"></param>
+        /// <returns>
+        /// A task that represents the asynchronous operation,
+        /// the task result contains the number of the user in the given role.
+        /// </returns>
+        public async Task<int> CountInRole(string role)
+        {
+            return (await _userManager.GetUsersInRoleAsync(role)).Count;
         }
 
         #endregion

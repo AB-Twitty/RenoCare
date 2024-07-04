@@ -96,6 +96,8 @@ namespace RenoCare.Core.Features.Chat.Mediator.Queries
 
             contacts = contacts.Union(msgContacts).ToList();
 
+            IList<int> contacts_delete = new List<int>();
+
             if (_ctxAccessor.HttpContext.User.IsInRole("HealthCare"))
             {
                 if (!int.TryParse(_ctxAccessor.HttpContext.Items["unitId"].ToString(), out int unitId))
@@ -128,24 +130,13 @@ namespace RenoCare.Core.Features.Chat.Mediator.Queries
 
                     if (obj == null)
                     {
-                        contacts.Remove(contact);
+                        contacts_delete.Add(contacts.IndexOf(contact));
                         continue;
-                    }
-
-                    var msgs = await _msgRepo.GetAllAsync(qry =>
-                        qry.Where(x => x.ReceiverId == curr_user && x.Status == 1));
-
-                    foreach (var msg in msgs)
-                    {
-                        msg.Status = 2;
-                        await _msgRepo.UpdateAsync(msg);
-                        await _msgRepo.SaveAsync();
-                        await _chatHub.Clients.User(msg.SenderId).SendAsync("MarkedAsReceived", msg);
                     }
 
                     (ChatMessage last_msg, int unread_cnt) = await _msgRepo.ApplyQueryAsync(async qry =>
                     {
-                        int cnt = qry.Where(m => m.ReceiverId == curr_user && m.Status == 2).Count();
+                        int cnt = qry.Where(m => m.ReceiverId == curr_user && m.SenderId == contact.UserId && m.Status == 2).Count();
 
                         ChatMessage last = await qry.Where(x => (x.SenderId == curr_user && x.ReceiverId == contact.UserId)
                                 || (x.ReceiverId == curr_user && x.SenderId == contact.UserId))
@@ -173,28 +164,16 @@ namespace RenoCare.Core.Features.Chat.Mediator.Queries
 
                     if (obj == null)
                     {
-                        contacts.Remove(contact);
+                        contacts_delete.Add(contacts.IndexOf(contact));
                         continue;
                     }
 
-
-                    var msgs = await _msgRepo.GetAllAsync(qry =>
-                        qry.Where(x => x.ReceiverId == curr_user && x.Status == 1));
-
-                    foreach (var msg in msgs)
-                    {
-                        msg.Status = 2;
-                        await _msgRepo.UpdateAsync(msg);
-                        await _msgRepo.SaveAsync();
-                        await _chatHub.Clients.User(msg.SenderId).SendAsync("MarkedAsReceived", msg);
-                    }
-
-
                     (ChatMessage last_msg, int unread_cnt) = await _msgRepo.ApplyQueryAsync(async qry =>
                     {
-                        int cnt = qry.Where(m => m.ReceiverId == curr_user && m.Status == 2).Count();
+                        int cnt = qry.Where(m => m.ReceiverId == curr_user && m.SenderId == contact.UserId && m.Status == 2).Count();
 
-                        ChatMessage last = await qry.Where(x => x.SenderId == curr_user || x.ReceiverId == curr_user)
+                        ChatMessage last = await qry.Where(x => (x.SenderId == curr_user && x.ReceiverId == contact.UserId)
+                                || (x.ReceiverId == curr_user && x.SenderId == contact.UserId))
                              .OrderByDescending(x => x.SendingTime).FirstOrDefaultAsync();
 
                         return (last, cnt);
@@ -206,6 +185,20 @@ namespace RenoCare.Core.Features.Chat.Mediator.Queries
                     contact.Name = obj.contact_name;
                 }
             }
+
+            var msgs = await _msgRepo.GetAllAsync(qry =>
+                        qry.Where(x => x.ReceiverId == curr_user && x.Status == 1));
+
+            foreach (var msg in msgs)
+            {
+                msg.Status = 2;
+                await _msgRepo.UpdateAsync(msg);
+                await _msgRepo.SaveAsync();
+                await _chatHub.Clients.User(msg.SenderId).SendAsync("MarkedAsReceived", msg);
+            }
+
+            foreach (var idx in contacts_delete)
+                contacts.RemoveAt(idx);
 
             return Success(contacts);
         }

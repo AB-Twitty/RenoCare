@@ -26,7 +26,7 @@ namespace RenoCare.Persistence.Mapping
             builder.Property(p => p.ReceiverId).IsRequired();
             builder.HasOne(p => p.Receiver).WithOne().HasForeignKey<ChatMessage>(p => p.ReceiverId);
 
-            builder.Property(p => p.Message).IsRequired().HasColumnType("text");
+            builder.Property(p => p.Message).IsRequired().HasColumnType("nvarchar(MAX)");
 
             builder.Property(p => p.SendingTime).IsRequired();
             builder.Property(p => p.Status).IsRequired();

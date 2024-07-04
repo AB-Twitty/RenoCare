@@ -85,11 +85,11 @@ namespace RenoCare.Core.Features.Reports.Mediator.Queries
                 DialysisUnit = unit
             };
 
-            var dirPath = Path.Combine(_webEnv.WebRootPath, "Templates", "Report");
+            var dirPath = Path.Combine(_webEnv.ContentRootPath, "Views", "Templates", "Report");
             var templatePath = Path.Combine(dirPath, "report_pdf_template.cshtml");
 
             // Render the template using the relative path
-            var html = await _razorLightEngine.CompileRenderAsync(templatePath, template_model);
+            var html = await _razorLightEngine.CompileRenderAsync("C:/home/site/Views/Templates/Report/report_pdf_template.cshtml", template_model);
 
             var renderer = new ChromePdfRenderer();
             renderer.RenderingOptions.CssMediaType = PdfCssMediaType.Print;

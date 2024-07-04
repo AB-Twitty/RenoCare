@@ -73,6 +73,7 @@ namespace RenoCare.Core.Features.DialysisUnits.Mediator.Queries
                     .Select(x => new DialysisUnitDetailsDto
                     {
                         Id = x.Id,
+                        UserId = x.UserId,
                         Name = x.Name,
                         Description = x.Description,
                         Address = x.Address,
@@ -82,14 +83,14 @@ namespace RenoCare.Core.Features.DialysisUnits.Mediator.Queries
                         IsHdSupported = x.IsHdSupported,
                         HdPrice = x.HdPrice,
                         IsHdfSupported = x.IsHdfSupported,
-                        HdfPrice = x.HdPrice,
+                        HdfPrice = x.HdfPrice,
 
                         Images = x.Images.ToList(),
                         Amenities = x.Amenities.ToList(),
                         Sessions = x.Sessions.OrderBy(x => x.Day).ThenBy(x => x.Time)
-                            .Select(x => new SessionTimeDto { Day = x.Day, Time = DateTime.Today.Add(x.Time) }).ToList(),
+                            .Select(x => new SessionTimeDto { Day = x.Day, Time = DateTime.Today.Add(x.Time), Id = x.Id }).ToList(),
 
-                        Rating = x.Reviews.Any() ? x.Reviews.Average(r => r.Rating) : 0,
+                        Rating = x.Reviews.Any() ? Math.Round(x.Reviews.Average(r => r.Rating) * 2, MidpointRounding.AwayFromZero) / 2 : 0,
                         ReviewCnt = x.Reviews.Count(),
 
                         AcceptingViruses = x.AcceptingViruses.ToList(),
@@ -104,6 +105,7 @@ namespace RenoCare.Core.Features.DialysisUnits.Mediator.Queries
 
             return Success(result);
         }
+
 
         #endregion
     }

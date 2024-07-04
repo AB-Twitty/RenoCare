@@ -25,7 +25,7 @@ namespace RenoCare.Core.Features.DialysisUnits.Mediator.Queries
         public string Viruses { get; set; }
         public string Amenities { get; set; }
         public string Search { get; set; }
-        public int? Day { get; set; }
+        public string Day { get; set; }
         public string SortBy { get; set; }
     }
 
@@ -65,6 +65,10 @@ namespace RenoCare.Core.Features.DialysisUnits.Mediator.Queries
         {
             var list = await _unitRepo.ApplyQueryAsync(async qry =>
             {
+                qry = qry.Where(x => !x.IsDeleted);
+
+                var totalcount = qry.Count();
+
                 try
                 {
                     if (!string.IsNullOrEmpty(request.Amenities))
@@ -102,9 +106,12 @@ namespace RenoCare.Core.Features.DialysisUnits.Mediator.Queries
 
                 try
                 {
-                    if (request.Day != null)
+                    if (!string.IsNullOrEmpty(request.Day))
                     {
-                        qry = qry.Include(x => x.Sessions).Where(x => x.Sessions.Any(s => s.Day == (DayOfWeek)request.Day));
+                        string formattedDay = char.ToUpper(request.Day.Trim()[0]) + request.Day.Trim().Substring(1).ToLower();
+
+                        if (Enum.TryParse(typeof(DayOfWeek), formattedDay, out var day))
+                            qry = qry.Include(x => x.Sessions).Where(x => x.Sessions.Any(s => s.Day == (DayOfWeek)day));
                     }
                 }
                 catch { }
@@ -130,7 +137,7 @@ namespace RenoCare.Core.Features.DialysisUnits.Mediator.Queries
                             IsHdfSupported = x.IsHdfSupported,
                             HdfPrice = x.HdfPrice,
 
-                            Rating = x.Reviews.Any() ? x.Reviews.Average(r => r.Rating) : 0,
+                            Rating = x.Reviews.Any() ? Math.Round(x.Reviews.Average(r => r.Rating) * 2, MidpointRounding.AwayFromZero) / 2 : 0,
                             ReviewsCnt = x.Reviews.Count,
 
                             ThumbnailImage = x.Images.Where(i => i.IsThumbnail).Select(i => i.Path).FirstOrDefault(),
@@ -151,7 +158,7 @@ namespace RenoCare.Core.Features.DialysisUnits.Mediator.Queries
                         query = query.OrderBy(x => x.Id); break;
                 }
 
-                return await query.ToPagedListAsync(request.PageIndex, request.PageSize);
+                return await query.ToPagedListAsync(request.PageIndex, request.PageSize, totalcount, 1, query.Count());
 
             });
 

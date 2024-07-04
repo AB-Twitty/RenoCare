@@ -6,14 +6,20 @@
     ViewData["Title"] = "Medication Requests";
 }
 
+
+@using Reno.MVC.Services.Base.Contracts;
+@inject ILocalStorageService _localStorageService;
+
+
 @{
+    string access_token = _localStorageService.GetCurrentToken();
+
     var MedicationTypes = (await _client.MedicationRequestTypesAsync(null,true)).Data.OrderBy(x => x.Id);
     var MedicationTypesSelect = new SelectList(MedicationTypes, "Name", "Name");
 
     var MedicationStatus = (await _client.MedicationRequestStatusListAsync(null)).Data.OrderBy(x => x.Id);
     var MedicationStatusSelect = new SelectList(MedicationStatus, "Name", "Name");
 }
-
 
 <div class="wrapper wrapper-content animated fadeInRight shadow">
     <div class="row wrapper  white-bg page-heading  mx-0 ">
@@ -71,7 +77,11 @@
                                                 </div>
                                             </div>
                                         }
-                                        
+                                        else if (User.IsInRole("HealthCare"))
+                                        {
+                                            <input disabled style="display:none;" type="text" class="m-b form-control" placeholder="Enter Dialysis Unit Name..." />
+                                        }
+
                                     </div>
 
                                     <div class="row mb-15">
@@ -120,13 +130,14 @@
                             <thead>
                                 <tr>
                                     
-                                    <th>Session Report</th>
+                                    <th>Actions</th>
                                     <th>Patient Name</th>
                                     <th>Dialysis Unit Name</th>
+                                    <th>Treatment</th>
                                     <th>Status</th>
                                     <th>Booking Type</th>
-                                    <th>Medication Date</th>
-                                    <th>Medication Time</th>
+                                    <th>Session Date</th>
+                                    <th>Session Time</th>
 
                                 </tr>
                             </thead>
@@ -151,7 +162,7 @@
 </div>
 
 
-@section Scripts {
+@section scripts {
     <script src="~/lib/datatables/js/jquery.datatables.min.js"></script>
     <script src="~/lib/datatables/js/datatables.bootstrap4.min.js"></script>
 
@@ -194,8 +205,8 @@
 
                             else if (row.status == "Pending")
                                 return `<a href="/Medication/Request/Details/${row.id}" target="_blank" class="btn btn-default" style="padding-right:17.5px;padding-left:17.5px;">Previous Reports</a>
-                                                    <div><a href="/Reports/1014" class="btn btn-primary" style="margin-right: 10px;">Accept</a>
-                                                    <a href="/Reports/1014" class="btn btn-danger">Reject</a></div>`;
+                                                    <div><button data-request-id=${row.id} class="btn btn-primary" style="margin-right: 10px;">Accept</button>
+                                                    <button data-request-id=${row.id} class="btn btn-danger">Reject</button></div>`;
                             
                             else if (row.status == "Upcoming")
                                 return `<a href="/Medication/Request/Details/${row.id}" target="_blank" class="btn btn-default" style="padding - right: 17.5px;padding - left: 17.5px;">Previous Reports</a>`;
@@ -212,6 +223,11 @@
                         name: "DialysisUnitName", 
                         visible: @User.IsInRole("Admin").ToString().ToLower(),
                     },
+                    {
+                        data: "treatment",
+                        name: "Treatment",
+                        sortable: false
+                    },
                     { 
                         data: "status", 
                         name: "Status", 
@@ -227,7 +243,8 @@
                     },
                     { 
                         data: "type", 
-                        name: "Type"
+                        name: "Type",
+                        sortable: false
                     },
                     { 
                         data: "date",
@@ -251,7 +268,9 @@
 
                     // Iterate over input fields within the form
                     $("#FilterMedicationRequests input").each(function (index) {
+                        console.log(this, index);
                         var inputValue = $(this).val();
+                        console.log(inputValue);
                         if (inputValue !== "") {
                             // Map input value to the corresponding column name
                             var columnIndex = getColumnIndexForInput(index);
@@ -277,10 +296,10 @@
             // Helper function to map input index to column name
             function getColumnIndexForInput(index) {
                 switch (index) {
-                    case 1: return '0';
-                    case 2: return '1';
-                    case 3: return '2';
-                    case 4: return '3';
+                    case 0: return '1';
+                    case 1: return '2';
+                    case 2: return '4';
+                    case 3: return '5';
                     // Add mappings for other input fields as needed
                     default: return ""; // Return an empty string for unmapped inputs
                 }
@@ -299,6 +318,49 @@
 
                 return `${day}-${month}-${year}`;
             }
+
+
+            $('#MedicationRequestTable tbody').on('click', 'button.btn-primary', function () {
+                var requestId = $(this).data('request-id');
+
+                $.ajax({
+                    url: 'http://localhost:6982/Api/V1/Medication/Request/Status-Update',
+                    type: 'POST',
+                    headers: {
+                        "Authorization": `Bearer @access_token`
+                    },
+                    data: JSON.stringify({ status: "Upcoming", id: requestId }),
+                    contentType: 'application/json',
+                    success: function (response) {
+                        console.log('Request successful:', response);
+                        Table.ajax.reload();
+                    },
+                    error: function (error) {
+                        console.error('Request failed:', error);
+                    }
+                });
+            });
+
+            $('#MedicationRequestTable tbody').on('click', 'button.btn-danger', function () {
+                var requestId = $(this).data('request-id');
+
+                $.ajax({
+                    url: 'http://localhost:6982/Api/V1/Medication/Request/Status-Update',
+                    type: 'POST',
+                    headers: {
+                        "Authorization": `Bearer @access_token`
+                    },
+                    data: JSON.stringify({ status: "Rejected", id: requestId }),
+                    contentType: 'application/json',
+                    success: function (response) {
+                        console.log('Request successful:', response);
+                        Table.ajax.reload();
+                    },
+                    error: function (error) {
+                        console.error('Request failed:', error);
+                    }
+                });
+            });
 
             /*setInterval(function () {
                 Table.ajax.reload();

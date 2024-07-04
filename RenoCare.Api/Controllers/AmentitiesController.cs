@@ -29,8 +29,8 @@ namespace RenoCare.Api.Controllers
 
         #region Methods
 
-        [HttpGet(Router.AmentitiesRouting.List)]
-        public async Task<ActionResult<ApiResponse<IList<Amenity>>>> GetAmentitiesAsync([FromQuery] int? id = null) =>
+        [HttpGet(Router.AmenitiesRouting.List)]
+        public async Task<ActionResult<ApiResponse<IList<Amenity>>>> GetAmenitiesAsync([FromQuery] int? id = null) =>
             ApiResult(await _mediator.Send(new GetAmentitiesQueryRequest { Id = id }));
 
         #endregion

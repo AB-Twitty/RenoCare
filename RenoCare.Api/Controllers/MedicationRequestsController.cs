@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using RenoCare.Core.Base;
 using RenoCare.Core.Features.MedicationRequests.DTOs;
+using RenoCare.Core.Features.MedicationRequests.Mediator.Commands;
 using RenoCare.Core.Features.MedicationRequests.Mediator.Queries;
 using RenoCare.Core.Features.MedicationRequestStatus.Mediator.Queries;
 using RenoCare.Core.Features.MedicationRequestTypes.Mediator.Queries;
@@ -35,6 +36,7 @@ namespace RenoCare.Api.Controllers
         #region Methods
 
         [HttpPost(Router.MedicationRequestRouting.List)]
+        [Authorize(Roles = "Admin, HealthCare")]
         public async Task<ActionResult<ApiResponse<IPagedList<MedicationRequestListItemDto>>>> GetMedicationRequestsAsync(
             [FromBody] GetMedicationRequestsQueryRequest request, [FromQuery] int page = 1)
         {
@@ -67,6 +69,21 @@ namespace RenoCare.Api.Controllers
         [Authorize(Roles = "Admin, HealthCare, Patient")]
         public async Task<ActionResult<ApiResponse<IList<MedicationRequestListItemDto>>>> GetMedReqAllForPatientAsync([FromQuery] int? patientId) =>
             ApiResult(await _mediator.Send(new GetMedReqAllForPatientQueryRequest { PatientId = patientId }));
+
+        [HttpPost(Router.MedicationRequestRouting.StatusUpdate)]
+        [Authorize(Roles = "HealthCare, Patient")]
+        public async Task<ActionResult<ApiResponse<MedicationRequestListItemDto>>> UpdateMedReqStatusAsync(UpdateMedReqStatusCommandRequest req) =>
+            ApiResult(await _mediator.Send(req));
+
+        [HttpPost(Router.MedicationRequestRouting.Schedule)]
+        [Authorize(Roles = "Patient")]
+        public async Task<ActionResult<ApiResponse<string>>> ScheduleMedReqAsync([FromBody] ScheduleMedReqCommandRequest req) =>
+            ApiResult(await _mediator.Send(req));
+
+        [HttpGet(Router.MedicationRequestRouting.ForPatient)]
+        [Authorize(Roles = "Patient")]
+        public async Task<ActionResult<ApiResponse<IList<MedicationRequestDetailsDto>>>> GetMedReqsForPatientAsync() =>
+            ApiResult(await _mediator.Send(new GetMedicationRequestDetailsQueryRequest()));
 
         #endregion
     }

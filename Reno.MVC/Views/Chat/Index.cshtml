@@ -78,6 +78,7 @@
         }
 
         .chat-user {
+            min-height: 60px;
             background-color: #fff;
             cursor: pointer;
         }
@@ -199,7 +200,6 @@
     <div class="row mx-0">
         <!-- Begin Column-->
         <div class="col-md-12 col-xs-12">
-
             <div class="ibox float-e-margins chat-view">
                 <div class="ibox-title shadow" style="background-color:#f7f6f6;min-height:55px;">
                     <input hidden id="page-index" value="1" />
@@ -518,13 +518,13 @@
         }
 
         // Receive message event handler
-        connection.on("ReceiveMessage", (msg) => {
+        connection.on("ReceiveMessage", (msg, sender_name) => {
             let $chatDiscussion = $('.chat-discussion');
             var active_chat = $('#active-chat').val();
 
             let dates = formatMsgDate(msg.SendingTime);
 
-            let msg_html = displayMsg(msg, dates.formatted_date, dates.last_date);
+            let msg_html = displayMsg(msg, dates.formatted_date, dates.last_date, sender_name);
             
             if (msg_html != "new" && msg_html != "error") {
                 updateToLastMsg(msg, dates.last_date);
@@ -580,7 +580,7 @@
         }
 
         // Function to add new contact with last message
-        function addNewContact(msg, last_date) {
+        function addNewContact(msg, last_date, sender_name) {
             var $chatUser = $('li.chat-user[data-user-id="' + msg.senderId + '"]');
 
             if ($chatUser.length > 0) {
@@ -604,7 +604,7 @@
                         <img class="chat-avatar" src="imgs/chat_avatar.jpg" alt="">
                         <div class="chat-user-info" style="width: 100%;">
                             <div class="chat-user-name" style="padding: 0;">
-                                Michael Smith
+                                        ${sender_name}
                                 <span class="last-msg-date">${last_date}</span>
                             </div>
                             <div class="chat-user-msg-wrapper">
@@ -619,11 +619,12 @@
             }
         }
 
-        // Function to get how msg will be displayed 
-        function displayMsg(msg, formatted_date, last_date) {
+        // Function to get how msg will be displayed
+        function displayMsg(msg, formatted_date, last_date, sender_name) {
             let msg_part_display = getMsgHtmlFormat(msg);
             
             let active_chat = $('#active-chat').val();
+            let active_user = $('#active-name').html();
 
             if (msg.senderId == '@user_id' && msg.receiverId == active_chat) {
                 let status = getMsgStatus(msg.status);
@@ -642,7 +643,7 @@
                 return `<div class="chat-message left" data-id="${msg.id}">
                             <img class="message-avatar" src="imgs/chat_avatar.jpg" alt="">
                             <div class="message">
-                                <a class="message-author" href="#">Michael Smith</a>
+                                <a class="message-author" href="#">${active_user}</a>
                                 <span class="message-date">${formatted_date}</span>
                                 ${msg_part_display}
                             </div>
@@ -650,7 +651,7 @@
 
             } 
             else if (msg.senderId != active_chat) {
-                addNewContact(msg, last_date);
+                addNewContact(msg, last_date, sender_name);
                 return "new";
             }
             

@@ -77,7 +77,7 @@ namespace RenoCare.Core.Features.DialysisUnits.Mediator.Queries
 
                 var statuses_names = statuses.Select(x => x.Name);
 
-                var totalCount = query.Count(x => !x.IsDeleted);
+                var totalCount = query.Count();
 
                 query = query
                     .Include(x => x.Amenities).Include(x => x.AcceptingViruses).Include(x => x.Reviews);
@@ -114,7 +114,7 @@ namespace RenoCare.Core.Features.DialysisUnits.Mediator.Queries
                         HDTreatment = x.IsHdSupported ? $"{x.HdPrice}$" : "",
                         IsHdfSupported = x.IsHdfSupported,
                         HDFTreatment = x.IsHdfSupported ? $"{x.HdfPrice}$" : "",
-                        Rating = x.Reviews.Any() ? x.Reviews.Average(r => r.Rating) : 0,
+                        Rating = x.Reviews.Any() ? Math.Round(x.Reviews.Average(r => r.Rating) * 2, MidpointRounding.AwayFromZero) / 2 : 0,
                         Amenities = string.Join(", ", x.Amenities.OrderBy(a => a.Id).Select(a => a.Name)),
                         AcceptingViruses = string.Join(", ", x.AcceptingViruses.OrderBy(v => v.Id).Select(a => a.Abbreviation)),
                         CreationDate = DateTime.Now,
@@ -133,11 +133,11 @@ namespace RenoCare.Core.Features.DialysisUnits.Mediator.Queries
                 {
                     unit.MedReqCnts = await _medReqRepo.ApplyQueryAsync(async q =>
                     {
-                        var medReqs = await q
+                        var medReqs = await q.Include(x => x.Session)
                             .Where(m => m.DialysisUnitId == int.Parse(unit.UnitId))
                             .ToListAsync();
 
-                        return medReqs
+                        return medReqs.Where(x => x.Status != null)
                             .GroupBy(m => m.Status.Name)
                             .Where(g => statuses_names.Contains(g.Key))
                             .ToDictionary(g => g.Key, g => g.Count());

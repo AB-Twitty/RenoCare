@@ -132,5 +132,38 @@ namespace RenoCare.Core.Features.Authentication.Contracts
         /// A task that represents the asynchronous operation.
         /// </returns>
         public Task DeleteUserAsync(AppUser user);
+
+        /// <summary>
+        /// Creates a new user and add it to a given role
+        /// </summary>
+        /// <param name="user">the new user</param>
+        /// <param name="password">the user's password</param>
+        /// <param name="role">the user's role</param>
+        /// <returns>
+        /// A task that represents the asynchronous operation,
+        /// the task result contains a value indicating the succession of the request with any faced errors.
+        /// </returns>
+        public Task<(bool, IEnumerable<ValidationFailure>)> AddNewUserAsync(AppUser user, string password, string role);
+
+        /// <summary>
+        /// Checks if a user is in a given role or not
+        /// </summary>
+        /// <param name="user">the user</param>
+        /// <param name="role">the role to check</param>
+        /// <returns>
+        /// A task that represents the asynchronous operation,
+        /// the task result contains a value indicating whether the user is in a given role or not
+        /// </returns>
+        public Task<bool> IsUserInRole(AppUser user, string role);
+
+        /// <summary>
+        /// Counte the number of user in a gven role
+        /// </summary>
+        /// <param name="role"></param>
+        /// <returns>
+        /// A task that represents the asynchronous operation,
+        /// the task result contains the number of the user in the given role.
+        /// </returns>
+        public Task<int> CountInRole(string role);
     }
 }

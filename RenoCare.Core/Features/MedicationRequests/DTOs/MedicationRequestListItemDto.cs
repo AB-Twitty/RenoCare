@@ -15,5 +15,7 @@ namespace RenoCare.Core.Features.MedicationRequests.DTOs
         public string Type { get; set; }
         public string PatientProblem { get; set; }
         public int? ReportId { get; set; }
+        public string Treatment { get; set; }
     }
+
 }

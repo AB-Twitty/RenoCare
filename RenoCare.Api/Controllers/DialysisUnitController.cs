@@ -37,7 +37,7 @@ namespace RenoCare.Api.Controllers
             ApiResult(await _mediator.Send(req));
 
         [HttpGet(Router.DialysisUnitRouting.Details)]
-        [Authorize(Roles = "Admin, HealthCare")]
+        [Authorize(Roles = "Admin, HealthCare, Patient")]
         public async Task<ActionResult<ApiResponse<DialysisUnitDetailsDto>>> GetDialysisUnitDetailsAsync(int id) =>
             ApiResult(await _mediator.Send(new GetDialysisUnitDetailsQueryRequest { Id = id }));
 
@@ -54,7 +54,7 @@ namespace RenoCare.Api.Controllers
         [Authorize(Roles = "Patient")]
         public async Task<ActionResult<ApiResponse<IPagedList<DialysisUnitSimpleListItemDto>>>>
             GetDialysisUnitsForPatientsAsync([FromQuery] int page = 1, int pageSize = 20, string search = null,
-                string treatment = null, string viruses = null, string amenities = null, int? day = null, string sortBy = "Id") =>
+                string treatment = null, string viruses = null, string amenities = null, string day = null, string sortBy = "Id") =>
             ApiResult(await _mediator.Send(new GetDialysisUnitsForPatientsQueryRequest
             {
                 PageIndex = page,

@@ -1,5 +1,6 @@
 ﻿using RenoCare.Domain.Common;
 using System;
+using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
 namespace RenoCare.Domain
@@ -9,6 +10,11 @@ namespace RenoCare.Domain
     /// </summary>
     public class SessionTimetable : BaseEntity, ISoftDeletedEntity
     {
+        public SessionTimetable()
+        {
+            MedReqs = new HashSet<MedicationRequest>();
+        }
+
         /// <summary>
         /// Gets or sets the dialysis unit id.
         /// </summary>
@@ -35,6 +41,9 @@ namespace RenoCare.Domain
         /// </summary>
         [JsonIgnore]
         public virtual DialysisUnit DialysisUnit { get; set; }
+
+        [JsonIgnore]
+        public virtual ICollection<MedicationRequest> MedReqs { get; set; }
 
     }
 }

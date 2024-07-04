@@ -1,0 +1,336 @@
+﻿@{
+    ViewData["Title"] = "Reports";
+
+}
+
+
+<style>
+    .l-border {
+        border-left: 2px solid #777777;
+    }
+
+    .r-border {
+        border-right: 2px solid #777777;
+    }
+</style>
+
+<div class="wrapper wrapper-content animated fadeInRight shadow">
+    <div class="row wrapper  white-bg page-heading  mx-0 ">
+        <div class="col-md-12">
+            <h2 class="col-md-9">Reports</h2>
+            <div class="col-md-3" style="float:right">
+                <ol class="breadcrumb">
+                    <li>
+                        <a asp-action="index" asp-controller="Home">Home</a>
+                    </li>
+                    <li class="active">
+                        <strong>Reports</strong>
+                    </li>
+                </ol>
+            </div>
+        </div>
+        <div class="col-lg-2">
+        </div>
+    </div>
+
+    @*<partial name="_DeleteModal" />*@
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox float-e-margins  p-10">
+                @* <div class="ibox-title">
+                <h5>Patients</h5>
+                </div>*@
+                <div class="ibox-content" style="padding: 15px 20px 0px 20px;">
+                    <div class="row">
+
+                        <form id="Filter">
+                            <div class="ibox float-e-margins">
+                                <div class="ibox-title">
+                                    <h5>Filter Section</h5>
+                                    <div class="ibox-tools">
+                                        <a class="collapse-link">
+                                            <i class="fa fa-chevron-up"></i>
+                                        </a>
+                                    </div>
+                                </div>
+
+                                <div class="ibox-content">
+
+                                    <div class="row mb-15">
+                                        <div class="col-md-6">
+                                            <label class="control-label col-md-12">Patient Name</label>
+                                            <div class="col-md-12">
+                                                <input type="text" class="m-b form-control" placeholder="Enter Patient Name..." />
+                                            </div>
+                                        </div>
+
+                                        @if (User.IsInRole("Admin"))
+                                        {
+                                            <div class="col-md-6">
+                                                <label class="control-label col-md-12">Dialysis Unit Name</label>
+                                                <div class="col-md-12">
+                                                    <input type="text" class="m-b form-control" placeholder="Enter Dialysis Unit Name..." />
+                                                </div>
+                                            </div>
+                                        }
+                                        else if (User.IsInRole("HealthCare"))
+                                        {
+                                            <input disabled style="display:none;" type="text" class="m-b form-control" placeholder="Enter Dialysis Unit Name..." />
+                                        }
+
+                                    </div>
+
+                                    <div class="row mb-15">
+                                        <div class="col-md-6">
+                                            <label class="control-label col-md-12">Nephrologist</label>
+                                            <div class="col-md-12">
+                                                <input type="text" class="m-b form-control" placeholder="Enter Nephrologist Name..." />
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row mb-15">
+                                        <div class="col-lg-12">
+                                            <div class="ibox float-e-margins">
+                                                <div class="ibox-title">
+
+                                                    <div class="col-md-12 text-end">
+                                                        <button class=" btn btn-danger" type="reset" id="ResetFilter">Reset</button>
+                                                        <button class=" btn btn-primary" id="SubmitFilter" type="button">Search</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <hr style="margin: 0;" />
+                                </div>
+                            </div>
+                        </form>
+
+                        <table id="ReportTable" class="table  table-striped  table-bordered table-hover display">
+                            <thead>
+                                <tr>
+
+                                    <th rowspan="3">View</th>
+                                    <th rowspan="3">Patient Name</th>
+                                    <th rowspan="3">Dialysis Unit</th>
+                                    <th rowspan="3">Nephrologist</th>
+                                    <th rowspan="3">Session Date</th>
+                                    <th rowspan="3">Session Time</th>
+                                    <th colspan="5" class="l-border r-border">Patient Information</th>
+                                    <th colspan="7" class="l-border r-border">Vital Signs</th>
+                                    <th colspan="7" class="l-border r-border">Treatment Outcomes</th>
+                                    <th colspan="5" class="l-border">Clinical Examinations</th>
+
+                                </tr>
+
+                                <tr>
+                                    <th rowspan="2" class="l-border">Gender</th>
+                                    <th rowspan="2">Age</th>
+                                    <th rowspan="2">Hypertension</th>
+                                    <th rowspan="2">Diabetes</th>
+                                    <th rowspan="2" class="r-border">Viruses</th>
+
+                                    <th colspan="3" class="l-border">Weight</th>
+                                    <th colspan="3">Blood Pressure</th>
+                                    <th rowspan="2" class="r-border">Heart Rate</th>
+
+                                    <th colspan="3" class="l-border">Urea</th>
+                                    <th colspan="2">Fluid Removal</th>
+                                    <th rowspan="2">Urine</th>
+                                    <th rowspan="2" class="r-border">Kt/V</th>
+
+                                    <th rowspan="2" class="l-border">Creatinine</th>
+                                    <th rowspan="2">Potassium</th>
+                                    <th rowspan="2">Albumin</th>
+                                    <th rowspan="2">Hemoglobin</th>
+                                    <th rowspan="2">Hematocrit</th>
+                                </tr>
+
+                                <tr>
+                                    <th class="l-border">Pre</th>
+                                    <th>Post</th>
+                                    <th>Dry</th>
+
+                                    <th>Pre</th>
+                                    <th>During</th>
+                                    <th>Post</th>
+
+                                    <th class="l-border">Pre</th>
+                                    <th>Post</th>
+                                    <th>URR</th>
+
+                                    <th>Totlal</th>
+                                    <th>Rate</th>
+                                </tr>
+
+                            </thead>
+                        </table>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts {
+    <script>
+        $('document').ready(function () {
+
+            var cols = [
+                { 
+                    data: "id", name: "Id", searchable: false, sortable: false,
+                    render: function (data, type, row, meta) {
+                        return `<a href="/Reports/${data}" target="_blank"
+                                 class="btn btn-default">View Report</a>`;
+                    }
+                },
+                { data: "patient.patientName", name: "Patient.PatientName" },
+                { data: "dialysisUnitName", name: "DialysisUnitName", visible: @User.IsInRole("Admin").ToString().ToLower() },
+                { 
+                    data: "nephrologist", name: "Nephrologist",
+                    render: function (data, type, row, meta) {return "Dr. " + data;}
+                },
+
+                { 
+                    data: "sessionDate", name: "SessionDate", searchable: false,
+                    render: (data, type, row, meta) => formatDateToCustomString(data)                    
+                },
+                { data: "formattedTime", name: "SessionTime", searchable: false },
+
+                { data: "patient.gender", name: "Patient.Gender", sortable: false },
+                { data: "patient.age", name: "Patient.BirthDate", searchable: false },
+                { data: "patient.diabetes", name: "Patient.Diabetes" },
+                { data: "patient.hypertension", name: "Patient.Hypertension" },
+                { 
+                    data: "patient.viruses", name: "Patient.Viruses", sortable: false,
+                    render: function(data, type, row, meta) {
+                        if (data=="") return "----";
+                        return data;
+                    }
+                },
+
+                { data: "preWeight", name: "PreWeight"},
+                { data: "postWeight", name: "PostWeight" },
+                { data: "dryWeight", name: "DryWeight" },
+                { data: "preBloodPressure", name: "PreBloodPressure" },
+                { data: "duringBloodPressure", name: "DuringBloodPressure" },
+                { data: "postBloodPressure", name: "PostBloodPressure" },
+                { data: "heartRate", name: "HeartRate" },
+
+                { data: "preUrea", name: "PreUrea" },
+                { data: "postUrea", name: "PostUrea" },
+                { data: "ureaReductionRatio", name: "UreaReductionRatio" },
+                { data: "totalFluidRemoval", name: "TotalFluidRemoval" },
+                { data: "fluidRemovalRate", name: "FluidRemovalRate" },
+                { data: "urineOutput", name: "UrineUutput" },
+                { data: "kt_V", name: "Kt_V" },
+
+                { data: "creatinine", name: "Creatinine" },
+                { data: "potassium", name: "Potassium" },
+                { data: "albumin", name: "Albumin" },
+                { data: "hemoglobin", name: "Hemoglobin" },
+                { data: "hematocrit", name: "Hematocrit" }
+
+            ];
+
+           
+            var Table = $('#ReportTable').DataTable({
+                pageLength: 25,
+                dom: '<"html5buttons"B>lrtip',
+                ordering: true,
+                scrollX: true,
+                ajax: {
+                    url: "/Reports",
+                    type: "POST",
+                    datatype: "json"
+                },
+                serverSide: true,
+                filter: true,
+                processing: false,
+                columns: cols,
+                buttons: [
+                    'copy', 'excel', 'csv',
+                    {
+                        extend: 'pdf',
+                        orientation: 'landscape',
+                        pageSize: 'LEGAL'
+                    },
+                    {
+                        extend: 'print',
+                        customize: function (win) {
+                            $(win.document.body).addClass('white-bg');
+                            $(win.document.body).css('font-size', '10px');
+                            $(win.document.body).find('table')
+                                .addClass('compact')
+                                .css('font-size', 'inherit');
+                        }
+                    }
+
+                ],
+                "fnInitComplete": function () {
+                    addSearchControl();
+                }
+            });
+
+            function addSearchControl() {
+                $("#SubmitFilter").on('click', function () {
+                    // Initialize an empty search object
+                    var searchObject = {};
+
+                    // Iterate over input fields within the form
+                    $("#Filter input").each(function (index) {
+                        var inputValue = $(this).val();
+                        if (inputValue !== "") {
+                            // Map input value to the corresponding column name
+                            var columnIndex = getColumnIndexForInput(index);
+                            searchObject[columnIndex] = inputValue;
+                        }
+                    });
+
+                    // Apply search filters to the DataTable
+                    for (var index in searchObject) {
+                        console.log(index);
+                        Table.column(index).search(searchObject[index]);
+                    }
+
+                    Table.draw();
+                });
+            }
+
+
+            $("#ResetFilter").on("click", () => {
+                Table.columns().search("").draw();
+            });
+
+            // Helper function to map input index to column name
+            function getColumnIndexForInput(index) {
+                switch (index) {
+                    case 0: return '1';
+                    case 1: return '2';
+                    case 2: return '3';
+                    // Add mappings for other input fields as needed
+                    default: return ""; // Return an empty string for unmapped inputs
+                }
+            }
+
+            function formatDateToCustomString(date_string) {
+                var date = new Date(date_string);
+                const months = [
+                    'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+                    'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
+                ];
+
+                const day = date.getDate();
+                const month = months[date.getMonth()];
+                const year = date.getFullYear();
+
+                return `${day}-${month}-${year}`;
+            }
+        });
+    </script>
+}

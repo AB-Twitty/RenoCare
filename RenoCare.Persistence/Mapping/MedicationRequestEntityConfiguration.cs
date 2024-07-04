@@ -21,7 +21,8 @@ namespace RenoCare.Persistence.Mapping
             builder.Property(p => p.PatientProblem).IsRequired(false).HasColumnType("text");
 
             builder.Property(p => p.AppointmentDate).IsRequired();
-            builder.Property(p => p.AppointmentHour).IsRequired();
+
+            builder.HasOne(p => p.Session).WithMany(s => s.MedReqs).HasForeignKey(p => p.SessionId).IsRequired();
 
 
             builder.Property(p => p.PatientId).IsRequired();
@@ -40,6 +41,9 @@ namespace RenoCare.Persistence.Mapping
 
             builder.Property(p => p.DialysisUnitId).IsRequired();
             builder.HasOne(p => p.DialysisUnit).WithMany(d => d.MedRequests).HasForeignKey(p => p.DialysisUnitId);
+
+            builder.Property(p => p.Treatment)
+                .IsRequired();
         }
     }
 }

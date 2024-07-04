@@ -1,8 +1,81 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+﻿@using Reno.MVC.Services.Base;
+@model DashboardModel
+
+@using Reno.MVC.Services.Base.Contracts;
+@inject ILocalStorageService _localStorageService;
+
+@{
+    string access_token = _localStorageService.GetCurrentToken();
+
+    ViewData["Title"] = "Dashboard";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<style>
+    .section-header-dashoard {
+        margin: 0 20px;
+    }
+
+    .section-header-dashoard .title i {
+            margin-right: 5px;
+    }
+
+    .section-header-dashoard .row {
+            padding: 0 20px;
+            margin-top: 20px;
+    }
+
+    .section-header-dashoard .row .ibox {
+        background-color: #e9e8e8;
+    }
+
+    .section-header-dashoard .section-data h1 {
+        font-weight: 500;
+    }
+
+    .section-header-dashoard .section-data small {
+        font-weight: 400;
+    }
+
+    .float-right {
+        float: right !important
+    }
+
+    .label-info {
+        background-color: #23c6c8 !important;
+    }
+
+    .med-req .ibox-title {
+        color: #fff;
+    }
+
+</style>
+
+
+<div class="wrapper wrapper-content shadow">
+    <div class="ibox float-e-margins">
+        <div class="ibox float-e-margins">
+            <div class="ibox-title">
+                <h1 style="color: #1ab394;">
+                    <i class="fa fa-chevron-right" style="margin-right: 5px;"></i>Dashboard
+                </h1>
+            </div>
+
+            <div class="tabs-container">
+                <ul class="nav nav-tabs">
+                    <li class="active"><a data-toggle="tab" href="#tab-1">Views</a></li>
+                    <li class=""><a data-toggle="tab" href="#tab-2">Graphs</a></li>
+                </ul>
+                <div class="tab-content">
+                    <div id="tab-1" class="tab-pane active">
+                        <partial name="_Views" />
+                    </div>
+                    <div id="tab-2" class="tab-pane">
+                        <partial name="_Graphs" />
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
 </div>

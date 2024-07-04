@@ -5,6 +5,7 @@ using RenoCare.Core.Base;
 using RenoCare.Core.Conatracts.Persistence;
 using RenoCare.Core.Features.MedicationRequests.DTOs;
 using RenoCare.Domain;
+using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -63,12 +64,13 @@ namespace RenoCare.Core.Features.MedicationRequests.Mediator.Queries
                     DialysisUnitName = x.DialysisUnit.Name,
                     DialysisUnitId = x.DialysisUnitId,
                     Date = x.AppointmentDate,
-                    Time = x.AppointmentHour,
+                    Time = new DateTime(x.Session.Time.Ticks).ToString("hh:mm tt"),
                     Status = x.Status.Name,
                     Type = x.Type.Name,
                     ReportId = x.ReportId,
                     PatientId = x.PatientId,
-                    PatientProblem = x.PatientProblem
+                    PatientProblem = x.PatientProblem,
+                    Treatment = x.Treatment.ToString(),
                 }).FirstOrDefaultAsync();
 
             if (medReq == null)

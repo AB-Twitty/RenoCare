@@ -23,6 +23,14 @@
         }
 
         /// <summary>
+        /// Represents home controller end points routing.
+        /// </summary>
+        public static class HomeRouting
+        {
+            public const string Dashboard = Rule + "/Dashboard";
+        }
+
+        /// <summary>
         /// Represents healthcare provider methods end points routing.
         /// </summary>
         public static class HealthCareProviderRouting
@@ -48,6 +56,7 @@
         {
             public const string List = Rule + "/Patients";
             public const string Medical = Rule + "/Patients/{id}";
+            public const string Newcome = Rule + "/Patient/Newcome";
         }
 
         /// <summary>
@@ -78,14 +87,17 @@
             public const string Details = Rule + "/Medication/Requests/{requestId}";
             public const string Status = Rule + "/Medication/Requests/Status";
             public const string Types = Rule + "/Medication/Requests/Types";
+            public const string StatusUpdate = Rule + "/Medication/Request/Status-Update";
+            public const string Schedule = Rule + "/Medication/Request/Schedule";
+            public const string ForPatient = Rule + "/Medication/Request/For-Patient";
         }
 
         /// <summary>
         /// Represents ametities controller end points routing.
         /// </summary>
-        public static class AmentitiesRouting
+        public static class AmenitiesRouting
         {
-            public const string List = Rule + "/Amentities";
+            public const string List = Rule + "/Amenities";
         }
 
         /// <summary>
@@ -103,6 +115,7 @@
         {
             public const string GetById = Rule + "/Report";
             public const string Create = Rule + "/Report/Create";
+            public const string List = Rule + "/Reports";
         }
     }
 }
