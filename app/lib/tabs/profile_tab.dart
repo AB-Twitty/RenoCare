@@ -29,16 +29,16 @@ class _ProfileTabState extends State<ProfileTab> {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        actions: [
-          IconButton(onPressed: ()async{
-              signalRUtil.stopConnection();
-            loginDataManager2.clearLoginData();
-            // delete tokens
-            SharedPreferences prefs = await SharedPreferences.getInstance();
-            await prefs.remove('token');
-            _navigation.removeAndNavigateToRoute('/login');
-          }, icon: Icon(Icons.logout,color: Colors.red,))
-        ],
+        // actions: [
+        //   IconButton(onPressed: ()async{
+        //       signalRUtil.stopConnection();
+        //     loginDataManager2.clearLoginData();
+        //     // delete tokens
+        //     SharedPreferences prefs = await SharedPreferences.getInstance();
+        //     await prefs.remove('token');
+        //     _navigation.removeAndNavigateToRoute('/login');
+        //   }, icon: Icon(Icons.logout,color: Colors.red,))
+        // ],
         backgroundColor: Colors.transparent,
         elevation: 0,
 
@@ -259,26 +259,30 @@ class _ProfileTabState extends State<ProfileTab> {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.only(left: 12, right: 12),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Row(
-                    children: [
-                      Icon(Icons.wifi),
-                      SizedBox(
-                        width: 6,
-                      ),
-                      Text("Only Download via wifi"),
-                    ],
-                  ),
-                  IconButton(
-                      onPressed: () {},
-                      icon: Icon(
-                        Icons.arrow_forward_ios_sharp,
-                        size: 20,
-                      ))
-                ],
+              padding: const EdgeInsets.only(left: 12, right: 12,top: 12),
+              child: InkWell(
+                onTap: () async{
+                  signalRUtil.stopConnection();
+                  loginDataManager2.clearLoginData();
+                  // delete tokens
+                  SharedPreferences prefs = await SharedPreferences.getInstance();
+                  await prefs.remove('token');
+                  _navigation.removeAndNavigateToRoute('/login');
+                },
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Row(
+                      children: [
+                        Icon(Icons.logout,color: Colors.red,),
+                        SizedBox(
+                          width: 6,
+                        ),
+                        Text("Logout",),
+                      ],
+                    ),
+                  ],
+                ),
               ),
             ),
           ],

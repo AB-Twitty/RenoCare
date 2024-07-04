@@ -126,15 +126,25 @@ class AppointmentCard extends StatelessWidget {
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(20))),
                       onPressed: () {
-                        showModalBottomSheet(
-                            isScrollControlled: true,
-                            shape: const RoundedRectangleBorder(
-                              borderRadius: BorderRadius.vertical(
-                                top: Radius.circular(20),
-                              ),
-                            ),
-                            context: context,
-                            builder: (context) => CommentScreen());
+                        if(!activeButton)
+                          {
+                            showModalBottomSheet(
+                                isScrollControlled: true,
+                                shape: const RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.vertical(
+                                    top: Radius.circular(20),
+                                  ),
+                                ),
+                                context: context,
+                                builder: (context) => CommentScreen());
+                          }
+                        else
+                          {
+                            // logic to cancel appointment
+
+                          }
+
+
                       },
                       child: Text(
                         activeButton ? 'Cancel' : 'Enter Review',

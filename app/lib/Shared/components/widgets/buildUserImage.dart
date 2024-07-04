@@ -7,32 +7,23 @@ Stack buildUserImage(Size size,context) {
       Container(
         width: size.width,
         height: 180,
-        color: Colors.transparent,
+
         padding: EdgeInsets.only(bottom: 150 / 3.5),
         child: Container(
           width: size.width,
           height: 140,
           decoration: BoxDecoration(
 
+            borderRadius: BorderRadius.only(
+              bottomRight: Radius.circular(80),
+              bottomLeft:Radius.circular(80)
+            ),
             color: Color(0xffB8E8F7)
           ),
         ),
       ),
 
       // * 1 backbutton (Row widget)
-      Row(
-
-        children: [
-          IconButton(
-            color: Colors.white,
-            onPressed: () {
-              Navigator.pop(context);
-            },
-            icon: Icon(Icons.arrow_back,color: Colors.black,),
-          ),
-
-        ],
-      ),
 
       // * user profile image
       Positioned(
@@ -47,7 +38,7 @@ Stack buildUserImage(Size size,context) {
               shape: BoxShape.circle),
           child: CircleAvatar(
             backgroundColor: Colors.transparent,
-            backgroundImage:AssetImage("assets/images/profile2.jpeg")  ),
+            backgroundImage:AssetImage("assets/images/profile.png")  ),
         ),
       ),
     ],

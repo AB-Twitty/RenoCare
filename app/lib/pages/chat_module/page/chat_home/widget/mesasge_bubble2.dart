@@ -50,6 +50,7 @@ class MessageBubble2 extends StatelessWidget {
                   ElevatedButton(
                     onPressed: () {
                       // Handle file download
+                      _downloadFile(context,message.fileLink,message.message);
                     },
                     child: Text('Download'),
                   ),
@@ -123,7 +124,7 @@ class MessageBubble2 extends StatelessWidget {
                   ? Colors.blue
                   : Colors.transparent,
               border: Border.all(
-                color: message.status == 3 ? Colors.blue : Colors.grey,
+                color: message.status == 3 ? Colors.blue : Colors.black,
               ),
             ),
           ),
@@ -133,7 +134,7 @@ class MessageBubble2 extends StatelessWidget {
                 : message.status == 2
                 ? Icons.done_all
                 : Icons.done,
-            color: message.status == 3 ? Colors.white : Colors.grey,
+            color: message.status == 3 ? Colors.white : Colors.black,
             size: 10.0,
           ),
         ],

@@ -29,7 +29,9 @@ class _ChatHomePageState extends State<ChatHomePage> {
 
   String prv_active_id = "";
   final Dio _dio = Dio();
-  List<Contact> contacts = [];
+  List<Contact> contacts = [
+
+  ];
   String currUserId = "";
   late Future<void> _contactsFuture;
 
@@ -164,10 +166,10 @@ class _ChatHomePageState extends State<ChatHomePage> {
         contact.lastMsg = msg;
         if (senderId != currUserId) {
           contact.unreadMsgCount++;
-          NotificationService.showMessageNotification(
-              title: contact.name,
-              body: msg.message,
-              fln: flutterLocalNotificationsPlugin);
+          // NotificationService.showMessageNotification(
+          //     title: contact.name,
+          //     body: msg.message,
+          //     fln: flutterLocalNotificationsPlugin);
           contact.lastMsg.status=0;
         }
       } else {
