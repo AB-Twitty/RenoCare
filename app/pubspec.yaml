@@ -76,6 +76,7 @@ dependencies:
   flutter_local_notifications: ^17.2.1
   flutter_xlider: ^3.5.0
   loading_animation_widget: ^1.2.1
+  awesome_dialog: ^3.2.1
 
 
 dev_dependencies:

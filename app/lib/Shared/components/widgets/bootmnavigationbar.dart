@@ -30,24 +30,21 @@ class _TabsState extends State<TabsScreen> {
     if (selectedPage == 2) {
       activeScreen = ProfileTab();
     }
-    if (selectedPage == 3) {
-      activeScreen = ChatHomePage();
-    }
+    // if (selectedPage == 3) {
+    //   activeScreen = ChatHomePage();
+    // }
     // TODO: implement build
     return Scaffold(
       body: activeScreen,
       bottomNavigationBar: BottomNavigationBar(
         onTap: _SelectPage,
         currentIndex: selectedPage,
-  unselectedItemColor: Colors.grey,
+        unselectedItemColor: Colors.grey,
         showSelectedLabels: true,
         showUnselectedLabels: true,
         selectedItemColor: Colors.black,
-
-        selectedIconTheme:
-        IconThemeData(
-            color: Color.fromRGBO(60, 152, 203, 1),
-
+        selectedIconTheme: IconThemeData(
+          color: Color.fromRGBO(60, 152, 203, 1),
         ),
         items: [
           BottomNavigationBarItem(
@@ -62,11 +59,10 @@ class _TabsState extends State<TabsScreen> {
             icon: Icon(Icons.person),
             label: 'Profile',
           ),
-
-          BottomNavigationBarItem(
-            icon: Icon(Icons.chat),
-            label: 'Chat',
-          ),
+          // BottomNavigationBarItem(
+          //   icon: Icon(Icons.chat),
+          //   label: 'Chat',
+          // ),
         ],
       ),
     );

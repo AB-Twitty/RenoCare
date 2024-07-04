@@ -44,6 +44,12 @@ class _AppointmentCardState extends State<Appointment> {
     }
   }
 
+  void refreshAppointments() {
+    setState(() {
+      futureAppointments = fetchAppointments();
+    });
+  }
+
   @override
   void initState() {
     super.initState();
@@ -52,78 +58,86 @@ class _AppointmentCardState extends State<Appointment> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 40.0, horizontal: 16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Appointment',
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
+    return SafeArea(
+      child: Scaffold(
+        body: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Appointment',
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
-            ),
-            SizedBox(
-              height: 10,
-            ),
-            Card(
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20.0)),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: Category.values
-                    .map((category) => FilterChip(
-                    backgroundColor: Color.fromARGB(255, 65, 171, 246),
-                    selected: selectedCategories.contains(category),
-                    label: Text(
-                      category.name,
-                      style: TextStyle(color: Colors.white),
-                    ),
-                    onSelected: (selected) {
-                      setState(() {
-                        if (selected) {
-                          selectedCategories.add(category);
-                        } else {
-                          selectedCategories.remove(category);
-                        }
-                      });
-                    }))
-                    .toList(),
+              SizedBox(
+                height: 13,
               ),
-            ),
-            Expanded(
-              child: FutureBuilder<List<AppointmentModel>>(
-                future: futureAppointments,
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return Center(child: CircularProgressIndicator());
-                  } else if (snapshot.hasError) {
-                    return Center(child: Text('Error: ${snapshot.error}'));
-                  } else if (snapshot.hasData) {
-                    final appointments = snapshot.data!;
-                    final filteredAppointments =
-                    appointments.where((appointment) {
-                      return selectedCategories.isEmpty ||
-                          selectedCategories.contains(appointment.category);
-                    }).toList();
-                    return ListView.builder(
-                      scrollDirection: Axis.vertical,
-                      shrinkWrap: true,
-                      itemCount: filteredAppointments.length,
-                      itemBuilder: ((context, index) {
-                        final appointment = filteredAppointments[index];
-                        return AppointmentCard(appointment);
-                      }),
-                    );
-                  } else {
-                    return Center(child: Text('No data available'));
-                  }
-                },
+              Card(
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20.0)),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: Category.values
+                      .map((category) => FilterChip(
+                          backgroundColor: Color.fromARGB(255, 65, 171, 246),
+                          selected: selectedCategories.contains(category),
+                          label: Text(
+                            category.name,
+                            style: TextStyle(color: Colors.white),
+                          ),
+                          onSelected: (selected) {
+                            setState(() {
+                              if (selected) {
+                                selectedCategories.add(category);
+                              } else {
+                                selectedCategories.remove(category);
+                              }
+                            });
+                          }))
+                      .toList(),
+                ),
               ),
-            )
-          ],
+              SizedBox(
+                height: 13,
+              ),
+              Expanded(
+                child: FutureBuilder<List<AppointmentModel>>(
+                  future: futureAppointments,
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return Center(child: CircularProgressIndicator());
+                    } else if (snapshot.hasError) {
+                      return Center(child: Text('Error: ${snapshot.error}'));
+                    } else if (snapshot.hasData) {
+                      final appointments = snapshot.data!;
+                      final filteredAppointments =
+                          appointments.where((appointment) {
+                        return selectedCategories.isEmpty ||
+                            selectedCategories.contains(appointment.category);
+                      }).toList();
+                      return ListView.builder(
+                        scrollDirection: Axis.vertical,
+                        shrinkWrap: true,
+                        itemCount: filteredAppointments.length,
+                        itemBuilder: ((context, index) {
+                          final appointment = filteredAppointments[index];
+                          return AppointmentCard(
+                            appointment,
+                            fetchAppointments: refreshAppointments,
+                          );
+                        }),
+                      );
+                    } else {
+                      return Center(child: Text('No data available'));
+                    }
+                  },
+                ),
+              )
+            ],
+          ),
         ),
       ),
     );

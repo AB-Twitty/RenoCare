@@ -22,15 +22,13 @@ import 'package:bloc/bloc.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_downloader/flutter_downloader.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart' as not;
+import 'package:flutter_local_notifications/flutter_local_notifications.dart'
+    as not;
 
 import 'bloc.dart';
 import 'firebase_options.dart';
 
-
 void main() async {
-
-
   Bloc.observer = MyBlocObserver();
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
@@ -53,14 +51,10 @@ void main() async {
 }
 
 class MyApp extends StatelessWidget {
-
-  final SignalRUtil signalRUtil=SignalRUtil();
-
+  final SignalRUtil signalRUtil = SignalRUtil();
 
   @override
   Widget build(BuildContext context) {
-
-
     return MaterialApp(
       theme: ThemeData(
         useMaterial3: false,
@@ -80,12 +74,7 @@ class MyApp extends StatelessWidget {
         '/home': (context) => Home(),
         '/chatHomePage': (context) => ChatHomePage(),
         '/bottomnav': (context) => TabsScreen(),
-
       },
     );
   }
-
-
-
 }
-

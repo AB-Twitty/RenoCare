@@ -57,28 +57,23 @@ class _ChatHomePageState extends State<ChatHomePage> {
         final chatResponse = ChatResponse.fromJson(response.data);
         if (chatResponse.succeded) {
           setState(() {
-
             contacts = chatResponse.data;
-            for(int i=0;i<contacts.length;i++)
+            for (int i = 0; i < contacts.length; i++) {
+              if (contacts[i].lastMsg.senderId != currUserId) // i am sender
               {
-                if(contacts[i].lastMsg.senderId!=currUserId)// i am sender
-                  {
-                    contacts[i].lastMsg.status=0;
-                }
+                contacts[i].lastMsg.status = 0;
               }
-
-
+            }
           });
 
-          for(int i=0;i<contacts.length;i++)
-            {
-              print("===================================================");
-              print("Name: ${contacts[i].name}");
+          for (int i = 0; i < contacts.length; i++) {
+            print("===================================================");
+            print("Name: ${contacts[i].name}");
 
-              print("Name: ${contacts[i].lastMsg.message}");
-              print("Name: ${contacts[i].unreadMsgCount}");
-              print("Name: ${contacts[i].lastMsg.status}");
-            }
+            print("Name: ${contacts[i].lastMsg.message}");
+            print("Name: ${contacts[i].unreadMsgCount}");
+            print("Name: ${contacts[i].lastMsg.status}");
+          }
         } else {
           print("Failed to fetch contacts: ${chatResponse.message}");
         }
@@ -119,8 +114,9 @@ class _ChatHomePageState extends State<ChatHomePage> {
     final messageJson = arguments[0] as Map<String, dynamic>;
     final receivedMessage = Message.fromJson(messageJson);
     setState(() {
-      final index = contacts.indexWhere((chat) =>(
-          currUserId==chat.lastMsg.senderId)&& chat.userId == receivedMessage.receiverId);
+      final index = contacts.indexWhere((chat) =>
+          (currUserId == chat.lastMsg.senderId) &&
+          chat.userId == receivedMessage.receiverId);
       if (index != -1) {
         if (currUserId == contacts[index].lastMsg.senderId)
           contacts[index].lastMsg.status = 2; // 2 means delivered
@@ -168,7 +164,7 @@ class _ChatHomePageState extends State<ChatHomePage> {
               title: contact.name,
               body: msg.message,
               fln: flutterLocalNotificationsPlugin);
-          contact.lastMsg.status=0;
+          contact.lastMsg.status = 0;
         }
       } else {
         String name = arguments[1] as String;
@@ -195,84 +191,109 @@ class _ChatHomePageState extends State<ChatHomePage> {
       backgroundColor: Colors.grey[200],
       appBar: AppBar(
         title: Text('Chats'),
+        backgroundColor: Color.fromRGBO(60, 152, 203, 1),
       ),
       body: FutureBuilder<void>(
         future: _contactsFuture,
         builder: (context, snapshot) {
-          if (snapshot.connectionState==ConnectionState.waiting)
-            {
-              return Center(
-                child: LoadingAnimationWidget.threeArchedCircle(color: Colors.blue, size:50),
-              );
-            }
-         else if (snapshot.hasError) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(
+              child: LoadingAnimationWidget.threeArchedCircle(
+                  color: Colors.blue, size: 50),
+            );
+          } else if (snapshot.hasError) {
             return Center(child: Text('Error fetching contacts'));
           } else if (contacts.isEmpty) {
             return Center(child: Text('No contacts available'));
           }
-          return ListView.builder(
-            itemCount: contacts.length,
-            itemBuilder: (context, index) {
-              final contact = contacts[index];
-              return Container(
-                margin: EdgeInsets.symmetric(vertical: 12,horizontal: 8),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(16)
-                ),
-                child: ListTile(
-                  leading: Image.asset(
-                    "assets/images/profile2.jpeg",
-                    height: 30,
-                  ),
-                  title: Text(contact.name),
-                  subtitle: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(contact.lastMsg.message),
-
-
+          return Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 15),
+            child: ListView.builder(
+              itemCount: contacts.length,
+              itemBuilder: (context, index) {
+                final contact = contacts[index];
+                return Container(
+                  margin: EdgeInsets.symmetric(vertical: 12),
+                  padding: EdgeInsets.all(9),
+                  decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(20)),
+                  child: ListTile(
+                    leading: Image.asset(
+                      "assets/images/profile2.jpeg",
+                      width: 40,
+                    ),
+                    title: Text(
+                      contact.name,
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                      ),
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    subtitle: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        SizedBox(
+                          height: 7,
+                        ),
+                        Text(
+                          contact.lastMsg.message,
+                          style: TextStyle(
+                            overflow: TextOverflow.ellipsis,
+                            fontSize: 16,
+                          ),
+                        ),
+                        SizedBox(
+                          height: 7,
+                        ),
                         Text(
                           _formatDate(contact.lastMsg.sendingTime),
+                          style: TextStyle(
+                            fontSize: 14,
+                            color: Colors.grey,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                        Text(
+                          _statusText(contact.lastMsg.status!),
                           style: TextStyle(fontSize: 12, color: Colors.grey),
                         ),
-                      Text(
-                        _statusText(contact.lastMsg.status!),
-                        style: TextStyle(fontSize: 12, color: Colors.grey),
-                      ),
-                    ],
-                  ),
-                  trailing: contact.unreadMsgCount > 0
-                      ? CircleAvatar(
-                          radius: 10,
-                          backgroundColor: Colors.blueAccent,
-                          child: Text(
-                            contact.unreadMsgCount.toString(),
-                            style: TextStyle(color: Colors.white, fontSize: 12),
+                      ],
+                    ),
+                    trailing: contact.unreadMsgCount > 0
+                        ? CircleAvatar(
+                            radius: 10,
+                            backgroundColor: Colors.blueAccent,
+                            child: Text(
+                              contact.unreadMsgCount.toString(),
+                              style:
+                                  TextStyle(color: Colors.white, fontSize: 12),
+                            ),
+                          )
+                        : null,
+                    onTap: () async {
+                      setState(() {
+                        contact.unreadMsgCount = 0;
+                      });
+                      await Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => ChatPage(
+                            active_chat_Id: contact.userId,
+                            chatName: contact.name,
                           ),
-                        )
-                      : null,
-                  onTap: () async {
-                    setState(() {
-                      contact.unreadMsgCount = 0;
-                    });
-                    await Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => ChatPage(
-                          active_chat_Id: contact.userId,
-                          chatName: contact.name,
                         ),
-                      ),
-                    ).then((value) {
-                      prv_active_id = value;
-                      fun();
-                    });
-                    setState(() {}); // Refresh the chat list on return
-                  },
-                ),
-              );
-            },
+                      ).then((value) {
+                        prv_active_id = value;
+                        fun();
+                      });
+                      setState(() {}); // Refresh the chat list on return
+                    },
+                  ),
+                );
+              },
+            ),
           );
         },
       ),

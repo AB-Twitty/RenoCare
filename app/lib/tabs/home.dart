@@ -32,7 +32,7 @@ class _HomeState extends State<Home> {
   String? _selectedSortOption;
   String searchQuery = ''; // Variable to store the search query
   bool isSearchBarVisible =
-  false; // State variable to manage the visibility of the search bar
+      false; // State variable to manage the visibility of the search bar
 
   final controller = ScrollController();
   Map<String, dynamic> appliedFilters = {};
@@ -82,13 +82,14 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     _navigation = NavigationService();
     return Scaffold(
-      // floatingActionButton: FloatingActionButton(
-      //   onPressed: () {
-      //     _navigation.navigateToRoute('/chatHomePage');
-      //   },
-      //   child: Icon(Icons.chat),
-      //   backgroundColor: Color(0xff3C98CB),
-      // ),
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: () {
+          _navigation.navigateToRoute('/chatHomePage');
+        },
+        label: Text("Chats"),
+        icon: Icon(Icons.chat),
+        backgroundColor: Color(0xff3C98CB),
+      ),
       key: _scaffoldKey,
       // EasySearchBar(
       //   backgroundColor: Colors.transparent,
@@ -113,33 +114,33 @@ class _HomeState extends State<Home> {
         child: isSearchBarVisible
             ? _buildSearchBar()
             : AppBar(
-          backgroundColor: Color.fromARGB(255, 255, 255, 255),
-          title: Text(
-            "RenoCare",
-            style: GoogleFonts.lato(color: Colors.black),
-          ),
-          elevation: 0,
-          actions: [
-            IconButton(
-              padding: EdgeInsets.only(right: 20.0),
-              onPressed: () {
-                setState(() {
-                  isSearchBarVisible = true; // Show search bar
-                });
-              },
-              icon: Icon(
-                Icons.search,
-                color: Colors.black,
+                backgroundColor: Color.fromARGB(255, 255, 255, 255),
+                title: Text(
+                  "RenoCare",
+                  style: GoogleFonts.lato(color: Colors.black),
+                ),
+                elevation: 0,
+                actions: [
+                  IconButton(
+                    padding: EdgeInsets.only(right: 20.0),
+                    onPressed: () {
+                      setState(() {
+                        isSearchBarVisible = true; // Show search bar
+                      });
+                    },
+                    icon: Icon(
+                      Icons.search,
+                      color: Colors.black,
+                    ),
+                  )
+                ],
               ),
-            )
-          ],
-        ),
       ),
       body: Column(
         children: [
           Padding(
             padding:
-            const EdgeInsets.symmetric(horizontal: 10.0, vertical: 20.0),
+                const EdgeInsets.symmetric(horizontal: 10.0, vertical: 20.0),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -340,7 +341,7 @@ class _HomeState extends State<Home> {
                     futureCenterUnit =
                         _fetchData(page, filters); // Fetch initial data
                     isSearchBarVisible =
-                    false; // Hide search bar // Hide search bar
+                        false; // Hide search bar // Hide search bar
                   });
                 },
               ),
@@ -363,22 +364,22 @@ class _HomeState extends State<Home> {
                     focusColor: Color(0xff3C98CB),
                     suffixIcon: searchQuery.isNotEmpty
                         ? IconButton(
-                      icon: Icon(
-                        Icons.clear,
-                        color: Colors.black,
-                      ),
-                      onPressed: () {
-                        setState(() {
-                          searchController.clear();
-                          searchQuery = ''; // Clear search query
-                          units.clear();
-                          filters.clear(); // Clear current data
-                          page = 1; // Reset page number
-                          futureCenterUnit = _fetchData(
-                              page, filters); // Fetch initial data
-                        });
-                      },
-                    )
+                            icon: Icon(
+                              Icons.clear,
+                              color: Colors.black,
+                            ),
+                            onPressed: () {
+                              setState(() {
+                                searchController.clear();
+                                searchQuery = ''; // Clear search query
+                                units.clear();
+                                filters.clear(); // Clear current data
+                                page = 1; // Reset page number
+                                futureCenterUnit = _fetchData(
+                                    page, filters); // Fetch initial data
+                              });
+                            },
+                          )
                         : null,
                   ),
                 ),

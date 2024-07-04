@@ -2,6 +2,7 @@ import 'package:app/Shared/components/widgets/book_widgets/time.dart';
 import 'package:app/Shared/components/widgets/book_widgets/time.dart';
 import 'package:app/Shared/components/widgets/book_widgets/treatmentType.dart';
 import 'package:app/pages/center_details_page/center_details/details.dart';
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -87,10 +88,10 @@ class _BookScreenState extends State<BookScreen> {
         detailModel.groupedSessions.forEach((weekday, sessions) {
           if (sessions.isNotEmpty) {
             final int weekdayIndex =
-            DateFormat.EEEE().dateSymbols.WEEKDAYS.indexOf(weekday);
+                DateFormat.EEEE().dateSymbols.WEEKDAYS.indexOf(weekday);
             DateTime now = DateTime.now();
             DateTime nextDate =
-            now.add(Duration(days: (weekdayIndex - now.weekday + 7) % 7));
+                now.add(Duration(days: (weekdayIndex - now.weekday + 7) % 7));
             while (nextDate.isBefore(DateTime(2024, 12, 31))) {
               availableDates.add(nextDate);
               nextDate = nextDate.add(Duration(days: 7));
@@ -161,8 +162,40 @@ class _BookScreenState extends State<BookScreen> {
     });
   }
 
-  String? selectedDay;
-  List<String> SelectedTypes = [];
+  void showErrorDialog(String message) {
+    AwesomeDialog(
+      context: context,
+      dialogType: DialogType.error,
+      title: 'Error',
+      descTextStyle: TextStyle(
+        fontSize: 16,
+      ),
+      desc: message,
+      btnOkColor: Color.fromRGBO(60, 152, 203, 1),
+      buttonsTextStyle: TextStyle(
+        fontSize: 18,
+      ),
+      btnOkOnPress: () {},
+    ).show();
+  }
+
+  void showSuccessDialog(String message) {
+    AwesomeDialog(
+      context: context,
+      dialogType: DialogType.success,
+      title: 'Success',
+      descTextStyle: TextStyle(
+        fontSize: 16,
+      ),
+      desc: message,
+      btnOkColor: Color.fromRGBO(60, 152, 203, 1),
+      buttonsTextStyle: TextStyle(
+        fontSize: 18,
+      ),
+      btnOkOnPress: () {},
+    ).show();
+  }
+
   Future<void> scheduleAppointment() async {
     final Dio _dio = Dio();
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -188,13 +221,16 @@ class _BookScreenState extends State<BookScreen> {
 
       if (response.statusCode == 200) {
         print(response.data);
+        showSuccessDialog("Booking has been done successfuly");
         // Handle success, e.g., show a success message or navigate to another page
         print('Appointment scheduled successfully');
       } else {
+        showErrorDialog('Failed to schedule appointment');
         throw Exception('Failed to schedule appointment');
       }
     } on DioError catch (e) {
       // Handle error, e.g., show an error message
+      showErrorDialog('Failed to schedule appointment:');
       print('Failed to schedule appointment: ${e.message}');
     }
   }
@@ -293,7 +329,7 @@ class _BookScreenState extends State<BookScreen> {
                         },
                         enabledDayPredicate: (day) {
                           return availableDates.any(
-                                  (availableDay) => isSameDay(availableDay, day));
+                              (availableDay) => isSameDay(availableDay, day));
                         },
                         onFormatChanged: (format) {
                           setState(() {
@@ -348,14 +384,13 @@ class _BookScreenState extends State<BookScreen> {
                         )
                       } else if (detail.isHdSupported) ...{
                         TreatmentType(
-                          types: const ["HD"],
-                          onSelectionChanged: (value) {
-                            print(value);
-                            setState(() {
-                              treatmentTypeValue = value;
-                            });
-                          },
-                        )
+                            types: const ["HD"],
+                            onSelectionChanged: (value) {
+                              print(value);
+                              setState(() {
+                                treatmentTypeValue = value;
+                              });
+                            })
                       } else ...{
                         TreatmentType(
                           types: const ["HDF"],
