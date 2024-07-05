@@ -132,7 +132,6 @@ class MessageBubble2 extends StatelessWidget {
               color: message.status == 3 ? Colors.blue : Colors.transparent,
               border: Border.all(
                 color: message.status == 3 ? Colors.blue : Colors.black,
-                color: message.status == 3 ? Colors.blue : Colors.black,
               ),
             ),
           ),
