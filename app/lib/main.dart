@@ -39,12 +39,15 @@ void main() async {
   await FlutterDownloader.initialize(
     debug: true,
   );
+
+  final sessionManager= LoginDataManager2();
+  final isSessionValid = await sessionManager.isSessionValid();
   runApp(
     SplashScreen(
       key: UniqueKey(),
       onInitializationComplete: () {
         runApp(
-          MyApp(),
+          MyApp( initialRoute: isSessionValid ? '/bottomnav' : '/login'),
         );
       },
     ),
@@ -53,6 +56,9 @@ void main() async {
 
 class MyApp extends StatelessWidget {
   final SignalRUtil signalRUtil = SignalRUtil();
+  final String initialRoute;
+
+  MyApp({required this.initialRoute});
 
   @override
   Widget build(BuildContext context) {
@@ -65,7 +71,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       home: LoginPage(),
       navigatorKey: NavigationService.navigatorKey,
-      initialRoute: '/login',
+      initialRoute: initialRoute,
       routes: {
         '/Pro': (context)=> Pro(),
         '/login': (context) => LoginPage(),
