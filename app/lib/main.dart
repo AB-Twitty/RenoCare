@@ -17,6 +17,7 @@ import 'package:app/services/token_service.dart';
 import 'package:app/tabs/appointment.dart';
 
 import 'package:app/tabs/home.dart';
+import 'package:app/tabs/pro.dart';
 import 'package:app/tabs/profile_tab.dart';
 import 'package:bloc/bloc.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -66,6 +67,7 @@ class MyApp extends StatelessWidget {
       navigatorKey: NavigationService.navigatorKey,
       initialRoute: '/login',
       routes: {
+        '/Pro': (context)=> Pro(),
         '/login': (context) => LoginPage(),
         '/home_page': (context) => HomePage(),
         '/signup': (context) => SignUp(),

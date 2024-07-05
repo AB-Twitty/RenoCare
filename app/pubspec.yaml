@@ -79,6 +79,10 @@ dependencies:
   awesome_dialog: ^3.2.1
 
 
+flutter_icons:
+  android: true
+  ios: true
+  image_path: "assets/app_icon/appIcon2.jpeg"
 dev_dependencies:
   flutter_test:
     sdk: flutter

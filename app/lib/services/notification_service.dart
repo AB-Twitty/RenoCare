@@ -63,6 +63,13 @@ class NotificationService {
       playSound: true,
       importance: Importance.max,
       priority: Priority.high,
+
+      styleInformation: BigTextStyleInformation(
+        body,
+        contentTitle: title,
+        htmlFormatContent: true,
+        htmlFormatContentTitle: true,
+      ),
     );
 
 

@@ -20,7 +20,6 @@ part 'login_state.dart';
 
 class LoginCubit extends Cubit<LoginState> {
   LoginCubit() : super(LoginInitial());
-
   String currId="";
   static LoginCubit get(context) => BlocProvider.of(context);
   final not.FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =

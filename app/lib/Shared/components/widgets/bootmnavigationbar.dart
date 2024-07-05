@@ -5,6 +5,8 @@ import 'package:app/tabs/profile_tab.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import '../../../tabs/pro.dart';
+
 class TabsScreen extends StatefulWidget {
   const TabsScreen({super.key});
   @override
