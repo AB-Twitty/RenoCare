@@ -6,10 +6,14 @@
         <a data-toggle="modal" data-target="#NotificationModal">
         <i class="fa fa-bell fa-lg"></i></a>
         </li>*@
+            @if(User.IsInRole("HealthCare") && int.TryParse(User.Claims.FirstOrDefault(x => x.Type == "uid")?.Value.ToString(), out int unitId))
+            {
+                var uid = User.Claims.First(x => x.Type == "sub").Value;
 
-            <li>
-                <a asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Update My Information</a>
-            </li>
+                <li>
+                    <a asp-controller="DialysisUnit" asp-action="EditInfo" asp-route-userId="@uid" asp-route-unitId="@unitId">Update My Information</a>
+                </li>
+            }
             <li>
                 <a asp-area="Identity" asp-page="/Account/Manage/SetPassword" title="Manage">Change Password</a>
             </li>

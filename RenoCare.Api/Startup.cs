@@ -35,7 +35,9 @@ namespace RenoCare.Api
             {
                 o.AddPolicy("CorsPolicy", builder =>
                 {
-                    builder.WithOrigins("https://localhost:44317")
+                    //https://localhost:44317
+                    //https://renocare.azurewebsites.net/
+                    builder.WithOrigins("https://renocare.azurewebsites.net")
                     .AllowAnyMethod()
                     .AllowAnyHeader()
                     .AllowCredentials();

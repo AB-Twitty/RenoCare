@@ -1,13 +1,10 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using RenoCare.Core.Base;
 using RenoCare.Core.Conatracts.Persistence;
 using RenoCare.Core.Features.Authentication.Contracts;
 using RenoCare.Core.Features.Home.Dtos;
-using RenoCare.Core.Hubs;
-using RenoCare.Core.Hubs.Models;
 using RenoCare.Domain;
 using System;
 using System.Collections.Generic;
@@ -41,7 +38,6 @@ namespace RenoCare.Core.Features.Home.Mediator.Queries
         private readonly IRepository<Domain.MedicationRequestStatus> _medReqStatusRepo;
         private readonly IAuthService _authService;
         private readonly IHttpContextAccessor _ctxAccessor;
-        private readonly IHubContext<ChatHub> _hub;
 
         #endregion
 
@@ -53,8 +49,7 @@ namespace RenoCare.Core.Features.Home.Mediator.Queries
             IRepository<MedicationRequest> medReq,
             IRepository<Patient> patientRepo,
             IRepository<Domain.MedicationRequestStatus> medReqStatusRepo,
-            IRepository<Report> reportRepo,
-            IHubContext<ChatHub> hub)
+            IRepository<Report> reportRepo)
         {
             _unitRepo = unitRepo;
             _ctxAccessor = ctxAccessor;
@@ -63,7 +58,6 @@ namespace RenoCare.Core.Features.Home.Mediator.Queries
             _patientRepo = patientRepo;
             _medReqStatusRepo = medReqStatusRepo;
             _reportRepo = reportRepo;
-            _hub = hub;
         }
 
         #endregion
@@ -72,15 +66,6 @@ namespace RenoCare.Core.Features.Home.Mediator.Queries
 
         public async Task<ApiResponse<DashboardDto>> Handle(GetDashboardDataQueryRequest request, CancellationToken cancellationToken)
         {
-            var notification = new Notification
-            {
-                UserId = "0a7caa9a-7a24-4fbf-bf3b-364d23289c1f",
-                Title = "Pending with no respond",
-                Body = $"Your appointment at El-Shefaa booked for {DateTime.Now:dd-MMM-yyyy} at {DateTime.Now:hh:mm tt} didn't receive any response."
-            };
-
-            await _hub.Clients.User(notification.UserId).SendAsync("OnNotified", notification);
-
             DashboardDto dashboard = new DashboardDto
             {
                 DialysisUnit = new Dictionary<string, Pair<int, int>>(),
@@ -161,8 +146,6 @@ namespace RenoCare.Core.Features.Home.Mediator.Queries
                 var total_prev_mon = _unitRepo.Table.Where(x => x.CreationDate.Month == prev_month).Count();
                 var MOM = (total_curr_mon - total_prev_mon) / (double)total_prev_mon;
 
-                dashboard.DialysisUnit.Add("Total", new Pair<int, int> { First = total_units, Second = (int)(MOM * 100) });
-
 
                 var total_healthcare = await _authService.CountInRole("HealthCare");
                 var active_units = await _unitRepo.Table.CountAsync();
@@ -175,6 +158,8 @@ namespace RenoCare.Core.Features.Home.Mediator.Queries
                 int non_active_MOM = -10;
                 dashboard.DialysisUnit.Add("Non-Active", new Pair<int, int> { First = non_active_units, Second = non_active_MOM });
 
+
+                dashboard.DialysisUnit.Add("Total", new Pair<int, int> { First = total_healthcare, Second = (int)(MOM * 100) });
 
                 var patient_total = await _patientRepo.Table.CountAsync();
                 int patient_MOM = 9;

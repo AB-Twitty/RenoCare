@@ -12,11 +12,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="Views\Templates\Report\logo.png" />
-    <Content Include="Views\Templates\Report\style.css" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="11.1.0" />
     <PackageReference Include="Microsoft.AspNetCore.Razor.Runtime" Version="2.2.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="5.0.17">
@@ -38,6 +33,11 @@
 	
   <ItemGroup>
     <Folder Include="wwwroot\Uploads\" />
+  </ItemGroup>
+	
+  <ItemGroup>
+    <None Include="wwwroot\Templates\Report\logo.png" />
+    <None Include="wwwroot\Templates\Report\style.css" />
   </ItemGroup>
 
 </Project>

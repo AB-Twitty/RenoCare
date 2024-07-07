@@ -105,9 +105,12 @@
             <div class="col-md-6">
                 <button data-toggle="tab" id="prev_to_treatmentOutcomes" href="#tab-4" class="tab7 btn btn-secondary">Previous</button>
             </div>
-            <div class="col-md-6 text-end">
-                <button type="submit" class="tab9 btn btn-primary">Save</button>
-            </div>
+            @if(Model.ViewMode == "Create")
+            {
+                <div class="col-md-6 text-end">
+                    <button type="submit" class="tab9 btn btn-primary">Save</button>
+                </div>
+            }
         </div>
     </div>
 

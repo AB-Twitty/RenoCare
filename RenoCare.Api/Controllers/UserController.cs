@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using RenoCare.Core.Base;
 using RenoCare.Core.Features.Authentication.Contracts.Models;
 using RenoCare.Core.Features.Authentication.Mediator.Commands;
+using RenoCare.Core.Features.Authentication.Mediator.Queries;
 using RenoCare.Core.Features.HealthCareProviders.Mediator.Commands;
 using RenoCare.Domain.MetaData;
 using System.Threading.Tasks;
@@ -50,6 +51,10 @@ namespace RenoCare.Api.Controllers
         [HttpPost(Router.AccountRouting.SetPasswordWithOtp)]
         public async Task<ActionResult<ApiResponse<AuthResponse>>> SetPasswordWithOtpAsync(OtpPasswordSetRequest passRequest) =>
             ApiResult(await _mediator.Send(new SetPasswordWithOtpCommandRequest { PasswordModel = passRequest }));
+
+        [HttpGet(Router.AccountRouting.Profile)]
+        public async Task<ActionResult<ApiResponse<UserInfo>>> GetUserProfile(string userId) =>
+            ApiResult(await _mediator.Send(new GetProfileQueryRequest { Id = userId }));
 
         #endregion
     }

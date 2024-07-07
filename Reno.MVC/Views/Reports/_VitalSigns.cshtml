@@ -34,10 +34,13 @@
             <!--Pre Weight-->
             <div class="col-md-6">
                 <div class="col-md-12" style="display:inline-flex;">
-                    <label class="control-label m-r-sm input-decimal" style="padding-top:5px; min-width:60px;">
+                    <label class="control-label m-r-sm input-decimal" style="padding-top:5px; min-width:55px;">
                         Pre:
                     </label>
                     <input asp-for="@Model.Report.PreWeight" type="text" class="m-b form-control input-decimal" maxlength="5" />
+                    
+                </div>
+                <div class="col-md-12">
                     <span asp-validation-for="@Model.Report.PreWeight" class="text-danger"></span>
                 </div>
             </div>
@@ -45,10 +48,13 @@
             <!--Post Weight-->
             <div class="col-md-6">
                 <div class="col-md-12" style="display:inline-flex;">
-                    <label class="control-label m-r-sm input-decimal" style="padding-top:5px; min-width:60px;">
+                    <label class="control-label m-r-sm input-decimal" style="padding-top:5px; min-width:55px;">
                         Post:
                     </label>
                     <input id="postWeight" asp-for="@Model.Report.PostWeight" type="text" class="m-b form-control input-decimal" maxlength="5" />
+                    
+                </div>
+                <div class="col-md-12">
                     <span asp-validation-for="@Model.Report.PostWeight" class="text-danger"></span>
                 </div>
             </div>
@@ -69,7 +75,7 @@
             <!--Pre-->
             <div class="col-md-4">
                 <div class="col-md-12" style="display:inline-flex;">
-                    <label class="control-label m-r-sm" style="padding-top:5px; min-width:60px;">
+                    <label class="control-label m-r-sm pre-lable" style="padding-top:5px; min-width:55px;">
                         Pre:
                     </label>
                     <div style="display:inline-flex; min-width:120px; max-width:200px;">
@@ -81,21 +87,24 @@
                         }
 
                         <input value="@Model.Report.PreBloodPressure?.Split('/')[0]" type="text"
-                               class="m-b form-control input-integer @(isPreValid ? "" : "input-validation-error")"
+                               class="m-b form-control VitalSigns-input input-integer @(isPreValid ? "" : "input-validation-error")"
                                maxlength="3" id="preSystolic"/>
                         <div style="font-size:x-large; margin: 0 5px;">/</div>
                         <input value="@Model.Report.PreBloodPressure?.Split('/')[1]" type="text"
-                               class="m-b form-control input-integer @(isPreValid ? "" : "input-validation-error")"
+                               class="m-b form-control VitalSigns-input input-integer @(isPreValid ? "" : "input-validation-error")"
                                maxlength="3" id="preDiastolic"/>
                     </div>
+                    
+                </div>
+                <div class="col-md-12">
                     <span asp-validation-for="@Model.Report.PreBloodPressure" class="text-danger"></span>
                 </div>
             </div>
 
             <!--During-->
-            <div class="col-md-4">
+            <div class="col-md-4 During">
                 <div class="col-md-12" style="display:inline-flex;">
-                    <label class="control-label m-r-sm" style="padding-top:5px; min-width:60px;">
+                    <label class="control-label m-r-sm During-lable" style="padding-top:5px; min-width:55px;">
                         During:
                     </label>
                     <div style="display:inline-flex; min-width:120px; max-width:200px;">
@@ -106,21 +115,24 @@
                                 ?.Errors.Any() ?? true;
                         }
                         <input value="@Model.Report.DuringBloodPressure?.Split('/')[0]" type="text"
-                               class="m-b form-control input-integer @(isDuringValid ? "" : "input-validation-error")"
+                               class="m-b form-control VitalSigns-input input-integer @(isDuringValid ? "" : "input-validation-error")"
                                maxlength="3" id="duringSystolic" />
                         <div style="font-size:x-large; margin: 0 5px;">/</div>
                         <input value="@Model.Report.DuringBloodPressure?.Split('/')[1]" type="text"
-                               class="m-b form-control input-integer @(isDuringValid ? "" : "input-validation-error")"
+                               class="m-b form-control VitalSigns-input input-integer @(isDuringValid ? "" : "input-validation-error")"
                                maxlength="3" id="duringDiastolic" />
                     </div>
+                    
+                </div>
+                <div class="col-md-12 post">
                     <span asp-validation-for="@Model.Report.DuringBloodPressure" class="text-danger"></span>
                 </div>
             </div>
 
             <!--Post-->
             <div class="col-md-4">
-                <div class="col-md-12" style="display:inline-flex;">
-                    <label class="control-label m-r-sm" style="padding-top:5px; min-width:60px;">
+                <div class="col-md-12 post" style="display:inline-flex;">
+                    <label class="control-label m-r-sm post-lable" style="padding-top:5px; min-width:55px;">
                         Post:
                     </label>
                     <div style="display:inline-flex; min-width:120px; max-width:200px;">
@@ -131,13 +143,16 @@
                                 ?.Errors.Any() ?? true;
                         }
                         <input value="@Model.Report.PostBloodPressure?.Split('/')[0]" type="text"
-                               class="m-b form-control input-integer @(isPostValid ? "" : "input-validation-error")"
+                               class="m-b form-control VitalSigns-input input-integer @(isPostValid ? "" : "input-validation-error")"
                                maxlength="3" id="postSystolic" />
                         <div style="font-size:x-large; margin: 0 5px;">/</div>
                         <input value="@Model.Report.PostBloodPressure?.Split('/')[1]" type="text"
-                               class="m-b form-control input-integer @(isPostValid ? "" : "input-validation-error")"
+                               class="m-b form-control VitalSigns-input input-integer @(isPostValid ? "" : "input-validation-error")"
                                maxlength="3" id="postDiastolic" />
                     </div>
+                    
+                </div>
+                <div class="col-md-12 post">
                     <span asp-validation-for="@Model.Report.PostBloodPressure" class="text-danger"></span>
                 </div>
             </div>
@@ -184,7 +199,7 @@
 <!--Tabs Buttons-->
 <div class="row">
     <div class="ibox float-e-margins">
-        <div class="ibox-title">
+        <div class="ibox-title ibox-title-reports">
             <div class="col-md-6">
                 <button data-toggle="tab" id="prev_to_healthStatus" href="#tab-2" class="tab7 btn btn-secondary">Previous</button>
             </div>

@@ -1,9 +1,7 @@
 ﻿using FluentValidation.Results;
 using Microsoft.AspNetCore.Identity;
-using RenoCare.Core.Conatracts.Persistence;
 using RenoCare.Core.Features.Authentication.Contracts;
 using RenoCare.Core.Features.Authentication.Contracts.Models;
-using RenoCare.Domain;
 using RenoCare.Domain.Identity;
 using RenoCare.Domain.MetaData;
 using RenoCare.Infrastructure.Authentication.Contracts;
@@ -24,22 +22,18 @@ namespace RenoCare.Infrastructure.Authentication
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly SignInManager<AppUser> _signInManager;
         private readonly ITokenProvider _tokenProvider;
-        private readonly IRepository<MedicationRequest> _medReqRepo;
-        private readonly IRepository<Report> _reportRepo;
 
         #endregion
 
         #region Ctor
         public AuthService(UserManager<AppUser> userManager,
             SignInManager<AppUser> signInManager, ITokenProvider tokenProvider,
-            RoleManager<IdentityRole> roleManager, IRepository<MedicationRequest> medReqRepo, IRepository<Report> reportRepo)
+            RoleManager<IdentityRole> roleManager)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _tokenProvider = tokenProvider;
             _roleManager = roleManager;
-            _medReqRepo = medReqRepo;
-            _reportRepo = reportRepo;
         }
 
         #endregion

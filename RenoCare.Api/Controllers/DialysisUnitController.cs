@@ -32,6 +32,7 @@ namespace RenoCare.Api.Controllers
         #region Methods
 
         [HttpPost(Router.HealthCareProviderRouting.NewCome)]
+        [Authorize(Roles = "HealthCare")]
         public async Task<ActionResult<ApiResponse<string>>> CreateNewcomeDialysisUnitAsync(
             [FromBody] CreateNewcomeDialysisUnitCommandRequest req) =>
             ApiResult(await _mediator.Send(req));

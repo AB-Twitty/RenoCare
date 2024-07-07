@@ -33,6 +33,13 @@ namespace RenoCare.Api.Controllers
         public async Task<ActionResult<ApiResponse<DashboardDto>>> GetDashboardDataAsync() =>
             ApiResult(await _mediator.Send(new GetDashboardDataQueryRequest()));
 
+        [HttpGet("/Test/Notify")]
+        public async Task<ActionResult> TestSendNotify24HourBefore()
+        {
+            await _mediator.Send(new TestSendNotify24Hour());
+            return Ok();
+        }
+
         #endregion
     }
 }

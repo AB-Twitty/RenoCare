@@ -37,6 +37,224 @@
         .well {
             background-color: rgba(0, 0, 0, 0) !important;
         }
+
+        .padding-right-0{
+    padding-right: 0;
+}
+.report-input-width {
+    width: 100%;
+}
+.report-input-padding-right {
+    padding-right: 1rem;
+}
+.report-input-padding-left {
+    padding-left: 1rem;
+}
+.report-input-padding-x {
+    padding-right: 1rem;
+    padding-left: 1rem;
+}
+.ibox-title-reports {
+    color: inherit;
+    margin-bottom: 0;
+    padding: 0 15px !important;
+    min-height: auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.mb-0{
+    margin-bottom: 0 !important;
+}
+.Treatment-input {
+    width: 140px;
+}
+
+.treatment-col-pre {
+    width: 25%;
+    padding-right: 0;
+}
+.treatment-col-Ratio{
+    width: 50%;
+    padding-left:0;
+}
+
+.Ratio-input {
+    width: 100%;
+}
+.treatment-p-0 {
+    padding-right: 0;
+    padding-left: 0;
+}
+.treatment-post-lable {
+    padding-top: 5px !important;
+    min-width: 30px !important;
+}
+.treatment-pre-lable {
+    min-width: 25px !important;
+}
+.Total-Fluid {
+    display: flex !important;
+    flex-direction: column;
+}
+@@media screen and (max-width: 1360px) {
+    .report-input {
+        height: 96.85px !important;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    }
+    .Treatment-input {
+        width: 110px;
+    }
+}
+@@media screen and (max-width: 1200px) {
+    .control-label {
+        font-size: 13px;
+    }
+
+    .padding-right-VitalSigns-0 {
+        padding-right: 0;
+    }
+
+    .report-input-padding-VitalSigns-x {
+        padding-right: 0;
+        padding-left: 0;
+    }
+
+    .pre-lable {
+        padding-top: 5px !important;
+        min-width: 25px !important;
+        margin-right: 6px;
+    }
+
+    .VitalSigns-input {
+        width: 45px !important;
+    }
+
+    .During {
+        padding: 0 6px !important;
+    }
+
+    .During-lable {
+        padding-top: 5px !important;
+        min-width: 55px !important;
+        margin-right: 2px !important;
+    }
+
+    .post {
+        padding: 0;
+    }
+
+    .post-lable {
+        padding-top: 5px !important;
+        min-width: 30px !important;
+    }
+
+    .treatment-col-pre {
+        width: 27%;
+        padding-right: 0;
+    }
+
+    .treatment-col-Ratio {
+        width: 46%;
+        padding-left: 0;
+    }
+
+    .Treatment-input {
+        width: 85px;
+    }
+
+    .Ratio-input {
+        width: 90px;
+    }
+}
+@@media screen and (max-width: 991.98px) {
+    .report-input {
+        height: auto !important;
+    }
+    .report-input-padding-right {
+        padding-right: 15px;
+    }
+    .report-input-padding-left {
+        padding-left: 15px;
+    }
+    .report-input-padding-x {
+        padding-right: 15px;
+        padding-left: 15px;
+    }
+    .padding-right-0 {
+        padding-right: 15px;
+    }
+    .report-input .pl-0 {
+        padding-left: 15px !important;
+    }
+
+    .pre-lable {
+        padding-top: 5px !important;
+        min-width: 55px !important;
+        margin-right: 10px;
+    }
+
+    .VitalSigns-input {
+        width: 85px !important;
+    }
+
+    .During {
+        padding: 0 15px !important;
+    }
+
+    .During-lable {
+        padding-top: 5px !important;
+        min-width: 55px !important;
+        margin-right: 10px !important;
+    }
+
+    .post {
+        padding: 0 15px;
+    }
+
+    .post-lable {
+        padding-top: 5px !important;
+        min-width: 55px !important;
+    }
+    .ibox-title {
+        color: inherit;
+        margin-bottom: 0;
+        padding: 15px 15px 7px;
+        min-height: auto; 
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    .treatment-col-pre {
+        width: 100%;
+        padding-right: 15px;
+    }
+    .treatment-pre-lable, .treatment-post-lable, .treatment-Ratio-lable {
+        min-width: 120px !important;
+    }
+    .Treatment-input {
+        width: 120px;
+    }
+    .Ratio-input {
+        width: 120px;
+    }
+    .treatment-p-0 {
+        padding-right: 15px;
+        padding-left: 15px;
+    }
+    .treatment-col-Ratio {
+        width: 100%;
+        padding-left: 15px;
+    }
+    
+
+}
+@@media screen and (max-width: 767px) {
+}
+@@media screen and (max-width: 567px) {
+}
     </style>
 }
 
@@ -300,7 +518,7 @@
             let reportId = $(this).data('id');
 
             $.ajax({
-                url: `http://localhost:6982/report/pdf/${reportId}`,
+                url: `https://renocareapi.azurewebsites.net/report/pdf/${reportId}`,
                 type: 'GET',
                 headers: {
                     "Authorization": `Bearer @access_token`

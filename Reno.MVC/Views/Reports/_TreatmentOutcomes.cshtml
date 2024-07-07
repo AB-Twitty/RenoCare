@@ -28,34 +28,43 @@
         <div class="row">
 
             <!--Pre Urea-->
-            <div class="col-md-4">
-                <div class="col-md-12" style="display:inline-flex;">
-                    <label class="control-label m-r-sm" style="padding-top:5px; min-width:60px;">
+            <div class="col-md-4 treatment-col-pre">
+                <div class="col-md-12 padding-right-0" style="display:inline-flex;">
+                    <label class="control-label m-r-sm treatment-pre-lable" style="padding-top:5px; min-width:60px;">
                         Pre:
                     </label>
-                    <input id="preUrea" asp-for="@Model.Report.PreUrea" class="m-b form-control input-decimal" maxlength="5" />
+                    <input id="preUrea" asp-for="@Model.Report.PreUrea" class="m-b form-control Treatment-input input-decimal" maxlength="5" />
+                    
+                </div>
+                <div class="col-md-12 padding-right-0">
                     <span asp-validation-for="@Model.Report.PreUrea" class="text-danger"></span>
                 </div>
             </div>
 
             <!--Post Urea-->
-            <div class="col-md-4">
-                <div class="col-md-12" style="display:inline-flex;">
-                    <label class="control-label m-r-sm" style="padding-top:5px; min-width:60px;">
+            <div class="col-md-4 treatment-col-pre">
+                <div class="col-md-12 treatment-p-0" style="display:inline-flex;">
+                    <label class="control-label m-r-sm treatment-post-lable" style="padding-top:5px; min-width:60px;">
                         Post:
                     </label>
-                    <input id="postUrea" asp-for="@Model.Report.PostUrea" class="m-b form-control input-decimal" maxlength="5" />
+                    <input id="postUrea" asp-for="@Model.Report.PostUrea" class="m-b form-control Treatment-input input-decimal" maxlength="5" />
+                </div>
+                <div class="col-md-12 treatment-p-0">
                     <span asp-validation-for="@Model.Report.PostUrea" class="text-danger"></span>
+
                 </div>
             </div>
 
             <!--Urea Reduction Ratio-->
-            <div class="col-md-4">
+            <div class="col-md-4 treatment-col-Ratio">
                 <div class="col-md-12" style="display:inline-flex;">
-                    <label class="control-label m-r-sm" style="min-width:fit-content;">
+                    <label class="control-label m-r-sm treatment-Ratio-lable" style="min-width:fit-content;">
                         Urea Reduction<br />Ratio (URR):
                     </label>
-                    <input id="URR" asp-for="@Model.Report.UreaReductionRatio" class="m-b form-control" readonly />
+                    <input id="URR" asp-for="@Model.Report.UreaReductionRatio" class="m-b Ratio-input form-control" readonly />
+                    
+                </div>
+                <div class="col-md-12">
                     <span class="text-danger"></span>
                 </div>
             </div>
@@ -74,26 +83,32 @@
 
             <!--Total-->
             <div class="col-md-6">
-                <div class="col-md-12" style="display:inline-flex;">
+                <div class="col-md-12 Total-Fluid" style="display:inline-flex;">
                     <label class="control-label m-r-sm wn-fit" style="padding-top:5px;">
                         Total Fluid Removal
                         <span class=" font-12 control-label">- ml</span>
                         :
                     </label>
                     <input id="totalFluid" asp-for="@Model.Report.TotalFluidRemoval" class="m-b form-control input-decimal" max-length="6" />
+                    
+                </div>
+                <div class="col-md-12 Total-Fluid">
                     <span asp-validation-for="@Model.Report.TotalFluidRemoval" class="text-danger"></span>
                 </div>
             </div>
 
             <!--Rate-->
             <div class="col-md-6">
-                <div class="col-md-12" style="display:inline-flex;">
+                <div class="col-md-12 Total-Fluid" style="display:inline-flex;">
                     <label class="control-label m-r-sm wn-fit" style="padding-top:5px;">
                         Fluid Removal Rate
                         <span class=" font-12 control-label">- ml/H</span>
                         :
                     </label>
                     <input id="fluidRate" asp-for="@Model.Report.FluidRemovalRate" class="m-b form-control" readonly/>
+                    
+                </div>
+                <div class="col-md-12 Total-Fluid">
                     <span class="text-danger"></span>
                 </div>
             </div>
@@ -139,7 +154,7 @@
 <!--Tabs Buttons-->
 <div class="row">
     <div class="ibox float-e-margins">
-        <div class="ibox-title">
+        <div class="ibox-title ibox-title-reports">
             <div class="col-md-6">
                 <button data-toggle="tab" id="prev_to_vitalSigns" href="#tab-3" class="tab7 btn btn-secondary">Previous</button>
             </div>

@@ -20,6 +20,7 @@
             public const string SendResetPasswordEmail = Rule + "/ResetPassword";
             public const string ResetPassword = Rule + "/ResetPassword/{userId}";
             public const string SetPasswordWithOtp = Rule + "/Password/Reset/OTP";
+            public const string Profile = Rule + "/Profile/{userId}";
         }
 
         /// <summary>

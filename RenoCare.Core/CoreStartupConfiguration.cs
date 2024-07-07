@@ -4,6 +4,7 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.Extensions.DependencyInjection;
 using RenoCare.Core.Base;
+using System;
 using System.Linq;
 using System.Reflection;
 
@@ -42,12 +43,19 @@ namespace RenoCare.Core
 
             services.AddHttpContextAccessor();
 
-            services.AddSignalR().AddMessagePackProtocol();
+            services.AddSignalR(o =>
+            {
+                o.KeepAliveInterval = TimeSpan.FromMinutes(5);
+                o.ClientTimeoutInterval = TimeSpan.FromMinutes(10);
+                o.HandshakeTimeout = TimeSpan.FromMinutes(5);
+            });
             //GlobalHost.HubPipeline.RequireAuthentication();
 
             License.LicenseKey = "IRONSUITE.MOCANEVA2.GMAIL.COM.18342-3040EC1DB1-KGKPW-MPN32LH3MXQH-AAW5EVEMLJ6K-SRGNB2LBUSS3-XVXODVH2QBJF-JJBEOTKBJMB7-YNNDIIC4LHQF-HIQGIH-THV3MD5J2B6NEA-DEPLOYMENT.TRIAL-IIW6NX.TRIAL.EXPIRES.25.JUL.2024";
 
-            //services.AddHostedService<MedReqCheckBackgroundService>();
+            services.AddHostedService<MedReqCheckBackgroundService>();
+            services.AddHostedService<Notify24HourBeforeBooking>();
+
 
             return services;
         }

@@ -1,9 +1,5 @@
 ﻿@using System.Security.Claims;
 
-@{
-    var unitId = User.Claims.Where(x => x.Type == "unitId").FirstOrDefault();
-}
-
 <nav class="navbar-default navbar-static-side" role="navigation">
     <div class="sidebar-collapse">
         <ul class="nav" id="side-menu">
@@ -22,10 +18,10 @@
                         </span>
                     </a>
                     <ul class="dropdown-menu animated fadeInRight m-t-xs">
-                        @if (User.IsInRole("Healthcare") && unitId != null)
+                        @if (User.IsInRole("HealthCare") && int.TryParse(User.Claims.FirstOrDefault(c => c.Type == "uid")?.Value, out int id))
                         {
                             <li>
-                                <a asp-action="GetDialysisUnitDetails" asp-controller="DialysisUnit" asp-route-id="@unitId">Profile</a>
+                                <a asp-action="GetDialysisUnitDetails" asp-controller="DialysisUnit" asp-route-id="@id">Profile</a>
                             </li>
                             <li class="divider"></li>
                         }
@@ -67,19 +63,19 @@
                         <li><a id="add-healthcare" >Add Healthcare Provider</a></li>
                     </ul>
                 </li>
-
+                /*
                 <li>
                     <a asp-action="Index" asp-controller="Users"><i class="fa  fa-2x  fa-users"></i> <span class="nav-label">Users</span> <span class="fa arrow"></span></a>
                     <ul class="nav nav-second-level collapse">
                         <li><a asp-action="Index" asp-controller="Users">All Users</a></li>
                     </ul>
-                </li>
+                </li>*/
             }
             
             <li>
                 <a asp-action="Index" asp-controller="MedicationRequests">
-                    <i class="fa  fa-2x  fa-address-card-o"></i>
-                    <span class="nav-label" >All Medication Requests</span>
+                    <i class="fa  fa-2x  fa-medkit"></i>
+                    <span class="nav-label">Hemodialysis Bookings</span>
                     <span class="fa arrow"></span>
                 </a>
             </li>
@@ -89,14 +85,17 @@
                 
             </li>
 
-            <li>
-                <a asp-action="Index" asp-controller="Chat">
-                    <i class="fa  fa-2x  fa-wechat"></i>
-                    <span class="nav-label" >Chat</span>
-                    <span class="fa arrow"></span>
-                </a>
-            </li>
-            
+            @if (User.IsInRole("HealthCare"))
+            {
+                <li>
+                    <a asp-action="Index" asp-controller="Chat">
+                        <i class="fa  fa-2x  fa-wechat"></i>
+                        <span class="nav-label">Chat</span>
+                        <span class="fa arrow"></span>
+                    </a>
+                </li>
+            }
+
         </ul>
     </div>
 </nav>

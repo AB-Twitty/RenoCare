@@ -85,10 +85,17 @@ namespace RenoCare.Core.Features.HealthCareProviders.Mediator.Commands
                 bodyHtml = streamReader.ReadToEnd();
             }
 
+            string url = "https://renocare.azurewebsites.net/Password/Reset/OTP";
+
+            // Encode the URL
+            string encodedUrl = Uri.EscapeUriString(url);
+
             var emailValues = new
             {
                 Code = code,
-                CurrentYear = DateTime.Now.Year.ToString()
+                CurrentYear = DateTime.Now.Year.ToString(),
+                EncodedUrl = encodedUrl,
+
             };
 
             var email = new Email

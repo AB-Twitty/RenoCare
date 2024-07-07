@@ -24,14 +24,14 @@
 <div class="wrapper wrapper-content animated fadeInRight shadow">
     <div class="row wrapper  white-bg page-heading  mx-0 ">
         <div class="col-md-12">
-            <h2 class="col-md-9">Medication Requests</h2>
-            <div class="col-md-3" style="float:right">
+            <h2 class="col-md-9" style="width:70%">Hemodialysis Bookings</h2>
+            <div class="col-md-3" style="float:right;width:30%">
                 <ol class="breadcrumb">
                     <li>
                         <a asp-action="index" asp-controller="Home">Home</a>
                     </li>
                     <li class="active">
-                        <strong>Mediaction Requests</strong>
+                        <strong>Hemodialysis Bookings</strong>
                     </li>
                 </ol>
             </div>
@@ -87,19 +87,19 @@
                                     <div class="row mb-15">
 
                                         <div class="col-md-6">
-                                            <label class="control-label col-md-12">Medication Requests Status</label>
+                                            <label class="control-label col-md-12">Booking Status</label>
                                             <div class="col-md-12">
                                                 <select multiple class="multiple-select" asp-items="@MedicationStatusSelect"
-                                                        placeholder="Select Medication Request Status..." data-search="false">
+                                                        placeholder="Select Booking Status..." data-search="false">
                                                 </select>
                                             </div>
                                         </div>
 
                                         <div class="col-md-6">
-                                            <label class="control-label col-md-12">Medication Requests Types</label>
+                                            <label class="control-label col-md-12">Booking Type</label>
                                             <div class="col-md-12">
                                                 <select multiple class="multiple-select" asp-items="@MedicationTypesSelect"
-                                                        placeholder="Select Medication Reuest Types..." data-search="false">
+                                                        placeholder="Select Booking Types..." data-search="false">
                                                 </select>
                                             </div>
                                         </div>
@@ -163,13 +163,12 @@
 
 
 @section scripts {
-    <script src="~/lib/datatables/js/jquery.datatables.min.js"></script>
-    <script src="~/lib/datatables/js/datatables.bootstrap4.min.js"></script>
-
+    
     <script>
         $('document').ready(function () {
             var Table = $('#MedicationRequestTable').DataTable({
                 pageLength: 25,
+                dom: '<"html5buttons"B>lrtip',
                 ordering: true,
                 scrollX: true,
                 ajax: {
@@ -256,6 +255,25 @@
                         name: "Time"
                     }
                 ],
+                buttons: [
+                    'copy', 'excel', 'csv',
+                    {
+                        extend: 'pdf',
+                        orientation: 'landscape',
+                        pageSize: 'LEGAL'
+                    },
+                    {
+                        extend: 'print',
+                        customize: function (win) {
+                            $(win.document.body).addClass('white-bg');
+                            $(win.document.body).css('font-size', '10px');
+                            $(win.document.body).find('table')
+                                .addClass('compact')
+                                .css('font-size', 'inherit');
+                        }
+                    }
+
+                ],
                 "fnInitComplete": function () {
                     addSearchControl();
                 }
@@ -324,7 +342,7 @@
                 var requestId = $(this).data('request-id');
 
                 $.ajax({
-                    url: 'http://localhost:6982/Api/V1/Medication/Request/Status-Update',
+                    url: 'https://renocareapi.azurewebsites.net/Api/V1/Medication/Request/Status-Update',
                     type: 'POST',
                     headers: {
                         "Authorization": `Bearer @access_token`
@@ -345,7 +363,7 @@
                 var requestId = $(this).data('request-id');
 
                 $.ajax({
-                    url: 'http://localhost:6982/Api/V1/Medication/Request/Status-Update',
+                    url: 'https://renocareapi.azurewebsites.net/Api/V1/Medication/Request/Status-Update',
                     type: 'POST',
                     headers: {
                         "Authorization": `Bearer @access_token`

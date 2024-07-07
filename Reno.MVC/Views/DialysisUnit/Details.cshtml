@@ -59,7 +59,15 @@
 <div class="wrapper wrapper-content animated fadeInRight shadow">
     <div class="row wrapper  white-bg page-heading  mx-0 ">
         <div class="col-md-12">
-            <h2 class="col-md-9">My Information</h2>
+
+            @if (User.IsInRole("Admin")) {
+                <h2 class="col-md-9">Information</h2>
+            }
+            else
+            {
+                <h2 class="col-md-9">My Information</h2>
+            }
+            
             <div class="col-md-3" style="float:right">
                 <ol class="breadcrumb">
                     <li>

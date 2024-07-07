@@ -41,10 +41,7 @@ namespace RenoCare.Core.Base
                 var _unitRepo = scope.ServiceProvider.GetRequiredService<IRepository<DialysisUnit>>();
 
                 //gat medReqs where the appointment time has exceeded the current time and it's status is upcoming or pending
-                var pending_medReqs = await _medReqRepo.GetAllAsync(qry =>
-                {
-                    return qry.Include(x => x.Session).Where(x => x.AppointmentDate > DateTime.Now && x.StatusId == 1);
-                });
+                var pending_medReqs = _medReqRepo.Table.Include(x => x.Session).Where(x => x.AppointmentDate > DateTime.Now && x.StatusId == 1).ToList();
 
                 foreach (var medReq in pending_medReqs)
                 {
@@ -53,12 +50,12 @@ namespace RenoCare.Core.Base
 
 
                     //notify the user that the request has passed ir's time with no response
-                    var unit_name = await _unitRepo.Table.Where(x => x.Id == medReq.DialysisUnitId)
-                            .Select(x => x.Name).FirstOrDefaultAsync();
+                    var unit_name = _unitRepo.Table.Where(x => x.Id == medReq.DialysisUnitId)
+                            .Select(x => x.Name).FirstOrDefault();
 
                     var notification = new Notification
                     {
-                        UserId = await _patientRepo.Table.Where(x => x.Id == medReq.PatientId).Select(x => x.UserId).FirstOrDefaultAsync(),
+                        UserId = _patientRepo.Table.Where(x => x.Id == medReq.PatientId).Select(x => x.UserId).FirstOrDefault(),
                         Title = "Pending with no respond",
                         Body = $"Your appointment at {unit_name} booked for ${medReq.AppointmentDate:dd-MMM-yyyy} at ${medReq.Session.Time:hh:mm tt} didn't receive any response."
                     };
@@ -66,10 +63,7 @@ namespace RenoCare.Core.Base
                     await _hub.Clients.User(notification.UserId).SendAsync("OnNotified", notification);
                 }
 
-                var upcoming_medReqs = await _medReqRepo.GetAllAsync(qry =>
-                {
-                    return qry.Include(x => x.Session).Where(x => x.AppointmentDate > DateTime.Now && x.StatusId == 2);
-                });
+                var upcoming_medReqs = _medReqRepo.Table.Include(x => x.Session).Where(x => x.AppointmentDate > DateTime.Now && x.StatusId == 2).ToList();
 
                 foreach (var medReq in upcoming_medReqs)
                 {
@@ -93,12 +87,12 @@ namespace RenoCare.Core.Base
                         await _medReqRepo.InsertAsync(next_weekMedReq);
 
                         //notify the user with the new made med req
-                        var unit_name = await _unitRepo.Table.Where(x => x.Id == medReq.DialysisUnitId)
-                            .Select(x => x.Name).FirstOrDefaultAsync();
+                        var unit_name = _unitRepo.Table.Where(x => x.Id == medReq.DialysisUnitId)
+                            .Select(x => x.Name).FirstOrDefault();
 
                         var notification = new Notification
                         {
-                            UserId = await _patientRepo.Table.Where(x => x.Id == medReq.PatientId).Select(x => x.UserId).FirstOrDefaultAsync(),
+                            UserId = _patientRepo.Table.Where(x => x.Id == medReq.PatientId).Select(x => x.UserId).FirstOrDefault(),
                             Title = "Next week session has been booked",
                             Body = $"A new session at {unit_name} was booked for ${next_weekMedReq.AppointmentDate:dd-MMM-yyyy} at ${medReq.Session.Time:hh:mm tt}."
                         };

@@ -4,6 +4,7 @@
     {
         public int Id { get; set; }
         public int UnitId { get; set; }
+        public string UserId { get; set; }
         public string DialysisUnitName { get; set; }
         public string Status { get; set; }
         public string Time { get; set; }

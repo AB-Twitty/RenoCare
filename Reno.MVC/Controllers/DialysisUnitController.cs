@@ -22,6 +22,53 @@ namespace Reno.MVC.Controllers
             _dataTableExtractor = dataTableExtractor;
         }
 
+
+        [HttpGet("DialysisUnit/Information/Edit/{unitId}/{userId}")]
+        [Authorize(Roles = "HealthCare")]
+        public async Task<IActionResult> EditInfoAsync(int unitId, string userId)
+        {
+            var user = (await _client.GetProfileAsync(userId)).Data;
+
+            var unit_details = (await _client.GetDialysisUnitDetailsAsync(unitId)).Data;
+
+            var spec = new UnitSpecificationsDto
+            {
+                Name = unit_details.Name,
+                Description = unit_details.Description,
+                Address = unit_details.Address,
+                Country = unit_details.Country,
+                City = unit_details.City,
+                IsHdSupported = unit_details.IsHdSupported,
+                IsHdfSupported = unit_details.IsHdfSupported,
+                HdPrice = unit_details.HdPrice,
+                HdfPrice = unit_details.HdfPrice,
+                PhoneNumber = unit_details.PhoneNumber,
+            };
+
+
+            var sessions = unit_details.Sessions.Select(x => new SessionTimeModel
+            {
+                Day = x.Day,
+                Time = new TimeSpan(x.Time.Ticks),
+                Deleted = false
+            }).OrderBy(x => x.Time).ToList();
+
+            var model = new DialysisUnitIndexModel
+            {
+                Email = user.Email,
+                UserId = user.UserId,
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                Phone = user.Phone,
+                UnitSpec = spec,
+                Sessions = sessions,
+                SelectedViruses = unit_details.AcceptingViruses.Select(x => x.Id).ToList(),
+            };
+
+            return View("Newcome_Unit", model);
+        }
+
+
         [HttpGet("DialysisUnit/Newcome")]
         public IActionResult NewcomeDialysisUnitAsync(string email, string id)
         {
@@ -31,6 +78,7 @@ namespace Reno.MVC.Controllers
                 UserId = id,
                 UnitSpec = new UnitSpecificationsDto(),
                 Sessions = new List<SessionTimeModel>(),
+                SelectedViruses = new List<int>()
             });
         }
 

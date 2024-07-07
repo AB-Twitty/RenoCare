@@ -12,7 +12,6 @@ using RenoCare.Domain.MetaData;
 using System;
 using System.IO;
 using System.Text;
-using System.Text.Encodings.Web;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -112,7 +111,7 @@ namespace RenoCare.Core.Features.Authentication.Mediator.Commands
                 FullName = $"{user.FirstName} {user.LastName}",
                 EmailHeader = emailHeader,
                 EmailMessage = emailMessage,
-                CallbackUrl = HtmlEncoder.Default.Encode(callbackUrl),
+                CallbackUrl = "sdf",
                 ButtonLabel = "Confirm Email",
                 CurrentYear = DateTime.Now.Year.ToString(),
             };

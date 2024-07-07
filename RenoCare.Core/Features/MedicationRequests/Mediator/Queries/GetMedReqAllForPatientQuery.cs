@@ -110,7 +110,7 @@ namespace RenoCare.Core.Features.MedicationRequests.Mediator.Queries
                         DialysisUnitName = x.DialysisUnit.Name,
                         DialysisUnitId = x.DialysisUnitId,
                         Date = x.AppointmentDate,
-                        //Time = x.AppointmentHour,
+                        Time = new DateTime(x.Session.Time.Ticks).ToString("hh:mm tt"),
                         Status = x.Status.Name,
                         Type = x.Type.Name,
                         ReportId = x.ReportId,

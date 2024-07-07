@@ -261,6 +261,7 @@
                 .withUrl("https://renocareapi.azurewebsites.net/chat", {
                     accessTokenFactory: () => '@access_token'
                 })
+                .withAutomaticReconnect()
                 .build();
 
             connection.start().catch(err => console.error(err));

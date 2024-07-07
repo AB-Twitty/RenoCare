@@ -48,6 +48,7 @@ namespace RenoCare.Core.Features.MedicationRequests.Mediator.Queries
                    {
                        Id = x.Id,
                        UnitId = x.DialysisUnitId,
+                       UserId = x.DialysisUnit.UserId,
                        DialysisUnitName = x.DialysisUnit.Name,
                        FormattedAdress = x.DialysisUnit.Address + ", " + x.DialysisUnit.Country + ", " + x.DialysisUnit.City,
                        ReportId = x.ReportId,

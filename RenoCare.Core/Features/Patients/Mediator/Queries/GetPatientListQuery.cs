@@ -8,6 +8,7 @@ using RenoCare.Core.Features.Patients.DTOs;
 using RenoCare.Core.Helpers;
 using RenoCare.Core.Helpers.Contracts;
 using RenoCare.Domain;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Dynamic.Core;
@@ -91,25 +92,23 @@ namespace RenoCare.Core.Features.Patients.Mediator.Queries
 
                 var pagedPatientIds = (await patientIdsQuery.ToPagedListAsync(request.PageIndex, request.PageSize)).Items;
 
-                list = await _medReqRepo.ApplyQueryAsync(async q =>
+                list = await _patientRepo.ApplyQueryAsync(async q =>
                 {
-                    var qry = q.Where(x => pagedPatientIds.Contains(x.Patient.Id))
-                         .Include(x => x.Patient).ThenInclude(p => p.User)
-                         .Include(x => x.Patient).ThenInclude(p => p.Reports)
-                         .Include(x => x.Patient).ThenInclude(p => p.Viruses)
+                    var qry = q.Where(x => pagedPatientIds.Contains(x.Id))
+                         .Include(p => p.User).Include(p => p.Reports).Include(p => p.Viruses)
                          .Select(p => new PatientListItemDto
                          {
-                             Id = p.Patient.Id,
-                             PatientName = p.Patient.User.FirstName + " " + p.Patient.User.LastName,
-                             ReportsSameUnit = p.Patient.Reports.Where(x => x.DialysisUnitId == unitId).Count(),
-                             ReportsOverral = p.Patient.Reports.Count(),
-                             Diabetes = p.Patient.DiabetesType.Name,
-                             Hypertension = p.Patient.HypertensionType.Name,
-                             Gender = p.Patient.Gender.ToString(),
-                             BirthDate = p.Patient.BirthDate,
-                             Age = AgeFormatter.CalculateAge(p.Patient.BirthDate),
-                             Smoking = p.Patient.SmokingStatus.Name ?? "--",
-                             Viruses = string.Join(", ", p.Patient.Viruses.OrderBy(x => x.Id).Select(x => x.Abbreviation))
+                             Id = p.Id,
+                             PatientName = p.User.FirstName + " " + p.User.LastName,
+                             ReportsSameUnit = p.Reports.Where(x => x.DialysisUnitId == unitId).Count(),
+                             ReportsOverral = p.Reports.Count(),
+                             Diabetes = p.DiabetesType.Name,
+                             Hypertension = p.HypertensionType.Name,
+                             Gender = p.Gender.ToString(),
+                             BirthDate = p.BirthDate,
+                             Age = AgeFormatter.CalculateAge(p.BirthDate),
+                             Smoking = p.SmokingStatus.Name ?? "--",
+                             Viruses = string.Join(", ", p.Viruses.OrderBy(x => x.Id).Select(x => x.Abbreviation))
                          });
 
                     var totalCount = qry.Count();

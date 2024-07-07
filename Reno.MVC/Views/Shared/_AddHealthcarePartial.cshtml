@@ -50,7 +50,7 @@
             if (!email) return;
 
             $.ajax({
-                url: `http://localhost:6982/Api/V1/HealthCare/Create`,
+                url: `https://renocareapi.azurewebsites.net/Api/V1/HealthCare/Create`,
                 method: "POST",
                 headers: {
                     "Authorization": `Bearer @access_token`

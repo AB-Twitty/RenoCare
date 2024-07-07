@@ -17,5 +17,8 @@ namespace Reno.MVC.Models.DialysisUnit
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string Phone { get; set; }
+
+
+        public IList<int> SelectedViruses { get; set; }
     }
 }

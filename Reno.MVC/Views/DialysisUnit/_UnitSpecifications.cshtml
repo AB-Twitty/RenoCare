@@ -27,7 +27,8 @@
     var amenitiesJson = Newtonsoft.Json.JsonConvert.SerializeObject(amenities);
 
     var viruses = (await _client.GetVirusesAsync(null)).Data.OrderBy(x => x.Id);
-    var viruses_select = new SelectList(viruses, "Id", "Abbreviation");
+    var viruses_select = new SelectList(viruses, "Id", "Abbreviation", Model.SelectedViruses);
+        
 }
 
 
@@ -194,7 +195,7 @@
         <div class="col-md-6 mb-15">
             <label class="control-label col-md-12">Accepting Patient with Viruses</label>
             <div class="col-md-12">
-                <select multiple class="multiple-select" asp-items="@viruses_select" asp-for="@Model.Viruses" >
+                <select multiple class="multiple-select" id="virus-select" asp-items="@viruses_select" asp-for="@Model.Viruses" >
                 </select>
             </div>
         </div>
@@ -265,6 +266,22 @@
     $("#nxt_to_available_sessions").on('click', function () {
         $('.nav-tabs a[href="' + "#tab-3" + '"]').tab('show');
     });
+
+    var selectedVirusIds = @Html.Raw(Json.Serialize(Model.SelectedViruses));
+
+    // Set selected values
+    selectedVirusIds.forEach(function (id) {
+        $('#virus-select option[value="' + id + '"]').prop('selected', true);
+    });
+
+    var country = '@Model.UnitSpec.Country';
+    var city = '@Model.UnitSpec.City';
+
+
+    $('#country-select option[value="' + country + '"]').prop('selected', true);
+    $('#country-select').trigger('change');
+    $('#city-select option[value="' + city + '"]').prop('selected', true);
+
 
     function autoResize(textarea) {
         textarea.style.height = 'auto';

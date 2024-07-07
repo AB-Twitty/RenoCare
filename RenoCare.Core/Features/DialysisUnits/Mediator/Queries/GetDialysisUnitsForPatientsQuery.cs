@@ -137,7 +137,7 @@ namespace RenoCare.Core.Features.DialysisUnits.Mediator.Queries
                             IsHdfSupported = x.IsHdfSupported,
                             HdfPrice = x.HdfPrice,
 
-                            Rating = x.Reviews.Any() ? Math.Round(x.Reviews.Average(r => r.Rating) * 2, MidpointRounding.AwayFromZero) / 2 : 0,
+                            Rating = x.Reviews.Any() ? x.Reviews.Average(r => r.Rating) : 0,
                             ReviewsCnt = x.Reviews.Count,
 
                             ThumbnailImage = x.Images.Where(i => i.IsThumbnail).Select(i => i.Path).FirstOrDefault(),
@@ -153,13 +153,25 @@ namespace RenoCare.Core.Features.DialysisUnits.Mediator.Queries
                         query = query.OrderBy(x => x.Name); break;
                     case "rating":
                         query = query.OrderByDescending(x => x.Rating); break;
-
+                    case "price":
+                        query = query.OrderBy(x => x.HdPrice).ThenBy(x => x.HdfPrice); break;
                     default:
                         query = query.OrderBy(x => x.Id); break;
                 }
 
-                return await query.ToPagedListAsync(request.PageIndex, request.PageSize, totalcount, 1, query.Count());
 
+
+
+                var paged = await query.ToPagedListAsync(request.PageIndex, request.PageSize, totalcount, 1, query.Count());
+
+
+                foreach (var item in paged.Items)
+                {
+                    item.Rating = Math.Round(item.Rating * 2, MidpointRounding.AwayFromZero) / 2;
+                }
+
+
+                return paged;
             });
 
             return Success(list);
