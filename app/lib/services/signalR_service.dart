@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:app/pages/chat_module/page/chat_home/model/chat_model.dart';
@@ -11,7 +12,7 @@ class SignalRUtil {
 
 
   var accessToken ="";
-
+ Timer? _reconnectTimer;
 
   Future<void>init()async{
     await loginDataManager2.loadLoginData();
@@ -48,6 +49,7 @@ class SignalRUtil {
           .build();
 
       await _hubConnection!.start();
+      _startReconnectTimer();
     } catch (e) {
       print(" Error establishing signalR connection");
       _reconnect();
@@ -75,6 +77,22 @@ class SignalRUtil {
       }
     }
   }
+
+
+ void _startReconnectTimer() {
+   _stopReconnectTimer();
+   _reconnectTimer = Timer.periodic(Duration(seconds: 5), (timer) async {
+     if (_hubConnection!.state != HubConnectionState.connected) {
+       print("Periodic reconnect attempt...");
+       _reconnect();
+     }
+   });
+ }
+
+ void _stopReconnectTimer() {
+   _reconnectTimer?.cancel();
+   _reconnectTimer = null;
+ }
 }
 
 

@@ -21,7 +21,7 @@ class MessageBubble2 extends StatelessWidget {
       padding: EdgeInsets.all(10.0),
       child: Column(
         crossAxisAlignment:
-            isMe ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+        isMe ? CrossAxisAlignment.end : CrossAxisAlignment.start,
         children: [
           Material(
             borderRadius: BorderRadius.only(
@@ -36,46 +36,61 @@ class MessageBubble2 extends StatelessWidget {
               padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
               child: message.isFile!
                   ? Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          "${message.message}",
-                          style: TextStyle(
-                            color: Colors.black,
-                            fontSize: 15.0,
-                          ),
-                        ),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        ElevatedButton(
-                          onPressed: () {
-                            _downloadFile(
-                                context, message.fileLink, message.message);
-                          },
-                          child: Text('Download'),
-                        ),
-                      ],
-                    )
-                  : Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Text(
-                          message.message,
-                          style: TextStyle(
-                            color: Colors.black,
-                            fontSize: 15.0,
-                          ),
-                        ),
-                        SizedBox(
-                          width: 6,
-                        ),
-                        Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [if (isMe) _buildStatusCircle()],
-                        ),
-                      ],
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Wrap(children: [
+                    Text(
+                      "${message.message}",
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 15.0,
+                      ),
                     ),
+                  ]),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      ElevatedButton(
+                        onPressed: () {
+                          _downloadFile(
+                              context, message.fileLink, message.message);
+                        },
+                        child: Text('Download'),
+                      ),
+                      SizedBox(
+                        width: 20,
+                      ),
+                      _buildStatusCircle(),
+                    ],
+                  ),
+                ],
+              )
+                  : Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Flexible(
+                    child: Text(
+                      maxLines: 50,
+                      message.message,
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 15.0,
+                        height: 1.5,
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    width: 6,
+                  ),
+                  Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [if (isMe) _buildStatusCircle()],
+                  ),
+                ],
+              ),
             ),
           ),
           SizedBox(
@@ -139,8 +154,8 @@ class MessageBubble2 extends StatelessWidget {
             message.status == 3
                 ? Icons.done_all
                 : message.status == 2
-                    ? Icons.done_all
-                    : Icons.done,
+                ? Icons.done_all
+                : Icons.done,
             color: message.status == 3 ? Colors.white : Colors.black,
             size: 10.0,
           ),

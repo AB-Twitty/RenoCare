@@ -40,7 +40,7 @@ class HomeCubit extends Cubit<HomeState> {
   List<Widget>tabs = [
     Appointment(),
     Home(),
-    ProfileTab(),
+    // ProfileTab(),
     ChatHomePage(),
   ];
 

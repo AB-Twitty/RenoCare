@@ -321,7 +321,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
                             ),
                             underline: SizedBox(),
                             items:
-                                detail.groupedSessions.keys.map((String day) {
+                            detail.groupedSessions.keys.map((String day) {
                               return DropdownMenuItem<String>(
                                 value: day,
                                 child: Text(day),
@@ -357,7 +357,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
                                   return Card(
                                     shape: RoundedRectangleBorder(
                                         borderRadius:
-                                            BorderRadius.circular(20)),
+                                        BorderRadius.circular(20)),
                                     color: Color.fromRGBO(60, 152, 203, 1),
                                     child: Padding(
                                       padding: const EdgeInsets.symmetric(
@@ -483,7 +483,7 @@ class DetailModel {
           .toList(),
       groupedSessions: (json['groupedSessions'] as Map<String, dynamic>? ?? {})
           .map((key, value) =>
-              MapEntry(key, (value as List).map((e) => e as String).toList())),
+          MapEntry(key, (value as List).map((e) => e as String).toList())),
       images: (json['images'] as List? ?? [])
           .map((image) => ImageModel.fromJson(image))
           .toList(),
@@ -500,7 +500,7 @@ class DetailModel {
       hdPrice: (json['hdPrice'] ?? 0).toDouble(),
       isHdfSupported: json['isHdfSupported'] ?? false,
       hdfPrice:
-          json['hdfPrice'] != null ? (json['hdfPrice'] ?? 0).toDouble() : null,
+      json['hdfPrice'] != null ? (json['hdfPrice'] ?? 0).toDouble() : null,
       reviews: (json['reviews'] as List? ?? [])
           .map((review) => Review.fromJson(review))
           .toList(), // Default to empty list if null

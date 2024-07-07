@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:app/pages/chat_module/page/chat_home/widget/mesasge_bubble2.dart';
 import 'package:chat_bubbles/chat_bubbles.dart';
 import 'package:dio/dio.dart';
@@ -38,6 +40,8 @@ class _ChatPageState extends State<ChatPage> {
   bool hasNextPage = true;
   bool getEnd=false;
   bool isMe=false;
+
+  Timer? _timer;
   @override
   void initState() {
     super.initState();
@@ -57,9 +61,19 @@ class _ChatPageState extends State<ChatPage> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _scrollToEnd();
     });
+
+    _startReloadTimer();
   }
 
 
+
+
+  void _startReloadTimer() {
+    _timer = Timer.periodic(Duration(seconds: 10), (timer) {
+      _fetchPreviousMessages(pageIndex: 1);
+
+    });
+  }
   void _scrollToEnd() {
     WidgetsBinding.instance.addPostFrameCallback((_){
 
@@ -77,6 +91,7 @@ class _ChatPageState extends State<ChatPage> {
   void dispose() {
     //_hubConnection.stop();
     _scrollController.dispose();
+    _timer?.cancel();
     //loginDataManager2.clearLoginData();
     super.dispose();
   }

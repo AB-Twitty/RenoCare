@@ -147,6 +147,7 @@ class _AppointmentCardState extends State<Appointment> {
 class AppointmentModel {
   final int id;
   final int unitId;
+  final String Uid;
   final String dialysisUnitName;
   final String status;
   final String time;
@@ -157,6 +158,7 @@ class AppointmentModel {
 
   AppointmentModel({
     required this.id,
+    required this.Uid,
     required this.unitId,
     required this.dialysisUnitName,
     required this.status,
@@ -170,6 +172,7 @@ class AppointmentModel {
   factory AppointmentModel.fromJson(Map<String, dynamic> json) {
     return AppointmentModel(
       id: json['id'],
+      Uid: json['userId'],
       unitId: json['unitId'],
       dialysisUnitName: json['dialysisUnitName'],
       status: json['status'],

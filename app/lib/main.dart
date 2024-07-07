@@ -1,4 +1,5 @@
 import 'package:app/Shared/components/widgets/bootmnavigationbar.dart';
+import 'package:app/SplachScreen.dart';
 import 'package:app/models/notification_model.dart';
 import 'package:app/pages/book_page/book_page.dart';
 import 'package:app/pages/center_details_page/center_details/details.dart';
@@ -17,18 +18,39 @@ import 'package:app/services/token_service.dart';
 import 'package:app/tabs/appointment.dart';
 
 import 'package:app/tabs/home.dart';
-import 'package:app/tabs/pro.dart';
+
 import 'package:app/tabs/profile_tab.dart';
 import 'package:bloc/bloc.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart'
-    as not;
+as not;
 
 import 'bloc.dart';
 import 'firebase_options.dart';
 
+// void main() async {
+//   Bloc.observer = MyBlocObserver();
+//   WidgetsFlutterBinding.ensureInitialized();
+//   await Firebase.initializeApp(
+//     options: DefaultFirebaseOptions.currentPlatform,
+//   );
+
+//   await FlutterDownloader.initialize(
+//     debug: true,
+//   );
+//   runApp(
+//     SplashScreen(
+//       key: UniqueKey(),
+//       onInitializationComplete: () {
+//         runApp(
+//           MyApp(),
+//         );
+//       },
+//     ),
+//   );
+// }
 void main() async {
   Bloc.observer = MyBlocObserver();
   WidgetsFlutterBinding.ensureInitialized();
@@ -39,26 +61,11 @@ void main() async {
   await FlutterDownloader.initialize(
     debug: true,
   );
-
-  final sessionManager= LoginDataManager2();
-  final isSessionValid = await sessionManager.isSessionValid();
-  runApp(
-    SplashScreen(
-      key: UniqueKey(),
-      onInitializationComplete: () {
-        runApp(
-          MyApp( initialRoute: isSessionValid ? '/bottomnav' : '/login'),
-        );
-      },
-    ),
-  );
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
   final SignalRUtil signalRUtil = SignalRUtil();
-  final String initialRoute;
-
-  MyApp({required this.initialRoute});
 
   @override
   Widget build(BuildContext context) {
@@ -69,11 +76,10 @@ class MyApp extends StatelessWidget {
         //backgroundColor: Colors.white,
       ),
       debugShowCheckedModeBanner: false,
-      home: LoginPage(),
+      home: SplashScreenPage(),
       navigatorKey: NavigationService.navigatorKey,
-      initialRoute: initialRoute,
       routes: {
-        '/Pro': (context)=> Pro(),
+
         '/login': (context) => LoginPage(),
         '/home_page': (context) => HomePage(),
         '/signup': (context) => SignUp(),

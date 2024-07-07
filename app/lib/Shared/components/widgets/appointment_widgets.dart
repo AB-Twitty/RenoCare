@@ -1,7 +1,12 @@
+import 'package:app/Shared/components/widgets/commentScreen.dart';
+import 'package:app/Shared/components/widgets/review_bottom_sheet.dart';
 import 'package:app/models/center_model/center_model.dart';
+import 'package:app/pages/chat_module/page/chat_home/chat_page.dart';
 import 'package:app/tabs/appointment.dart';
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_downloader/flutter_downloader.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:dio/dio.dart';
 import 'package:path_provider/path_provider.dart';
@@ -20,28 +25,28 @@ class AppointmentCard extends StatefulWidget {
 class _AppointmentCardState extends State<AppointmentCard> {
   void popup() {
     AwesomeDialog(
-            context: context,
-            dialogType: DialogType.warning,
-            title: 'Attention',
-            descTextStyle: TextStyle(
-              fontSize: 16,
-              height: 1.5,
-            ),
-            desc: "Are you sure that you want to cancel this appointment?",
-            btnOkColor: Color.fromRGBO(60, 152, 203, 1),
-            buttonsTextStyle: TextStyle(
-              fontSize: 18,
-            ),
-            btnOkOnPress: () {
-              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                content: Text('Appointment cancelled successfully'),
-              ));
-              // Call fetchAppointments to refresh the list
-              widget.fetchAppointments();
-            },
-            btnCancelOnPress: () {},
-            btnOkText: "Yes",
-            btnCancelText: "No")
+        context: context,
+        dialogType: DialogType.warning,
+        title: 'Attention',
+        descTextStyle: TextStyle(
+          fontSize: 16,
+          height: 1.5,
+        ),
+        desc: "Are you sure that you want to cancel this appointment?",
+        btnOkColor: Color.fromRGBO(60, 152, 203, 1),
+        buttonsTextStyle: TextStyle(
+          fontSize: 18,
+        ),
+        btnOkOnPress: () {
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Text('Appointment cancelled successfully'),
+          ));
+          // Call fetchAppointments to refresh the list
+          widget.fetchAppointments();
+        },
+        btnCancelOnPress: () {},
+        btnOkText: "Yes",
+        btnCancelText: "No")
         .show();
   }
 
@@ -130,13 +135,26 @@ class _AppointmentCardState extends State<AppointmentCard> {
                               ),
                             ),
                             if (widget.appointment.category ==
-                                    Category.upcoming ||
+                                Category.upcoming ||
                                 widget.appointment.category ==
                                     Category.completed) ...{
-                              Icon(
+                              IconButton(
+                                onPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => ChatPage(
+                                        active_chat_Id: widget
+                                            .appointment.Uid,
+                                        chatName:
+                                        widget.appointment.dialysisUnitName,
+                                      ),
+                                    ),
+                                  );
+                                },
                                 color: Color.fromARGB(255, 109, 153, 222),
-                                size: 30.0,
-                                IconData(0xe5c9, fontFamily: 'MaterialIcons'),
+                                icon: Icon(IconData(0xe5c9,
+                                    fontFamily: 'MaterialIcons')),
                               ),
                             }
                           ],
@@ -170,12 +188,12 @@ class _AppointmentCardState extends State<AppointmentCard> {
                               textAlign: TextAlign.end,
                               style: TextStyle(
                                   color: widget.appointment.category ==
-                                          Category.upcoming
+                                      Category.upcoming
                                       ? Color.fromARGB(255, 199, 183, 38)
                                       : widget.appointment.category ==
-                                              Category.cancelled
-                                          ? Colors.red
-                                          : Colors.green),
+                                      Category.cancelled
+                                      ? Colors.red
+                                      : Colors.green),
                             ),
                           ),
                         )
@@ -204,55 +222,148 @@ class _AppointmentCardState extends State<AppointmentCard> {
               ),
               activeselect
                   ? Row(
-                      children: [
-                        OutlinedButton(
-                          style: OutlinedButton.styleFrom(
-                            side: BorderSide(
-                              color: Color.fromARGB(255, 109, 153, 222),
-                            ),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(20),
-                            ),
-                          ),
-                          onPressed: () {
-                            if (activeButton) {
-                              // Function to enter review (if exists)
-                            } else {
-                              cancelAppointment(context);
-                            }
-                          },
-                          child: Text(
-                            activeButton ? 'Enter Review' : 'Cancel',
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: Color.fromARGB(255, 109, 153, 222),
-                            ),
-                          ),
-                        ),
-                        Spacer(),
-                        if (activeButton) ...{
-                          ElevatedButton.icon(
-                            icon: Icon(Icons.download),
-                            style: OutlinedButton.styleFrom(
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(20),
-                              ),
-                            ),
-                            onPressed: () {
-                              // Function to view report (if exists)
-                            },
-                            label: Text('View Report'),
-                          ),
-                        }
-                      ],
-                    )
-                  : SizedBox(
-                      height: 15,
+                children: [
+                  OutlinedButton(
+                    style: OutlinedButton.styleFrom(
+                      side: BorderSide(
+                        color: Color.fromARGB(255, 109, 153, 222),
+                      ),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20),
+                      ),
                     ),
+                    onPressed: () {
+                      if (activeButton) {
+                        showModalBottomSheet(
+                          isScrollControlled: true,
+                          shape: const RoundedRectangleBorder(
+                            borderRadius: BorderRadius.vertical(
+                              top: Radius.circular(30),
+                            ),
+                          ),
+                          context: context,
+                          builder: (context) => ReviewBottomSheet(
+                            appointmentId: widget.appointment.unitId,
+                            onReviewSubmitted: () {
+                              widget.fetchAppointments();
+                            },
+                          ),
+                        );
+                      } else {
+                        cancelAppointment(context);
+                      }
+                    },
+                    child: Text(
+                      activeButton ? 'Enter Review' : 'Cancel',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Color.fromARGB(255, 109, 153, 222),
+                      ),
+                    ),
+                  ),
+                  Spacer(),
+                  if (activeButton &&
+                      widget.appointment.reportId != null) ...{
+                    ElevatedButton.icon(
+                      icon: Icon(Icons.download),
+                      style: OutlinedButton.styleFrom(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                      ),
+                      onPressed: () {
+                        print(
+                            '=================${widget.appointment.reportId}===========');
+                        downloadReport(context,
+                            widget.appointment.reportId.toString());
+                      },
+                      label: Text('Report'),
+                    ),
+                  }
+                ],
+              )
+                  : SizedBox(
+                height: 15,
+              ),
             ],
           ),
         ),
       ),
     );
+  }
+}
+
+Future<void> downloadReport(BuildContext context, String reportId) async {
+  final Dio _dio = Dio();
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  String? token = prefs.getString('token');
+
+  if (token == null) {
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      content: Text('No token found. Please login again.'),
+    ));
+    return;
+  }
+
+  String reportUrl =
+      'https://renocareapi.azurewebsites.net/report/pdf/$reportId';
+
+  final status = await Permission.storage.request();
+  if (status.isGranted) {
+    try {
+      final externalDir = await getExternalStorageDirectory();
+      if (externalDir == null) {
+        print('Unable to get external storage directory');
+        return;
+      }
+
+      final savedDir = externalDir.path;
+      final savePath = '$savedDir/report_$reportId.pdf';
+
+      // Get the download URL with token in headers
+      final response = await _dio.get(
+        reportUrl,
+        options: Options(
+          headers: {
+            'Authorization': 'Bearer $token',
+          },
+        ),
+      );
+
+      if (response.statusCode == 200) {
+        // Download the file using flutter_downloader
+        final taskId = await FlutterDownloader.enqueue(
+          url: reportUrl,
+          savedDir: savedDir,
+          fileName: 'report_$reportId.pdf',
+          showNotification: true,
+          openFileFromNotification: true,
+          headers: {
+            'Authorization': 'Bearer $token'
+          }, // Add headers to download request
+        );
+
+        print('Download started with taskId: $taskId');
+      } else {
+        print(
+            'Failed to get download URL with status code: ${response.statusCode}');
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          duration: const Duration(seconds: 3),
+          content: Text('Failed to get download URL'),
+        ));
+      }
+    } catch (e) {
+      print('Download failed: $e');
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        duration: const Duration(seconds: 3),
+        content: Text('Failed to download report: $e'),
+      ));
+    }
+  } else {
+    print('Permission denied to access storage');
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      duration: const Duration(seconds: 3),
+      content: Text('Permission denied to access storage'),
+    ));
   }
 }

@@ -33,7 +33,7 @@ class _LoginPageState extends State<LoginPage> {
   var emailController = TextEditingController();
   var passwordController = TextEditingController();
 
-  SignalRUtil signalRUtil=SignalRUtil();
+  SignalRUtil signalRUtil = SignalRUtil();
   @override
   Widget build(BuildContext context) {
     deviceHeight = MediaQuery.of(context).size.height;
@@ -42,19 +42,16 @@ class _LoginPageState extends State<LoginPage> {
     return BlocProvider(
       create: (context) => LoginCubit(),
       child: BlocConsumer<LoginCubit, LoginState>(
-        listener: (context, state)async {
+        listener: (context, state) async {
           if (state is LoginSuccessState) {
             _navigation.removeAndNavigateToRoute2('/bottomnav');
             // start
-
-
-
           } else if (state is LoginErrorState) {
-            print(state.error);
+            print("===================================${state.error}=========================");
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
                   content:
-                      Text('Login Failed: The email or password is wrong')),
+                  Text('Login Failed: The email or password is wrong')),
             );
           }
         },
@@ -98,23 +95,23 @@ class _LoginPageState extends State<LoginPage> {
                                   ),
                                   errorBorder: OutlineInputBorder(
                                     borderRadius:
-                                        BorderRadius.all(Radius.circular(20)),
+                                    BorderRadius.all(Radius.circular(20)),
                                     borderSide: BorderSide(
                                       color: Colors.red,
                                     ),
                                   ),
                                   focusedErrorBorder: OutlineInputBorder(
                                     borderRadius:
-                                        BorderRadius.all(Radius.circular(20)),
+                                    BorderRadius.all(Radius.circular(20)),
                                     borderSide: BorderSide(
                                       color: Colors.red,
                                     ),
                                   ),
                                   floatingLabelStyle:
-                                      TextStyle(color: emailLabelColor),
+                                  TextStyle(color: emailLabelColor),
                                   focusedBorder: OutlineInputBorder(
                                     borderRadius:
-                                        BorderRadius.all(Radius.circular(20)),
+                                    BorderRadius.all(Radius.circular(20)),
                                     borderSide: BorderSide(
                                       color: Color(0xffB8E8F7),
                                       width: 3,
@@ -122,7 +119,7 @@ class _LoginPageState extends State<LoginPage> {
                                   ),
                                   enabledBorder: OutlineInputBorder(
                                     borderRadius:
-                                        BorderRadius.all(Radius.circular(20)),
+                                    BorderRadius.all(Radius.circular(20)),
                                     borderSide: BorderSide(
                                       color: Color(0xffB8E8F7),
                                       width: 3,
@@ -150,7 +147,7 @@ class _LoginPageState extends State<LoginPage> {
                                     });
                                   }
                                   final bool emailValid = RegExp(
-                                          r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+                                      r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
                                       .hasMatch(value);
                                   if (!emailValid) {
                                     setState(() {
@@ -194,23 +191,23 @@ class _LoginPageState extends State<LoginPage> {
                                   ),
                                   errorBorder: OutlineInputBorder(
                                     borderRadius:
-                                        BorderRadius.all(Radius.circular(20)),
+                                    BorderRadius.all(Radius.circular(20)),
                                     borderSide: BorderSide(
                                       color: Colors.red,
                                     ),
                                   ),
                                   focusedErrorBorder: OutlineInputBorder(
                                     borderRadius:
-                                        BorderRadius.all(Radius.circular(20)),
+                                    BorderRadius.all(Radius.circular(20)),
                                     borderSide: BorderSide(
                                       color: Colors.red,
                                     ),
                                   ),
                                   floatingLabelStyle:
-                                      TextStyle(color: passwordLabelColor),
+                                  TextStyle(color: passwordLabelColor),
                                   focusedBorder: OutlineInputBorder(
                                     borderRadius:
-                                        BorderRadius.all(Radius.circular(20)),
+                                    BorderRadius.all(Radius.circular(20)),
                                     borderSide: BorderSide(
                                       color: Color(
                                         0xffB8E8F7,
@@ -220,7 +217,7 @@ class _LoginPageState extends State<LoginPage> {
                                   ),
                                   enabledBorder: OutlineInputBorder(
                                     borderRadius:
-                                        BorderRadius.all(Radius.circular(20)),
+                                    BorderRadius.all(Radius.circular(20)),
                                     borderSide: BorderSide(
                                       color: Color(0xffB8E8F7),
                                       width: 3,
@@ -251,41 +248,43 @@ class _LoginPageState extends State<LoginPage> {
                               ),
                               state is LoginLoadingState
                                   ? Center(
-                                      child: LoadingAnimationWidget.threeArchedCircle(color: Colors.blue, size: 30),
-                                    )
+                                child: LoadingAnimationWidget
+                                    .threeArchedCircle(
+                                    color: Colors.blue, size: 30),
+                              )
                                   : SizedBox(
-                                      width: 250,
-                                      child: ElevatedButton(
-                                        style: ElevatedButton.styleFrom(
-                                          shape: RoundedRectangleBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(20)),
-                                          padding: EdgeInsets.symmetric(
-                                            horizontal: 40,
-                                            vertical: 17,
-                                          ),
-                                          backgroundColor: Color(0xff019AED),
-                                          textStyle: TextStyle(
-                                            color: Colors.white,
-                                            fontSize: 20,
-                                          ),
-                                        ),
-                                        onPressed: () async {
-                                          if (_formKey.currentState
-                                                  ?.validate() ??
-                                              false) {
-                                            print(cubit.emailController.text);
-                                            cubit.login(
-                                                cubit.emailController.text,
-                                                cubit.passwordController.text,
-                                                true);
-                                          }
-                                        },
-                                        child: const Text(
-                                          'Login',
-                                        ),
-                                      ),
+                                width: 250,
+                                child: ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                        BorderRadius.circular(20)),
+                                    padding: EdgeInsets.symmetric(
+                                      horizontal: 40,
+                                      vertical: 17,
                                     ),
+                                    backgroundColor: Color(0xff019AED),
+                                    textStyle: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 20,
+                                    ),
+                                  ),
+                                  onPressed: () async {
+                                    if (_formKey.currentState
+                                        ?.validate() ??
+                                        false) {
+                                      print(cubit.emailController.text);
+                                      cubit.login(
+                                          cubit.emailController.text,
+                                          cubit.passwordController.text,
+                                          true);
+                                    }
+                                  },
+                                  child: const Text(
+                                    'Login',
+                                  ),
+                                ),
+                              ),
                               SizedBox(
                                 height: 25,
                               ),
@@ -322,24 +321,9 @@ class _LoginPageState extends State<LoginPage> {
                               Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  InkWell(
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        Container(
-                                          child: Image.asset(
-                                              "assets/images/google_logo.png"),
-                                          width: 50,
-                                          height: 50,
-                                        ),
-                                        Text("Continue with Google")
-                                      ],
-                                    ),
-                                  ),
                                   Row(
                                     crossAxisAlignment:
-                                        CrossAxisAlignment.center,
+                                    CrossAxisAlignment.center,
                                     mainAxisSize: MainAxisSize.max,
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
@@ -354,7 +338,7 @@ class _LoginPageState extends State<LoginPage> {
                                           onPressed: () {
                                             _navigation
                                                 .removeAndNavigateToRoute(
-                                                    '/signup');
+                                                '/signup');
                                           },
                                           child: Text(
                                             "sign up",

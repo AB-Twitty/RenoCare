@@ -35,7 +35,7 @@ class _BookScreenState extends State<BookScreen> {
   List<String> selectedTimes = [];
   List<DateTime> availableDates = [];
   List<Map<String, dynamic>> bookingTypes = [];
-
+  int sessionId = 7;
   int? selectedBookingType;
   int treatmentTypeValue = 0;
 
@@ -88,10 +88,10 @@ class _BookScreenState extends State<BookScreen> {
         detailModel.groupedSessions.forEach((weekday, sessions) {
           if (sessions.isNotEmpty) {
             final int weekdayIndex =
-                DateFormat.EEEE().dateSymbols.WEEKDAYS.indexOf(weekday);
+            DateFormat.EEEE().dateSymbols.WEEKDAYS.indexOf(weekday);
             DateTime now = DateTime.now();
             DateTime nextDate =
-                now.add(Duration(days: (weekdayIndex - now.weekday + 7) % 7));
+            now.add(Duration(days: (weekdayIndex - now.weekday + 7) % 7));
             while (nextDate.isBefore(DateTime(2024, 12, 31))) {
               availableDates.add(nextDate);
               nextDate = nextDate.add(Duration(days: 7));
@@ -200,6 +200,7 @@ class _BookScreenState extends State<BookScreen> {
     final Dio _dio = Dio();
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? token = prefs.getString('token');
+    DetailModel detailModel;
 
     try {
       final response = await _dio.post(
@@ -207,10 +208,10 @@ class _BookScreenState extends State<BookScreen> {
         data: {
           "unitId": widget.unitId,
           "date": _currentDay.toIso8601String(),
-          "sessionId": 7,
+          "sessionId": sessionId,
           "patientRemarks": _textController.text,
           "medReqTypeId": selectedBookingType,
-          "treatment": treatmentTypeValue
+          "treatment": treatmentTypeValue,
         },
         options: Options(
           headers: {
@@ -329,7 +330,7 @@ class _BookScreenState extends State<BookScreen> {
                         },
                         enabledDayPredicate: (day) {
                           return availableDates.any(
-                              (availableDay) => isSameDay(availableDay, day));
+                                  (availableDay) => isSameDay(availableDay, day));
                         },
                         onFormatChanged: (format) {
                           setState(() {

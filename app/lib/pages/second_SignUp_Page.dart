@@ -16,11 +16,23 @@ class SecondSignUpPage extends StatefulWidget {
 class _SecondSignUpPageState extends State<SecondSignUpPage> {
   List<String> _selectedItems = [];
   List<List<String>> choices = [
-    ["Type 1", "Type 2", "Type 3"],
-    ["Type 1", "Type 2", "Type 3"],
-    ["Type 1", "Type 2", "Type 3"],
+    [
+      "Non-diabetic",
+      "Type 2 diabetes",
+      "Type 1 diabetes",
+      "Gestational diabetes",
+      "Monogenic diabetes"
+    ],
+    [
+      "Normal",
+      "Elevated",
+      "Hypertension Stage 1",
+      "Hypertension Stage 2",
+      "Hypertensive Crisis"
+    ],
+    ["Non Smoker", "Former Smoker", "Current Smoker	"],
   ];
-  List<String> selectedChoice = ["Type 1", "Type 1", "Type 1"];
+  List<String> selectedChoice = ["Non-diabetic", "Normal", "Non Smoker"];
   List<String> labels = ["Diabetes", "Hypertension", "Smoking status"];
   final TextEditingController _textController = TextEditingController();
   void _showErrorDialog(Map<String, dynamic> errors) {
@@ -53,7 +65,11 @@ class _SecondSignUpPageState extends State<SecondSignUpPage> {
   }
 
   void _showMultiSelect() async {
-    final List<String> items = ['Type 1', 'Type 2', 'Type 3'];
+    final List<String> items = [
+      'Human Immunodeficiency Virus	',
+      'Hepatitis B Virus',
+      'Hepatitis C Virus',
+    ];
     final List<String>? results = await showDialog(
       context: context,
       builder: (BuildContext context) {
