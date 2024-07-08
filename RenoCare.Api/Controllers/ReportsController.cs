@@ -60,6 +60,15 @@ namespace RenoCare.Api.Controllers
             return ApiResult(await _mediator.Send(req));
         }
 
+        [HttpGet(Router.ReportRouting.AllForPatient)]
+        [Authorize(Roles = "Patient")]
+        public async Task<IActionResult> GetAllPatientReportsAsync()
+        {
+            var res = await _mediator.Send(new GetAllPatientReportQueryRequest());
+
+            return File(res.File, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", res.FileName);
+        }
+
 
         #endregion
     }

@@ -140,6 +140,12 @@ namespace RenoCare.Core.Features.Reports.Mediator.Queries
                     request.SearchDict.Remove("Patient.PatientName");
                 }
 
+                if (request.SearchDict.ContainsKey("Patient.Id") && int.TryParse(request.SearchDict["Patient.Id"].ToString(), out int id))
+                {
+                    query = query.Where(x => x.Patient.Id == id);
+                    request.SearchDict.Remove("Patient.Id");
+                }
+
 
                 query = query.FilterQuery(request);
 

@@ -117,6 +117,7 @@
             public const string GetById = Rule + "/Report";
             public const string Create = Rule + "/Report/Create";
             public const string List = Rule + "/Reports";
+            public const string AllForPatient = Rule + "/All/Patient/Reports";
         }
     }
 }
