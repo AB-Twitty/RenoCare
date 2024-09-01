@@ -94,9 +94,11 @@ RenoCare is designed to address the challenges faced by hemodialysis patients an
 Explore the following demo videos to get a comprehensive understanding of the RenoCare platform:
 
 - **Web Application Demo:**
+
 https://github.com/user-attachments/assets/3d192a34-0607-4ad2-8ad4-058712e32f90
-- **Mobile Application Demo:** 
-https://github.com/user-attachments/assets/0fc46907-2f86-4186-984f-02678459d705
+- **Mobile Application Demo:**
+
+https://github.com/user-attachments/assets/988c4398-0214-46f6-a537-d84b63b06065
 
 ## Technologies
 
