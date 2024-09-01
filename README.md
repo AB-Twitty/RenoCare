@@ -70,7 +70,7 @@ RenoCare is designed to address the challenges faced by hemodialysis patients an
 ### Mobile Application
 
 1. **Download the APK:**
-    - [Download RenoCare APK](https://renocare-apk.com)
+    - [Download RenoCare APK](https://drive.google.com/file/d/1OEBsasn0__JdRGOnOkc-KswENBCZMOAb/view?usp=drive_link)
 2. **Install on Android Devices:**
     - Transfer the APK to your device and install it. Make sure to enable installation from unknown sources in your device settings.
 
