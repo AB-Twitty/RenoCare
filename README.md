@@ -108,7 +108,7 @@ https://github.com/user-attachments/assets/988c4398-0214-46f6-a537-d84b63b06065
 - **Real-Time Communication:** SignalR
 - **Email Handling:** FluentEmail
 - **Validation:** FluentValidation
-- **Data Management:** DataTables, 
+- **Data Management:** DataTables, chart.js
 - **Design Pattern:** Mediator
 - **Data Storage:** .NET Entity Framework, Microsoft SQL Server
 
